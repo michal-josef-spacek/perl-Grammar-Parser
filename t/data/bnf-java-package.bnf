@@ -1,0 +1,26 @@
+
+@keyword package
+
+comment     := qr/
+    (?>(?<c_comment>   \/\/ .* $) )
+  | (?>(?<doc_comment> \/\*\* (?! \*) [\s\S]*? \*\/ ))
+  | (?>(?<cpp_comment> \/\*           [\s\S]*? \*\/ ))
+/x
+
+whitespace  := qr/\s+/
+
+start       := compilation_unit
+
+IDENTIFIER := qr/ \b (?! \d) \w+ \b /x
+identifier := IDENTIFIER
+
+qualified_identifier :=
+	{ identifier ... '.' }
+
+compilation_unit :=
+	[ package_declaration ]
+
+package_declaration :=
+	package
+    qualified_identifier
+    ';'

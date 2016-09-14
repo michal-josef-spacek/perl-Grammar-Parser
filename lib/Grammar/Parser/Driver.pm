@@ -51,7 +51,7 @@ around BUILDARGS => sub {
             grammar => $params{grammar},
             (start  => $params{start}) x!! $params{start},
             (empty  => $params{empty}) x!! $params{empty},
-            (white  => $params{white}) x!! $params{white},
+            (insignificant  => $params{white}) x!! $params{white},
         ) unless Scalar::Util::blessed ($params{grammar});
 
 		delete @params{qw[ start empty white ]};

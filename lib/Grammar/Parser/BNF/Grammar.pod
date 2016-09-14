@@ -1,0 +1,216 @@
+
+=pod
+
+=head1 NAME
+
+Grammar::Parser::BNF::Grammar - BNF grammar variant
+
+=head1 DESCRIPTION
+
+Grammar::Parser uses BNF like grammar combined from
+
+=over
+
+=item ... (TODO) - misc BNFs
+
+=item PostgreSQL documentation
+
+=item DB2 documentation
+
+=back
+
+=head1 GRAMMAR
+
+=head2 Rule naming
+
+Rule names are case sensitive
+
+=over
+
+=item must start with word character but not digit
+
+=item must end with word character
+
+=item may contain '-'
+
+=item may be surrounded by '<' and '>' or '«' and '»'
+
+These symbols are not considered as part of rule name and may contain
+inner whitespaces
+
+  < rule >
+  « rule »
+
+=item may contain '::' acting as "include path"
+
+Include path identifies included grammars and their rules.
+
+See L<#Include> for details
+
+=back
+
+=head2 Special symbols
+
+=head3 Whitespaces
+
+Tokens may be separated by any number of symbols Perl recognize as \s
+
+=head3 Comment
+
+whole content starting with unescaped character # until new line (\n)
+is considered as comment and is not evaluated
+
+=head3 Literal values
+
+Literal values are enclosed in apostrofs or quotes.
+Grammar::Parser::BNF supports backslash escaping
+
+Example:
+    comma := ','
+    apos  := '\\''
+
+=head3 Regular expression
+
+Reqular expression like literal values are similar to perl's qr// except it supports
+only 'ixms' modificators.
+
+Other literals may be included in regex using $ interpolation
+
+   integer  := qr/ [0-9] /x
+   floating := qr/ $« integer » (?: \. $« integer » ) /x
+   floating := qr/ $< integer > (?: \. $< integer > ) /x
+   floating := qr/ $integer (?: \. $integer ) /x
+
+=head2 Expression
+
+=head3 definition
+
+   RULE_NAME = expression
+   RULE_NAME : expression
+   RULE_NAME := expression
+   RULE_NAME :: expression
+   RULE_NAME ::= expression
+
+Definition may be terminated by semicolon.
+
+Be aware that '::' may be used in nonterminal so unlike other variants it
+may require at least one character (whitespace) between rule name and expression.
+
+=head3 alternative
+
+   expression / expression
+   expression | expression
+
+=head3 incremental alternative (TODO)
+
+  RULE_NAME /= another alternative
+  RULE_NAME |= another alternative
+
+Any combination of definition and alternative operator is treated as
+incremental alternative, ie extending already defined rule with new alternative.
+
+=head3 grouping
+
+   ( expression1  expression2 expression3 )
+
+Expression (eq: alternatives, sequences) enclosed in parenthesis is treated
+as single expression.
+
+=head3 repetition
+
+   { expression }
+   { expression ... }
+   { expression ... delimiter }
+
+Expression can appear multiple times (1..n) separated by delimiter expression.
+
+   comma-separated-list := { expression ... ',' }
+
+If you want 0..n repetition, use L</optional> syntax with square brackets.
+
+=head3 optional
+
+   [ expression ]
+   [ expression ... ]
+   [ expression ... delimiter ]
+
+Optional expression may be omitted.
+
+=head3 include
+
+TODO - not implemented yet
+
+   :include ALIAS from FILE-PATH
+
+Includes rules from other file.
+Every included rule will be available under name C<ALIAS::name>.
+
+File path can be relative, then it will be searched at cwd and @INC;
+
+=head1 FULL GRAMMAR
+
+Describe this grammar by itself
+
+   separator := qr/ \s+ /mx
+   comment := qr/ \# .* /x
+
+   regex := qr/ qr ([^\w\s]) ((?: [^\\] | \\. ).*?) \1 ([ixms]*) /mx
+
+   literal := qr/ ([\'\"]) ((?: [^\\] | \\. )*?) \1 /mx
+
+   identifier := qr/ (?: (?=\w) (?! \d) ) [-\w]+ (?<= \w) /x
+
+   full-name := qr/ $identifier (?: '::' $identifier ) /x+
+
+   nonterminal :=
+       '«' identifier '»'
+     | '<' identifier '>'
+     | qr/\b/ identifier qr/\b/
+
+   file-name:= qr/(\S+)/ | literal
+
+   INCLUDE := qr/ :include \b /ix
+   AS := qr/\b as \b/ix
+   FROM := qr/\b from \b/ix
+
+   DEFINITION := qr/(?= [:=]) (?: :{0,2} =?) (?! [:=] /x
+   ALTERNATIVE := '|' | '/'
+   REPETITION := '...'
+
+   termination := { ';' ... }
+
+   bnf:= [ element ... termination ]
+
+   element := include | rule
+
+   alias := identifier
+   include := INCLUDE alias FROM file-name
+
+   rule := nonterminal DEFINITION expression
+
+   expression :=
+       nonterminal
+     | literal
+     | regex
+     | group
+     | repeat
+     | sequence
+     | alternative
+
+   group := '(' expression ')'
+   sequence := [ expression ]
+   alternative := [ expression ... ALTERNATIVE ]
+   repeat :=
+       '[' expression { REPETITION { expression } } ']'
+     | '{' expression   REPETITION { expression }   '}'
+
+=head1 AUTHOR
+
+Branislav Zahradník <barney@cpan.org>
+
+=head1 COPYRIGHT
+
+This file if part of L<Grammar::Parser>.
+It can be distributed and/or modified under Artistic license 2.0
+
+=cut
