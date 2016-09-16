@@ -7,3 +7,11 @@
   - [ ] support final token
   - [ ] test stream parsing
 	- throws 'more data required'
+  - [ ] test helper / Test::Tester positive tests
+  - [ ] test helper / Test::Tester negative tests
+
+* Grammar::Parser::Grammar
+  - [ ] test per use-case
+  - [ ] test helper
+  - [ ] test helper / Test::Tester positive tests
+  - [ ] test helper / Test::Tester negative tests
