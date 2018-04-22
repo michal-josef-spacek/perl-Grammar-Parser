@@ -58,11 +58,11 @@ sub _build_driver {
     my $driver     = delete $self->{driver};
     my $driver_env = delete $self->{driver_env};
 
-    return $self->_load_driver (
-        $driver,
-        $ENV{ $driver_env // $DEFAULT_ENV_NAME },
-        $DEFAULT_DRIVER,
-    );
+    return undef
+		// $self->_load_driver ($driver)
+		// $self->_load_driver ($ENV{ $driver_env // $DEFAULT_ENV_NAME })
+		// $self->_load_driver ($DEFAULT_DRIVER)
+		;
 }
 
 sub _build_grammar {
@@ -100,7 +100,7 @@ __END__
 
 =head1 NAME
 
-Grammar::Parser - Unified API over misc grammar parser
+Grammar::Parser - Extensible, parser and lexer independent grammars
 
 =head1 SYNOPSIS
 
@@ -123,7 +123,7 @@ Its idea is to support:
 
 =over
 
-=item multiple backends using unified API
+=item multiple parser backends
 
 There are plenty of grammar parsing modules around, each one with its own callbacks,
 grammar definition, features, lifecycle, performance.

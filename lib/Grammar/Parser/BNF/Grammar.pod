@@ -7,17 +7,8 @@ Grammar::Parser::BNF::Grammar - BNF grammar variant
 
 =head1 DESCRIPTION
 
-Grammar::Parser uses BNF like grammar combined from
-
-=over
-
-=item ... (TODO) - misc BNFs
-
-=item PostgreSQL documentation
-
-=item DB2 documentation
-
-=back
+Grammar::Parser uses BNF like grammar with some modifications inspired by
+databases documentation.
 
 =head1 GRAMMAR
 
