@@ -1,0 +1,9 @@
+
+* Grammar::Parser::Lexer
+
+  - [X] longest match
+  - [X] returns token data object
+  - [X] thows "not found" exception
+  - [ ] support final token
+  - [ ] test stream parsing
+	- throws 'more data required'

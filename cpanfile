@@ -1,3 +1,8 @@
+# C:S
+requires "List::MoreUtils" => "0";
+requires "Module::Pluggable::Object" => "0";
+requires "Carp::Always" => "0";
+
 requires "Sub::Override" => "0";
 requires "Class::Load" => "0";
 requires "Clone" => "0";
