@@ -7,9 +7,11 @@ package Grammar::Parser::BNF::Action v1.0.0;
 
 use Grammar::Parser::Action::Util qw( rule install_action_name );
 
-use namespace::clean;
+# TODO: employ Exporter::Tiny ...
+# use Grammar::Parser::Action::Util { rule_prefix => 'action_' } qw[ rule install_action_name ];
+# use Grammar::Parser::Action::Util { rule_prefix => 'action_' } 'action_name', 'rule';
 
-local $Grammar::Parser::Action::Util::PREFIX = 'bnf_';
+use namespace::clean;
 
 install_action_name 'action_name';
 

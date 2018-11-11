@@ -25,8 +25,12 @@ sub parse {
 
     $lexer->push_data (@what);
 
+	my $step = 0;
     while (1) {
+		$step++;
         my $expected = $marpa->terminals_expected;
+		Test::More::diag ("Step ${step}: expect ${\ join ' ', @$expected }");
+		Test::More::diag ("     ${step}: ${ $lexer->_data }");
         last unless @$expected;
         my $symbol = $lexer->next_token (@$expected);
         last unless $symbol;

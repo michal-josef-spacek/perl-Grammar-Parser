@@ -17,9 +17,9 @@ use constant HANDLER_SET => 1;
 use namespace::clean;
 
 sub new {
-    my ($class, $grammar) = @_;
+    my ($class, $result) = @_;
 
-    return bless { bnf => $grammar->{bnf}, prefix => '' }, $class;
+    return bless { bnf => $result->{bnf}, prefix => '' }, $class;
 }
 
 sub prefix {

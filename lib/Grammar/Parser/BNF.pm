@@ -2,6 +2,7 @@
 use v5.14;
 use strict;
 use warnings;
+use utf8;
 
 package Grammar::Parser::BNF v1.0.0;
 
@@ -178,7 +179,7 @@ Grammar::Parser::BNF - parse Grammar::Parser's bnf file
 
    use Grammar::Parser::BNF;
 
-   my $ast = Grammar::Parser::BNF->new->parse_file ($bnf_file);
+   my $ast = Grammar::Parser::BNF->new->parse (file => $bnf_file);
 
 =head1 DESCRIPTION
 
