@@ -1,0 +1,199 @@
+
+# https://www.w3.org/TR/2008/REC-CSS1-20080411/#appendix-b
+# *  : 0 or more
+# +  : 1 or more
+# ?  : 0 or 1
+# |  : separates alternatives
+# [] : grouping 
+
+
+unicode		\\[0-9a-f]{1,4}
+latin1		[¡-ÿ]
+escape		{unicode}|\\[ -~¡-ÿ]
+stringchar	{escape}|{latin1}|[ !#$%&(-~]
+nmstrt		[a-z]|{latin1}|{escape}
+nmchar		[-a-z0-9]|{latin1}|{escape}
+name		{nmchar}+
+d		[0-9]
+notnm		[^-a-z0-9\\]|{latin1}
+w		[ \t\n]*
+num		{d}+|{d}*\.{d}+
+string		\"({stringchar}|\')*\"|\'({stringchar}|\")*\'
+
+UNICODE := qr/\\[0-9a-f]{1,4}/i
+ESCAPE := qr/$UNICODE|\\[ -~¡-ÿ]/
+LATIN1 := qr/[¡-ÿ]/
+NMCHAR := qr/[-a-z0-9]|$LATIN1|$ESCAPE/i
+IDENT := qr/(?!=)($NMCHAR)+/x
+
+IMPORTANT := "!" qr/\b important \b/i
+OPERATOR := "/" | ","
+
+operator   := OPERATOR
+identifier := IDENTIFIER
+important  := IMPORTANT
+
+property := identifier
+
+rule :=
+    rule_selector "{" { rule_declaration } "}"
+
+rule_selector :=
+    [ selector ... "," ]
+
+rule_declaration :=
+    [ declaration ... ";" ]
+
+declaration :=
+    property ":" expression { priority }
+
+priority :=
+    important
+
+expression := [ term ... { operator } ]
+
+term :=
+    { unary_operator }
+    ( NUMBER | STRING | PERCENTAGE | LENGTH | EMS | EXS | IDENT | hexcolor | URL | RGB )
+
+
+
+
+
+# __END__
+
+IMPORT_SYM  := qr/@import\/foo/
+URL         := qr/url\({w} ( [^ \n\'\"\)] | \ | \' | \" | \) )+ {w} \)/
+
+STRING      := qr/([\'\"])(?:[^\\]|(?:\\.))$1)/
+
+stylesheet  :=
+ : [CDO|CDC]* [ import [CDO|CDC]* ]* [ ruleset [CDO|CDC]* ]*
+ ;
+
+location    := STRING | URL
+class       := CLASS_AFTER_IDENT
+
+import      := IMPORT_SYM location ";"
+
+simple_selector
+ : element_name id? class? pseudo_class?	# eg: H1.subject
+ | solitary_id class? pseudo_class?		# eg: #xyz33
+ | solitary_class pseudo_class?			# eg: .author
+ | solitary_pseudo_class			# eg: :link
+ ;
+
+TODO selector :=
+ : simple_selector+ [ pseudo_element | solitary_pseudo_element ]?
+ | solitary_pseudo_element
+
+
+unary_operator
+ : '-' | '+'
+ ;
+element_name
+ : IDENT
+ ;
+pseudo_class					/* as in:  A:link */
+ : LINK_PSCLASS_AFTER_IDENT
+ | VISITED_PSCLASS_AFTER_IDENT
+ | ACTIVE_PSCLASS_AFTER_IDENT
+ ;
+solitary_pseudo_class				/* as in:  :link */
+ : LINK_PSCLASS
+ | VISITED_PSCLASS
+ | ACTIVE_PSCLASS
+ ;
+solitary_class					/* as in:  .note */
+ : CLASS
+ ;
+pseudo_element					/* as in:  P:first-line */
+ : FIRST_LETTER_AFTER_IDENT
+ | FIRST_LINE_AFTER_IDENT
+ ;
+solitary_pseudo_element				/* as in:  :first-line */
+ : FIRST_LETTER
+ | FIRST_LINE
+ ;
+	/* There is a constraint on the id and solitary_id that the
+	** part after the "#" must be a valid HTML ID value;
+	** e.g., "#x77" is OK, but "#77" is not.
+	*/
+id
+ : HASH_AFTER_IDENT
+ ;
+solitary_id
+ : HASH
+ ;
+	/* There is a constraint on the color that it must
+	** have either 3 or 6 hex-digits (i.e., [0-9a-fA-F])
+	** after the "#"; e.g., "#000" is OK, but "#abcd" is not.
+	*/
+hexcolor
+ : HASH | HASH_AFTER_IDENT
+ ;
+
+## __END__
+unicode		\\[0-9a-f]{1,4}
+latin1		[¡-ÿ]
+escape		{unicode}|\\[ -~¡-ÿ]
+stringchar	{escape}|{latin1}|[ !#$%&(-~]
+nmstrt		[a-z]|{latin1}|{escape}
+nmchar		[-a-z0-9]|{latin1}|{escape}
+ident		{nmstrt}{nmchar}*
+name		{nmchar}+
+d		[0-9]
+notnm		[^-a-z0-9\\]|{latin1}
+w		[ \t\n]*
+num		{d}+|{d}*\.{d}+
+string		\"({stringchar}|\')*\"|\'({stringchar}|\")*\'
+
+%x COMMENT
+%s AFTER_IDENT
+
+%%
+"/*"				{BEGIN(COMMENT);}
+<COMMENT>"*/"			{BEGIN(0);}
+<COMMENT>\n			{/* ignore */}
+<COMMENT>.			{/* ignore */}
+{ident}				{BEGIN(AFTER_IDENT); return IDENT;}
+{string}			{BEGIN(0); return STRING;}
+
+{num}				{BEGIN(0); return NUMBER;}
+{num}"%"			{BEGIN(0); return PERCENTAGE;}
+{num}pt/{notnm}			{BEGIN(0); return LENGTH;}
+{num}mm/{notnm}			{BEGIN(0); return LENGTH;}
+{num}cm/{notnm}			{BEGIN(0); return LENGTH;}
+{num}pc/{notnm}			{BEGIN(0); return LENGTH;}
+{num}in/{notnm}			{BEGIN(0); return LENGTH;}
+{num}px/{notnm}			{BEGIN(0); return LENGTH;}
+{num}em/{notnm}			{BEGIN(0); return EMS;}
+{num}ex/{notnm}			{BEGIN(0); return EXS;}
+
+<AFTER_IDENT>":"link		{return LINK_PSCLASS_AFTER_IDENT;}
+<AFTER_IDENT>":"visited	{return VISITED_PSCLASS_AFTER_IDENT;}
+<AFTER_IDENT>":"active	{return ACTIVE_PSCLASS_AFTER_IDENT;}
+<AFTER_IDENT>":"first-line	{return FIRST_LINE_AFTER_IDENT;}
+<AFTER_IDENT>":"first-letter	{return FIRST_LETTER_AFTER_IDENT;}
+<AFTER_IDENT>"#"{name}		{return HASH_AFTER_IDENT;}
+<AFTER_IDENT>"."{name}		{return CLASS_AFTER_IDENT;}
+
+":"link				{BEGIN(AFTER_IDENT); return LINK_PSCLASS;}
+":"visited			{BEGIN(AFTER_IDENT); return VISITED_PSCLASS;}
+":"active			{BEGIN(AFTER_IDENT); return ACTIVE_PSCLASS;}
+":"first-line			{BEGIN(AFTER_IDENT); return FIRST_LINE;}
+":"first-letter			{BEGIN(AFTER_IDENT); return FIRST_LETTER;}
+"#"{name}			{BEGIN(AFTER_IDENT); return HASH;}
+"."{name}			{BEGIN(AFTER_IDENT); return CLASS;}
+
+url\({w}{string}{w}\)					|
+rgb\({w}{num}%?{w}\,{w}{num}%?{w}\,{w}{num}%?{w}\)	{BEGIN(0); return RGB;}
+
+[-/+{};,#:]			{BEGIN(0); return *yytext;}
+[ \t]+				{BEGIN(0); /* ignore whitespace */}
+\n				{BEGIN(0); /* ignore whitespace */}
+\<\!\-\-			{BEGIN(0); return CDO;}
+\-\-\>				{BEGIN(0); return CDC;}
+.				{fprintf(stderr, "%d: Illegal character (%d)\n",
+				 lineno, *yytext);}
+

@@ -1,0 +1,16 @@
+
+whitespace := qr/\s+/
+comment := qr/;.*/
+
+letter := qr/[a-z]/i
+digit := qr/[0-9]/
+
+ATOM := qr/$letter (?: $letter | $digit )*/x
+atom := ATOM
+
+sexp :=
+    atom
+ | "(" sexp "." sexp ")"
+ | list
+
+list := "(" [ sexp ... ] ")"

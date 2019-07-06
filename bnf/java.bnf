@@ -1,0 +1,666 @@
+
+SUPER       := qr/\b super \b/
+super       := SUPER
+TRY       := qr/\b try \b/
+try       := TRY
+CATCH       := qr/\b catch \b/
+catch       := CATCH
+FINALLY       := qr/\b finally \b/
+finally       := FINALLY
+ASSERT       := qr/\b assert \b/
+assert       := ASSERT
+SWITCH       := qr/\b switch \b/
+switch       := SWITCH
+DO       := qr/\b do \b/
+do       := DO
+WHILE       := qr/\b while \b/
+while       := WHILE
+FOR       := qr/\b for \b/
+for       := FOR
+BREAK       := qr/\b break \b/
+break       := BREAK
+CONTINUE       := qr/\b continue \b/
+continue       := CONTINUE
+RETURN       := qr/\b return \b/
+return       := RETURN
+IF       := qr/\b if \b/
+if       := IF
+THEN       := qr/\b then \b/
+then       := THEN
+FINAL       := qr/\b final \b/
+final       := FINAL
+THROWS       := qr/\b throws \b/
+throws       := THROWS
+THROW       := qr/\b throw \b/
+throw       := THROW
+PUBLIC       := qr/\b public \b/
+public       := PUBLIC
+PROTECTED       := qr/\b protected \b/
+protected       := PROTECTED
+PRIVATE       := qr/\b private \b/
+private       := PRIVATE
+STATIC       := qr/\b static \b/
+static       := STATIC
+ABSTRACT       := qr/\b abstract \b/
+abstract       := ABSTRACT
+FINAL       := qr/\b final \b/
+final       := FINAL
+NATIVE       := qr/\b native \b/
+native       := NATIVE
+SYNCHRONIZED       := qr/\b synchronized \b/
+synchronized    := SYNCHRONIZED
+TRANSIENT       := qr/\b transient \b/
+transient       := TRANSIENT
+VOLATILE        := qr/\b volatile \b/
+volatile        := VOLATILE
+STRICTFP        := qr/\b strictfp \b/
+strictfp        := STRICTFP
+VOID       := qr/\b void \b/
+void       := VOID
+
+BOOLEAN     := qr/\b boolean \b/
+BYTE        := qr/\b byte \b/
+CHAR        := qr/\b char \b/
+CLASS       := qr/\b class \b/
+DOUBLE      := qr/\b double \b/
+ENUM        := qr/\b enum \b/
+EXTENDS     := qr/\b extends \b/
+FLOAT       := qr/\b float \b/
+IMPLEMENTS  := qr/\b implements \b/
+IMPORT      := qr/\b import \b/
+INT         := qr/\b int \b/
+INTERFACE   := qr/\b interface \b/
+LONG        := qr/\b long \b/
+PACKAGE     := qr/\b package \b/
+SHORT       := qr/\b short \b/
+STATIC      := qr/\b static \b/
+
+boolean     := BOOLEAN
+byte        := BYTE
+char        := CHAR
+class       := CLASS
+double      := DOUBLE
+enum        := ENUM
+extends     := EXTENDS
+float       := FLOAT
+implements  := IMPLEMENTS
+import      := IMPORT
+int         := INT
+interface   := INTERFACE
+long        := LONG
+package     := PACKAGE
+short       := SHORT
+static      := STATIC
+
+identifier := IDENTIFIER
+
+qualified_identifier :=
+	{ identifier ... '.' }
+
+qualified_identifier_list :=
+	{ qualified_identifier ... ',' }
+
+compilation_unit :=
+	[ package_declaration ]
+	[ import_declaration ... ]
+	{ type_declaration ... }
+
+package_declaration :=
+	[ annotations ]
+	package
+	qualified_identifier
+	';'
+
+import_declaration :=
+	import
+	[ static ]
+	qualified_identifier
+	[ '.' * ]
+	';'
+
+type_declaration :=
+	class_or_interface_declaration
+	';'
+
+class_or_interface_declaration :=
+	{ modifier }
+	( class_declaration | interface_declaration )
+
+class_declaration :=
+	normal_class_declaration
+	| enum_declaration
+
+interface_declaration :=
+	normal_interface_declaration
+	| annotation_type_declaration
+
+normal_class_declaration :=
+	class
+	identifier
+	[ type_parameters ]
+	[ extends type ]
+    [ implements type_list]
+    class_body
+
+enum_declaration :=
+	enum
+    identifier
+    [ implements type_list ]
+    enum_body
+
+normal_interface_declaration :=
+	interface
+    identifier
+    [ type_parameters ]
+    [ extends type_list ]
+    interface_body
+
+annotation_type_declaration :=
+	'@'
+    interface
+    identifier
+    annotation_type_body
+
+vector_declaration := '[' ']'
+
+type :=
+	basic_type [ vector_declaration ]
+	| reference_type  [ vector_declaration ]
+
+basic_type :=
+	byte
+	| short
+	| char
+	| int
+	| long
+	| float
+	| double
+	| boolean
+
+reference_type :=
+	{ identifier [ type_arguments ] ... '.' }
+
+type_arguments :=
+	'<' { type_argument ... '.' } '>'
+
+type_argument :=
+	reference_type
+    | '?' [ ( extends | super ) reference_type ]
+
+non_wildcard_type_arguments :=
+	'<' type_list '>'
+
+type_list :=
+	{ reference_type ... ',' }
+
+diamond :=
+	'<' '>'
+
+type_arguments_or_diamond :=
+	diamond
+	| type_arguments
+
+non_wildcard_type_arguments_or_diamond :=
+	diamond
+    | non_wildcard_type_arguments
+
+type_parameters :=
+	'<' { type_parameter ... ',' } '>'
+
+type_parameter :=
+	identifier [ extends bound]
+
+bound :=
+	{ reference_type ... '&' }
+
+modifier :=
+	annotation
+	| PUBLIC
+	| PROTECTED
+	| PRIVATE
+	| STATIC
+	| ABSTRACT
+	| FINAL
+	| NATIVE
+	| SYNCHRONIZED
+	| TRANSIENT
+	| VOLATILE
+	| STRICTFP
+
+annotations :=
+	{ Annotation }
+
+annotation :=
+	'@' qualified_identifier [ ( [ annotation_element ] ) ]
+
+annotation_element :=
+	element_value_pairs
+	| element_value
+
+element_value_pairs :=
+	{ element_value_pair ... ',' }
+
+element_value_pair :=
+	identifier '=' element_value
+
+element_value :=
+	annotation
+	| expression1
+	| element_value_array_initializer
+
+element_value_array_initializer :=
+	{ [element_values] [,] }
+
+element_values :=
+	{  element_value ... ',' }
+
+class_body :=
+	'{' { class_body_declaration } '}'
+
+class_body_declaration :=
+	;
+	| { modifier } member_decl
+	| [ static ] block
+
+member_decl :=
+	method_or_field_decl
+	| void identifier void_method_declarator_rest
+	| identifier constructor_declarator_rest
+	| generic_method_or_constructor_decl
+	| class_declaration
+	| interface_declaration
+
+method_or_field_decl :=
+	type identifier method_or_field_rest
+
+method_or_field_rest :=
+	field_declarators_rest ';'
+	| method_declarator_rest
+
+field_declarators_rest :=
+	variable_declarator_rest { ',' variable_declarator }
+
+method_declarator_rest :=
+	formal_parameters
+    { vector_declaration }
+    [ throws qualified_identifier_list]
+    ( block | ';' )
+
+void_method_declarator_rest :=
+	formal_parameters
+    [ throws qualified_identifier_list ]
+    ( block | ';' )
+
+constructor_declarator_rest :=
+	formal_parameters
+    [throws qualified_identifier_list]
+    block
+
+generic_method_or_constructor_decl :=
+	type_parameters
+    generic_method_or_constructor_rest
+
+generic_method_or_constructor_rest :=
+	( type | void ) identifier method_declarator_rest
+	| identifier constructor_declarator_rest
+
+interface_body :=
+	'{' { InterfaceBodyDeclaration } '}'
+
+InterfaceBodyDeclaration :=
+	';'
+	| { modifier } interface_member_decl
+
+interface_member_decl :=
+	interface_method_or_field_decl
+	| void identifier void_interface_method_declarator_rest
+	| interface_generic_method_decl
+	| class_declaration
+	| interface_declaration
+
+interface_method_or_field_decl :=
+	type
+    identifier
+    interface_method_or_field_rest
+
+interface_method_or_field_rest :=
+	constant_declarators_rest ';'
+	| interface_method_declarator_rest
+
+constant_declarators_rest :=
+	constant_declarator_rest { ',' constant_declarator }
+
+constant_declarator_rest :=
+	{ vector_declaration } = variable_initializer
+
+constant_declarator :=
+	identifier constant_declarator_rest
+
+interface_method_declarator_rest :=
+	formal_parameters
+    { vector_declaration }
+    [ throws qualified_identifier_list ]
+    ';'
+
+void_interface_method_declarator_rest :=
+	formal_parameters
+    [ throws qualified_identifier_list ]
+    ';'
+
+interface_generic_method_decl :=
+	type_parameters
+    ( type | void )
+    identifier
+    interface_method_declarator_rest
+
+formal_parameters :=
+	'(' [ formal_parameter_decls ] ')'
+
+formal_parameter_decls :=
+	{ variable_modifier } type formal_parameter_decls_rest
+
+VariableModifier :=
+	final
+	Annotation
+
+formal_parameter_decls_rest :=
+	variable_declarator_id [ ',' formal_parameter_decls ]
+	| '...' variable_declarator_id
+
+variable_declarator_id :=
+	identifier { vector_declaration }
+
+variable_declarators :=
+	{ variable_declarator ... ',' }
+
+variable_declarator :=
+	identifier variable_declarator_rest
+
+variable_declarator_rest :=
+	{ vector_declaration } [ '=' variable_initializer ]
+
+variable_initializer :=
+	array_initializer
+	| expression
+
+array_initializer :=
+	'{' [ VariableInitializer ... ',' ] '}'
+
+block :=
+	'{' block_statements '}'
+
+block_statements :=
+	{ block_statement }
+
+block_statement :=
+	local_variable_declaration_statement
+	| class_or_interface_declaration
+	| [ identifier ':' ] statement
+
+local_variable_declaration_statement :=
+	{ variable_modifier } type variable_declarators ';'
+
+statement :=
+	Block
+	| ';'
+	| identifier ':' statement
+	| statement_expression ';'
+	| if par_expression statement [ else statement ]
+	| assert expression [ ':' expression ] ';'
+	| switch par_expression '{' switch_block_statement_groups '}'
+	| while par_expression statement
+	| do statement while par_expression ';'
+	| for '(' for_control ')' statement
+	| break [ identifier ] ';'
+	| continue [ identifier ] ';'
+	| return [ expression ] ';'
+	| throw expression ';'
+	| synchronized par_expression block
+	| try block (catches | [ catches ] finally_expression )
+	| try resource_specification block [catches] [finally_expression]
+
+statement_expression :=
+	expression
+
+catches :=
+	{ catch_clause }
+
+catch_clause :=
+	catch ( { variable_modifier } catch_type identifier ) block
+
+CatchType :=
+	{ qualified_identifier ... '|' }
+
+finally_expression :=
+	finally block
+
+ResourceSpecification :=
+	( Resources [';'] )
+
+Resources :=
+	Resource { ';' Resource }
+
+Resource :=
+	{VariableModifier} ReferenceType VariableDeclaratorId = Expression
+
+
+SwitchBlockStatementGroups :=
+	{ SwitchBlockStatementGroup }
+
+SwitchBlockStatementGroup :=
+	SwitchLabels BlockStatements
+
+SwitchLabels :=
+	SwitchLabel { SwitchLabel }
+
+SwitchLabel :=
+	case Expression  :=
+	case EnumConstantName  :=
+	default  :=
+
+EnumConstantName :=
+	identifier
+
+
+
+ForControl :=
+	ForVarControl
+	ForInit ';' [Expression] ; [ForUpdate]
+
+ForVarControl :=
+	{VariableModifier} Type VariableDeclaratorId  ForVarControlRest
+
+ForVarControlRest :=
+	ForVariableDeclaratorsRest ';' [Expression] ; [ForUpdate]
+	: Expression
+
+ForVariableDeclaratorsRest :=
+	[= VariableInitializer] { , VariableDeclarator }
+
+ForInit :=
+ForUpdate :=
+	StatementExpression { , StatementExpression }
+
+
+Expression :=
+	Expression1 [AssignmentOperator Expression1]
+
+AssignmentOperator :=
+	=
+	+=
+	-=
+	*=
+	/=
+	&=
+	|=
+	^=
+	%=
+	<<=
+	>>=
+	>>>=
+
+Expression1 :=
+	Expression2 [Expression1Rest]
+
+Expression1Rest :=
+	? Expression : Expression1
+
+Expression2 :=
+	Expression3 [Expression2Rest]
+
+Expression2Rest :=
+	{ InfixOp Expression3 }
+	instanceof Type
+
+
+InfixOp :=
+	||
+	&&
+	|
+	^
+	&
+	==
+	!=
+	<
+	>
+	<=
+	>=
+	<<
+	>>
+	>>>
+	+
+	-
+	*
+	/
+	%
+
+Expression3 :=
+	PrefixOp Expression3
+	( (Expression | Type) ) Expression3
+	Primary { Selector } { PostfixOp }
+
+PrefixOp :=
+	++
+	--
+	!
+	~
+	+
+	-
+
+PostfixOp :=
+	++
+	--
+
+
+Primary :=
+	Literal
+	ParExpression
+	this [Arguments]
+	super SuperSuffix
+	new Creator
+	NonWildcardTypeArguments (ExplicitGenericInvocationSuffix | this Arguments)
+	identifier { . identifier } [IdentifierSuffix]
+	BasicType {[]} . class
+	void . class
+
+
+
+Literal :=
+	IntegerLiteral
+	FloatingPointLiteral
+	CharacterLiteral
+	StringLiteral
+	BooleanLiteral
+	NullLiteral
+
+ParExpression :=
+	( Expression )
+
+Arguments :=
+	( [ Expression { , Expression } ] )
+
+SuperSuffix :=
+	Arguments
+	. identifier [Arguments]
+
+ExplicitGenericInvocationSuffix :=
+	super SuperSuffix
+	identifier Arguments
+
+
+Creator :=
+	NonWildcardTypeArguments CreatedName ClassCreatorRest
+	CreatedName (ClassCreatorRest | ArrayCreatorRest)
+
+CreatedName :=
+	identifier [TypeArgumentsOrDiamond] { . identifier [TypeArgumentsOrDiamond] }
+
+ClassCreatorRest :=
+	Arguments [ClassBody]
+
+ArrayCreatorRest :=
+	[ (] {[]} ArrayInitializer  |  Expression ] {[ Expression ]} {[]})
+
+
+
+IdentifierSuffix :=
+	[ ({[]} . class | Expression) ]
+	Arguments
+	. (class | ExplicitGenericInvocation | this | super Arguments |
+	new [NonWildcardTypeArguments] InnerCreator)
+
+ExplicitGenericInvocation :=
+	NonWildcardTypeArguments ExplicitGenericInvocationSuffix
+
+InnerCreator :=
+	identifier [NonWildcardTypeArgumentsOrDiamond] ClassCreatorRest
+
+
+
+Selector :=
+	. identifier [Arguments]
+	. ExplicitGenericInvocation
+	. this
+	. super SuperSuffix
+	. new [NonWildcardTypeArguments] InnerCreator
+	[ Expression ]
+
+
+EnumBody :=
+	{ [EnumConstants] [,] [EnumBodyDeclarations] }
+
+EnumConstants :=
+	EnumConstant
+	EnumConstants , EnumConstant
+
+EnumConstant :=
+	[Annotations] identifier [Arguments] [ClassBody]
+
+EnumBodyDeclarations :=
+	';' {ClassBodyDeclaration}
+
+
+
+AnnotationTypeBody :=
+	{ [AnnotationTypeElementDeclarations] }
+
+AnnotationTypeElementDeclarations :=
+	AnnotationTypeElementDeclaration
+	AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
+
+AnnotationTypeElementDeclaration :=
+	{Modifier} AnnotationTypeElementRest
+
+AnnotationTypeElementRest :=
+	Type identifier AnnotationMethodOrConstantRest ';'
+	ClassDeclaration
+	InterfaceDeclaration
+	EnumDeclaration
+	AnnotationTypeDeclaration
+
+AnnotationMethodOrConstantRest :=
+	AnnotationMethodRest
+	ConstantDeclaratorsRest
+
+AnnotationMethodRest :=
+	( ) [[]] [default ElementValue]

@@ -1,0 +1,50 @@
+
+# TODO: include "comments.bnf"
+# TODO: @nonsignificant comment := ...
+# TODO: @nonsignificant whitespace :=
+# TODO: Lexer::Token->next_token / ->previous_token
+
+# include "comments.bnf"
+
+c-style-comment := qr/ \/ \* [.\n]*? \* \/ /x
+shell-style-comment := qr/ # .* $ /x
+comment := c-style-comment | shell-style-comment
+
+statement :=
+    class-statement
+  | define-statement
+
+expression :=
+    include-expression
+  | contain-expression
+  | relation-expression
+  | resource-expression
+
+include-expression := INCLUDE package-address
+contain-expression := CONTAIN package-address
+
+resource-expression := resource-type '{' resource-definition-list '}'
+resource-definition-list := { resource-definition ... ';' }
+resource-definition := resource-title ':' [ resource-attributes ]
+resource-attributes := { attribute '=>' value-expression }
+
+attribute := identifier
+optional-value-list := [ value-expression ... ',' ]
+value-expression :=
+    string
+  | function-call
+  | array-value
+  | hash-value
+  | variable-reference
+
+function-call := function-name '(' function-arguments ')'
+function-arguments := optional-value-list
+
+array-value := '[' array-items ']'
+array-items := optional-value-list
+
+hash-value := '{' hash-items '}'
+hash-items := [ hash-item ... ',' ]
+hash-item := hash
+
+relation-expression := { resource-reference ... relation-operator }

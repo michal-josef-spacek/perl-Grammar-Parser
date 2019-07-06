@@ -1,0 +1,30 @@
+
+CREATE      : qw/\b create \b/xi
+SEQUENCE    : gw/\b sequence \b/xi
+START       : qw/\b start \b/xi
+WITH        : qw/\b with \b/xi
+NO          : qw/\b no \b/xi
+MINVALUE    : qw/\b minvalue \b/xi
+
+identifier    : qw/\b (?! \d) \w+ \b/xi
+integer       : qw/[-+] \d+/x
+
+sequence_no_minvalue : NO MINVALUE
+sequence_name : identifier
+
+create_sequence :
+    CREATE
+    SEQUENCE
+    [ sequence_scope ]
+    sequence_name
+    [ sequence_options ]
+
+sequence_options : {
+    sequence_start_with
+  | sequence_min_value
+}
+
+sequence_start_with :
+    START
+    WITH
+    integer

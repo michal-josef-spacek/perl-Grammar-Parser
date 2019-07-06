@@ -1,0 +1,9 @@
+
+AT          : '@'
+LOAD_FROM   : '>>'
+
+nonterminal : 
+
+bnf         : { element }
+element     : include | rule
+include     : AT nonterminal LOAD_FROM file_name
