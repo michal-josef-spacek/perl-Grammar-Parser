@@ -1,180 +1,164 @@
 
+use Syntax::Construct 1.008 qw[ package-version package-block ];
+
 use v5.14;
 use strict;
 use warnings;
 
-package Grammar::Parser::Lexer v1.0.0;
+package Grammar::Parser::Lexer v1.0.0 {
 
-use Moo;
-use Ref::Util qw[ is_regexpref ];
+	use Moo;
+	use Ref::Util qw[ is_regexpref ];
 
-use Grammar::Parser::X::Lexer::Notfound;
-use Grammar::Parser::Lexer::Builder::Token;
-use Grammar::Parser::Lexer::Builder::Lexeme;
+	use Grammar::Parser::X::Lexer::Notfound;
+	use Grammar::Parser::Lexer::Builder::Token;
+	use Grammar::Parser::Lexer::Builder::Lexeme;
 
-use namespace::clean;
+	use namespace::clean;
 
-has lexemes         => (
-	is              => 'ro',
-	required        => 1,
-);
+	has lexemes         => (
+		is              => 'ro',
+		required        => 1,
+	);
 
-has insignificant   => (
-	is              => 'ro',
-	default         => sub { +[] },
-);
+	has insignificant   => (
+		is              => 'ro',
+		default         => sub { +[] },
+	);
 
-has final_token     => (
-	is              => 'ro',
-	default         => sub { undef },
-);
+	has final_token     => (
+		is              => 'ro',
+		default         => sub { undef },
+	);
 
-has lexeme_builder_class => (
-	is              => 'ro',
-	lazy            => 1,
-	default         => sub { 'Grammar::Parser::Lexer::Builder::Lexeme' },
-);
+	has lexeme_builder_class => (
+		is              => 'ro',
+		lazy            => 1,
+		default         => sub { 'Grammar::Parser::Lexer::Builder::Lexeme' },
+	);
 
-has token_builder_class => (
-	is              => 'ro',
-	lazy            => 1,
-	default         => sub { 'Grammar::Parser::Lexer::Builder::Token' },
-);
+	has token_builder_class => (
+		is              => 'ro',
+		lazy            => 1,
+		default         => sub { 'Grammar::Parser::Lexer::Builder::Token' },
+	);
 
-has token_builder   => (
-	is              => 'ro',
-	lazy            => 1,
-	default         => sub { $_[0]->token_builder_class->new },
-);
+	has token_builder   => (
+		is              => 'ro',
+		lazy            => 1,
+		default         => sub { $_[0]->token_builder_class->new },
+	);
 
-has _lexeme_map     => (
-	init_arg        => undef,
-	is              => 'ro',
-	lazy            => 1,
-	builder         => '_build_lexeme_map',
-);
+	has _lexeme_map     => (
+		init_arg        => undef,
+		is              => 'ro',
+		lazy            => 1,
+		builder         => '_build_lexeme_map',
+	);
 
-has _insignificant_map => (
-	init_arg        => undef,
-	is              => 'ro',
-	lazy            => 1,
-	builder         => '_build_insignificant_map',
-);
+	has _insignificant_map => (
+		init_arg        => undef,
+		is              => 'ro',
+		lazy            => 1,
+		builder         => '_build_insignificant_map',
+	);
 
-has _accepted_map   => (
-	init_arg        => undef,
-	is              => 'ro',
-	lazy            => 1,
-	builder         => '_build_accepted_map',
-);
+	has _accepted_map   => (
+		init_arg        => undef,
+		is              => 'ro',
+		lazy            => 1,
+		builder         => '_build_accepted_map',
+	);
 
-has _data           => (
-	init_arg        => undef,
-	is              => 'rw',
-	default         => sub { \ (my $o = '') },
-);
+	has _data           => (
+		init_arg        => undef,
+		is              => 'rw',
+		default         => sub { \ (my $o = '') },
+	);
 
-has _line           => (
-	init_arg        => undef,
-	is              => 'rw',
-	default         => sub { 1 },
-);
+	has _line           => (
+		init_arg        => undef,
+		is              => 'rw',
+		default         => sub { 1 },
+	);
 
-has _column         => (
-	init_arg        => undef,
-	is              => 'rw',
-	default         => sub { 1 },
-);
+	has _column         => (
+		init_arg        => undef,
+		is              => 'rw',
+		default         => sub { 1 },
+	);
 
-sub _build_lexeme_map {
-	my ($self) = @_;
+	sub _build_lexeme_map {
+		my ($self) = @_;
 
-	my %lexeme_map;
-	while (my ($name, $definition) = each %{ $self->lexemes } ) {
-		my $lexeme = $self->lexeme_builder_class->build (@$definition);
+		my %lexeme_map;
+		while (my ($name, $definition) = each %{ $self->lexemes } ) {
+			my $lexeme = $self->lexeme_builder_class->build (@$definition);
 
-		next unless $lexeme;
+			next unless $lexeme;
 
-		$lexeme_map{$name} = $lexeme;
+			$lexeme_map{$name} = $lexeme;
+		}
+
+		\ %lexeme_map;
 	}
 
-	\ %lexeme_map;
-}
+	sub _build_insignificant_map {
+		my ($self) = @_;
 
-sub _build_insignificant_map {
-	my ($self) = @_;
+		my $lexeme_map = $self->_lexeme_map;
 
-	my $lexeme_map = $self->_lexeme_map;
+		+{ map +($_ => 1), grep exists $lexeme_map->{$_}, @{ $self->insignificant } };
+	}
 
-	+{ map +($_ => 1), grep exists $lexeme_map->{$_}, @{ $self->insignificant } };
-}
+	sub _build_accepted_map {
+		my ($self) = @_;
+		my $insignificant = $self->insignificant;
 
-sub _build_accepted_map {
-	my ($self) = @_;
-	my $insignificant = $self->insignificant;
+		my %map;
+		@map{ keys %{ $self->_lexeme_map } } = ();
+		delete @map{ keys %{ $self->_insignificant_map } };
 
-	my %map;
-	@map{ keys %{ $self->_lexeme_map } } = ();
-	delete @map{ keys %{ $self->_insignificant_map } };
+		\%map;
+	}
 
-	\%map;
-}
+	sub _prepare_accepted_tokens {
+		my ($self, $accepted) = @_;
 
-sub _prepare_accepted_tokens {
-	my ($self, $accepted) = @_;
+		return $self->_accepted_map
+			unless scalar @$accepted;
 
-	return $self->_accepted_map
-		unless scalar @$accepted;
+		my %hash;
+		@hash{@$accepted} = ();
 
-	my %hash;
-	@hash{@$accepted} = ();
+		return \%hash;
+	}
 
-	return \%hash;
-}
+	sub _prepare_allowed_tokens {
+		my ($self, $accepted) = @_;
+		$accepted = { %$accepted, %{ $self->_insignificant_map } };
 
-sub _prepare_allowed_tokens {
-	my ($self, $accepted) = @_;
-	$accepted = { %$accepted, %{ $self->_insignificant_map } };
+		return [ @{ $self->_lexeme_map }{ keys %$accepted } ];
+	}
 
-	return [ @{ $self->_lexeme_map }{ keys %$accepted } ];
-}
+	sub _build_token {
+		my ($self, %params) = @_;
 
-sub _build_token {
-	my ($self, %params) = @_;
+		return $self->token_builder->build (%params);
+	}
 
-	return $self->token_builder->build (%params);
-}
+	sub _lookup_best_match {
+		my ($self, @allowed) = @_;
 
-sub push_data {
-	my ($self, @pieces) = @_;
-
-	${ $self->_data } .= join '', @pieces;
-
-	return;
-}
-
-sub next_token {
-	my ($self, @accepted) = @_;
-	my $lexeme_map = $self->_lexeme_map;
-	my $insignificant_map = $self->_insignificant_map;
-
-	@accepted = grep ! exists $insignificant_map->{$_}, keys %{ $lexeme_map }
-		unless @accepted;
-
-	my %accepted = map +($_ => 1), @accepted;
-	my %allowed = map +($_ => 1), @accepted, keys %$insignificant_map;
-
-	my $token;
-	my $data = $self->_data;
-	until ($token) {
-		my $max_length = -1;
+		my $data = $self->_data;
 
 		# end of data
-		last if $$data =~ m/\A \z/mx;
+		return if $$data =~ m/\A \z/mx;
 
-		# for all allowed tokens
-		for my $name (keys %allowed) {
-			my $regex = $lexeme_map->{$name};
+		my $token;
+		my $max_length = 0;
+		for my $name (keys @allowed) {
+			my $regex = $self->_lexeme_map->{$name};
 
 			# check if token's regexp matches current data
 			next unless my ($match) = $$data =~ m/\A($regex)/mx;
@@ -194,45 +178,82 @@ sub next_token {
 				match		=> $match,
 				line		=> $self->_line,
 				column      => $self->_column,
-				significant => ! exists $insignificant_map->{$name},
+				significant => ! exists $self->_insignificant_map->{$name},
 				captures	=> { %+ },
 			);
 
 			$token = [ $name, $value ];
 		}
 
-		last unless $token;
+		$token;
+	}
+
+	sub _adjust_data {
+		my ($self, $token) = @_;
+
+		my $match_length = length $token->[1]->match;
 
 		# Symbol found, so get rid of match
-		my $full = substr $$data, 0, $max_length, '';
+		my $full = substr ${ $self->_data }, 0, $match_length, '';
 		my (@parts) = split m/\n/, $full, -1;
 
 		$self->_line ($self->_line + @parts - 1);
 		$self->_column (1) if @parts > 1;
 		$self->_column ($self->_column + length $parts[-1]);
 
-		last
-			if exists $accepted{$token->[0]};
-
-		# token is only discard token, search next one
-		$token = undef;
+		();
 	}
 
-	unless ($token) {
-		my $data = ${ $self->_data };
-		substr ($data, 97) = '...' if 100 < length $data;
-		Grammar::Parser::X::Lexer::Notfound->throw (
-			line        => $self->_line,
-			column      => $self->_column,
-			near_data   => $data,
-			expected    => \ @accepted,
-		) if length $data;
+	sub push_data {
+		my ($self, @pieces) = @_;
 
-		$token = [];
+		${ $self->_data } .= join '', @pieces;
+
+		return;
 	}
 
-	return $token;
-}
+	sub next_token {
+		my ($self, @accepted) = @_;
+		my $insignificant_map = $self->_insignificant_map;
+
+		@accepted = grep ! exists $insignificant_map->{$_}, keys %{ $self->_lexeme_map }
+			unless @accepted;
+
+		my %accepted = map +($_ => 1), @accepted;
+		my %allowed  = map +($_ => 1), @accepted, keys %$insignificant_map;
+
+		my $token;
+		until ($token) {
+			my $max_length = -1;
+
+			my $token = $self->_lookup_best_match (keys %allowed);
+			last unless $token;
+
+			$self->_adjust_data ($token);
+
+			last
+				if exists $accepted{$token->[0]};
+
+			# token is only discard token, search next one
+			$token = undef;
+		}
+
+		unless ($token) {
+			my $data = ${ $self->_data };
+			substr ($data, 97) = '...' if 100 < length $data;
+			Grammar::Parser::X::Lexer::Notfound->throw (
+				line        => $self->_line,
+				column      => $self->_column,
+				near_data   => $data,
+				expected    => \ @accepted,
+			) if length $data;
+
+			$token = [];
+		}
+
+		return $token;
+	}
+};
 
 1;
 
