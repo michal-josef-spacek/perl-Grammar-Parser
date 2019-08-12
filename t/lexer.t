@@ -20,7 +20,7 @@ sub token;
 
 binmode STDOUT, ':utf8';
 
-not 1 and plan tests => 6;
+plan tests => 5;
 test_lexer 'simple grammar - happy scenario' => (
 	grammar => simple_grammar,
 	data => [ '1 -2 + 13 = 12' ],
@@ -51,7 +51,7 @@ not 1 and test_lexer 'simple grammar - with final token' => (
 	],
 );
 
-not 1 and test_lexer 'simple grammar - return whitespace if requested' => (
+test_lexer 'simple grammar - return whitespace if requested' => (
 	grammar => simple_grammar,
 	data => [ '1  - 2 + 13 = 12' ],
 	plan => [
@@ -61,7 +61,7 @@ not 1 and test_lexer 'simple grammar - return whitespace if requested' => (
 	]
 );
 
-not 1 and test_lexer 'simple grammar - throws if requested not found' => (
+test_lexer 'simple grammar - throws if requested not found' => (
 	grammar => simple_grammar,
 	data    => [ '1  - 2 + 13 = 12' ],
 	plan    => [
@@ -71,7 +71,7 @@ not 1 and test_lexer 'simple grammar - throws if requested not found' => (
 	],
 );
 
-not 1 and test_lexer 'bnf grammar - operator in string' => (
+test_lexer 'bnf grammar - operator in string' => (
 	grammar => bnf_grammar,
 	data    => [ "operator: '+' | '-' | '*' | '/'" ],
 	plan    => [
@@ -88,7 +88,6 @@ not 1 and test_lexer 'bnf grammar - operator in string' => (
 );
 
 had_no_warnings 'no unexpected warnings in Grammar::Parser::Lexer';
-done_testing;
 
 sub token {
 	my ($name, %params) = @_;
@@ -177,9 +176,11 @@ sub test_next_token {
 	if ($params{throws}) {
 		return fail "Expected to die but lives"
 			if $status;
+		$params{throws} = obj_isa ($params{throws})
+			unless ref $params{throws};
 		return do {
-			my $ok = cmp_deeply $error, $params{expect}, $title;
-			p $params{expect} unless $ok;
+			my $ok = cmp_deeply $error, $params{throws}, $title;
+			p $params{throws} unless $ok;
 			$ok;
 		};
 	}

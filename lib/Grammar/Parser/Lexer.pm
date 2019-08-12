@@ -157,7 +157,7 @@ package Grammar::Parser::Lexer v1.0.0 {
 
 		my $token;
 		my $max_length = 0;
-		for my $name (keys @allowed) {
+		for my $name (@allowed) {
 			my $regex = $self->_lexeme_map->{$name};
 
 			# check if token's regexp matches current data
@@ -204,6 +204,19 @@ package Grammar::Parser::Lexer v1.0.0 {
 		();
 	}
 
+	sub _report_error {
+		my ($self, @accepted) = @_;
+
+		my $data = ${ $self->_data };
+		substr ($data, 97) = '...' if length $data > 100;
+		Grammar::Parser::X::Lexer::Notfound->throw (
+			line        => $self->_line,
+			column      => $self->_column,
+			near_data   => $data,
+			expected    => \ @accepted,
+		)
+	}
+
 	sub push_data {
 		my ($self, @pieces) = @_;
 
@@ -224,34 +237,21 @@ package Grammar::Parser::Lexer v1.0.0 {
 
 		my $token;
 		until ($token) {
-			my $max_length = -1;
+			$token = $self->_lookup_best_match (keys %allowed);
 
-			my $token = $self->_lookup_best_match (keys %allowed);
 			last unless $token;
 
 			$self->_adjust_data ($token);
 
-			last
-				if exists $accepted{$token->[0]};
+			last if exists $accepted{$token->[0]};
 
-			# token is only discard token, search next one
 			$token = undef;
 		}
 
-		unless ($token) {
-			my $data = ${ $self->_data };
-			substr ($data, 97) = '...' if 100 < length $data;
-			Grammar::Parser::X::Lexer::Notfound->throw (
-				line        => $self->_line,
-				column      => $self->_column,
-				near_data   => $data,
-				expected    => \ @accepted,
-			) if length $data;
+		return $token if $token;
+		return [] unless length ${ $self->_data };
 
-			$token = [];
-		}
-
-		return $token;
+		$self->_report_error (@accepted);
 	}
 };
 
@@ -266,7 +266,7 @@ Grammar::Parser::Lexer - generic lexer
 =head1 SYNOPSIS
 
 	my $lexer = Grammar::Parser::Lexer (
-		tokens => {
+		lexemes => {
 			number      => qr/\d+/,
 			or          => '|',
 			whitespaces => qr/\s+/,
