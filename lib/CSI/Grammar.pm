@@ -41,6 +41,7 @@ package CSI::Grammar v1.0.0 {
 	sub _common {
 		my ($class, $rule_name, @def) = @_;
 		state $label_map = {
+			dom    => 'DOM',
 			action => 'ACTION',
 			proto  => 'PROTO',
 		};
@@ -53,7 +54,13 @@ package CSI::Grammar v1.0.0 {
 			goto $label_map->{$key};
 
 			ACTION:
-			$class->__csi_grammar->add_action ($rule_name => $value);
+			$class->__csi_grammar->add_action ($rule_name => $value)
+				unless exists $dom{$class}{$rule_name};
+			next;
+
+			DOM:
+			$dom{$class}{$rule_name} = $value;
+			$class->__csi_grammar->add_action ($rule_name => 'dom');
 			next;
 
 			PROTO:
