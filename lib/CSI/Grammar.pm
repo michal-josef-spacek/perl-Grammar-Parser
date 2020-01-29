@@ -9,13 +9,11 @@ package CSI::Grammar v1.0.0 {
 	use Attribute::Handlers;
 	require Exporter;
 
+	use CSI::Grammar::Meta;
 	use CSI::Grammar::Actions;
 
-	my %grammar;
-	my %regex;
-	my %action;
-	my %start;
-	my %insignificant;
+	my $annonymous_counter = "000000";
+	my %dom;
 
 	sub import {
 		my ($class, @params) = @_;
@@ -24,10 +22,18 @@ package CSI::Grammar v1.0.0 {
 		my $caller = scalar caller;
 
 		our @EXPORT = (
-			qw[ keyword ],
+			qw[ keyword register_action_lookup ],
 			qw[ insignificant start ],
 			qw[ rule regex token ],
 		);
+
+		{
+			no strict 'refs';
+
+			my $meta = CSI::Grammar::Meta->new (class => $caller);
+			$meta->prepend_action_lookup ("CSI::Grammar::Actions::__::${\ ++$annonymous_counter }::$class");
+			*{"${class}::__csi_grammar"} = sub { $meta };
+		}
 
 		goto &Exporter::import;
 	}
@@ -47,21 +53,30 @@ package CSI::Grammar v1.0.0 {
 			goto $label_map->{$key};
 
 			ACTION:
-			$action{$class}{$rule_name} = "rule_$value";
+			$class->__csi_grammar->add_action ($rule_name => $value);
 			next;
 
 			PROTO:
-			push @{ $grammar{$class}{$value} //= [] }, \ $rule_name;
+			$class->__csi_grammar->append_rule ($value => \ $rule_name);
 			next;
 		}
 
 		@def;
 	}
 
+	sub _ensure_unique_grammar_symbol {
+		my ($class, $rule_name) = @_;
+
+		die "Rule $rule_name already defined"
+			if $class->__csi_grammar->rule_exists ($rule_name);
+	}
+
 	sub _token {
 		my ($class, $rule_name, @def) = @_;
 
-		$grammar{$class}{$rule_name} //= [ _common $class, $rule_name, action => 'literal', @def ];
+		_ensure_unique_grammar_symbol $class, $rule_name;
+
+		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, action => 'literal', @def ]);
 
 		$rule_name;
 	}
@@ -69,7 +84,7 @@ package CSI::Grammar v1.0.0 {
 	sub _regex {
 		my ($class, $rule_name, @def) = @_;
 
-		$grammar{$class}{$rule_name} //= \ [ @def ];
+		$class->__csi_grammar->add_rule ($rule_name => \ [ @def ]);
 
 		$rule_name;
 	}
@@ -77,7 +92,7 @@ package CSI::Grammar v1.0.0 {
 	sub _insignificant {
 		my ($class, $name, @rest) = @_;
 
-		push @{ $insignificant{$class} }, $name;
+		$class->__csi_grammar->append_insignificant ($name);
 
 		($name, @rest);
 	}
@@ -85,7 +100,7 @@ package CSI::Grammar v1.0.0 {
 	sub _start {
 		my ($class, $name, @rest) = @_;
 
-		$start{$class} = $name;
+		$class->__csi_grammar->start ($name);
 
 		($name, @rest);
 	}
@@ -94,7 +109,7 @@ package CSI::Grammar v1.0.0 {
 		my ($rule_name, @def) = @_;
 		my $class = scalar caller;
 
-		$grammar{$class}{$rule_name} //= [ _common $class, $rule_name, action => 'default', @def ];
+		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, action => 'default', @def ]);
 
 		$rule_name;
 	}
@@ -113,6 +128,10 @@ package CSI::Grammar v1.0.0 {
 
 	sub start {
 		_start scalar caller, @_;
+	}
+
+	sub register_action_lookup {
+		(scalar caller)->__csi_grammar->prepend_action_lookup (@_);
 	}
 
 	sub keyword {
@@ -135,20 +154,8 @@ package CSI::Grammar v1.0.0 {
 	sub _grammar_element {
 		my ($class, $symbol, $referent, $attr_name, $attr_data, $phase) = @_;
 
-		my $value =
-		$grammar{$class}{_rule_name @_} = $class->$referent;
-
-		return;
-
-		my $name = _rule_name @_;
-
-		return if $name eq 'TOP';
-
-		die "$name contains empty rule"
-			if grep { ! defined $_->[0] } grep Ref::Util::is_arrayref ($_), @$value;
-
-		die "$name references itself"
-			if grep { $_->[0] eq $name } grep Ref::Util::is_arrayref ($_), @$value;
+		my $rule_name = _rule_name @_;
+		$class->__csi_grammar->add_rule ($rule_name => $class->$referent);
 	}
 
 	sub _action {
@@ -156,7 +163,7 @@ package CSI::Grammar v1.0.0 {
 
 		my $action = lc $attr_name =~ s/^ACTION_//r;
 
-		$action{$class}{_rule_name @_} = "rule_$action";
+		$class->__csi_grammar->add_action (_rule_name (@_) => $action);
 	}
 
 	sub RULE                :ATTR(CODE) { &_grammar_element }
@@ -203,7 +210,7 @@ package CSI::Grammar v1.0.0 {
 		eval {
 			my $rule_name = _rule_name @_;
 			for my $proto (@$attr_data) {
-				push @{ $grammar{$class}{$proto} //= [] }, \ $rule_name;
+				$class->__csi_grammar->append_rule ($proto => \ $rule_name);
 			}
 		};
 
@@ -225,14 +232,14 @@ package CSI::Grammar v1.0.0 {
 
 		my ($key, $transform) = @$attr_data;
 
-		$action{$class}{_rule_name @_} = sub {
+		$class->__csi_grammar->add_action (_rule_name (@_) => sub {
 			my ($instance, $name, $token) = @_;
 
 			$token->$key ($class->$transform ($token->$key));
 			p $token;
 			say "Found rule handler: $rule_name";
 			$token;
-		}
+		});
 	}
 
 	sub TRAIT               :ATTR(CODE) {
@@ -241,33 +248,23 @@ package CSI::Grammar v1.0.0 {
 	}
 
 	sub grammar {
-		my ($self) = @_;
-		$self = ref $self if ref $self;
-
-		$grammar{$self};
+		$_[0]->__csi_grammar->grammar;
 	}
 
 	sub actions {
-		my ($self) = @_;
-		$self = ref $self if ref $self;
-
-		$action{$self};
+		$_[0]->__csi_grammar->actions;
 	}
 
 	sub start_rule {
-		my ($self) = @_;
-
-		$self = ref $self if ref $self;
-
-		$start{$self};
+		$_[0]->__csi_grammar->start;
 	}
 
 	sub insignificant_rules {
-		my ($self) = @_;
+		$_[0]->__csi_grammar->insignificant;
+	}
 
-		$self = ref $self if ref $self;
-
-		$insignificant{$self} // [];
+	sub action_lookup {
+		$_[0]->__csi_grammar->action_lookup;
 	}
 
 	sub _build_grammar {
