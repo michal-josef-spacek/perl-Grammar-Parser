@@ -32,7 +32,9 @@ package CSI::Grammar v1.0.0 {
 
 			my $meta = CSI::Grammar::Meta->new (class => $caller);
 			$meta->prepend_action_lookup ("CSI::Grammar::Actions::__::${\ ++$annonymous_counter }::$class");
-			*{"${class}::__csi_grammar"} = sub { $meta };
+			*{"${caller}::__csi_grammar"} = sub { $meta };
+
+			push @{ "${caller}::ISA" }, __PACKAGE__;
 		}
 
 		goto &Exporter::import;
@@ -41,6 +43,7 @@ package CSI::Grammar v1.0.0 {
 	sub _common {
 		my ($class, $rule_name, @def) = @_;
 		state $label_map = {
+			dom    => 'DOM',
 			action => 'ACTION',
 			proto  => 'PROTO',
 		};
@@ -53,7 +56,13 @@ package CSI::Grammar v1.0.0 {
 			goto $label_map->{$key};
 
 			ACTION:
-			$class->__csi_grammar->add_action ($rule_name => $value);
+			$class->__csi_grammar->add_action ($rule_name => $value)
+				unless $class->__csi_grammar->dom_for ($rule_name);
+			next;
+
+			DOM:
+			$class->__csi_grammar->add_dom ($rule_name => $value);
+			$class->__csi_grammar->add_action ($rule_name => 'dom');
 			next;
 
 			PROTO:
@@ -275,6 +284,10 @@ package CSI::Grammar v1.0.0 {
 			start         => $self->start_rule,
 			insignificant => $self->insignificant_rules,
 		);
+	}
+
+	sub dom_for {
+		$_[0]->__csi_grammar->dom_for ($_[1]);
 	}
 };
 
