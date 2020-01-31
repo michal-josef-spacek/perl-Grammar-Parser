@@ -9,6 +9,9 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	use Moo;
 	BEGIN { extends 'CSI::Grammar' };
 
+	register_action_lookup 'CSI::Language::Java::Actions';
+	require CSI::Language::Java::Actions;
+
 	my %char_escape_map = (
 		# eg: https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-EscapeSequence
 		'b' => 0x0008,
