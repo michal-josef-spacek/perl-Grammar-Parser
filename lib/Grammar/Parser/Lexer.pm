@@ -343,6 +343,19 @@ package Grammar::Parser::Lexer v1.0.0 {
 	sub next_token {
 		my ($self, @accepted) = @_;
 
+		my $priority_token = 'PRIORITY_TOKEN';
+		if (grep { $_ eq $priority_token } @accepted) {
+			my $value = $self->_build_match_value (
+				name		=> $priority_token,
+				match		=> '',
+				line		=> $self->_line,
+				column      => $self->_column,
+				significant => 0,
+				captures	=> { },
+			);
+			return [ $priority_token, $value ];
+		}
+
 		@accepted = $self->_significant_tokens
 			unless @accepted;
 

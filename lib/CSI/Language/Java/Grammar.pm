@@ -1818,8 +1818,9 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  type_arguments                    => dom => 'CSI::Language::Java::Type::Arguments',
-		[qw[  TYPE_LIST_OPEN  type_argument_list  TYPE_LIST_CLOSE  ]],
-		[qw[  TYPE_LIST_OPEN                      TYPE_LIST_CLOSE  ]],
+		# without  data type knowledge generic can be confused with relational / bitshift expression
+		[qw[  TYPE_LIST_OPEN  type_argument_list  TYPE_LIST_CLOSE  PRIORITY_TOKEN  ]],
+		[qw[  TYPE_LIST_OPEN                      TYPE_LIST_CLOSE  PRIORITY_TOKEN  ]],
 		;
 
 	rule  type_bound                        => dom => 'CSI::Language::Java::Type::Bound',

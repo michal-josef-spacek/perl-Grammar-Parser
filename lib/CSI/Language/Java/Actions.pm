@@ -92,6 +92,11 @@ package CSI::Language::Java::Actions v1.0.0 {
 		return +{ $name => _unescape ($token->value) };
 	}
 
+
+	sub rule_skip {
+		[];
+	}
+
 	sub rule_token {
 		my ($context, $name, $token) = @_;
 

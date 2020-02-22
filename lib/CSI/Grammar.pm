@@ -34,6 +34,8 @@ package CSI::Grammar v1.0.0 {
 			$meta->prepend_action_lookup ("CSI::Grammar::Actions::__::${\ ++$anonymous_counter }::$class");
 			*{"${caller}::__csi_grammar"} = sub { $meta };
 
+			$meta->add_action (PRIORITY_TOKEN =>  'skip');
+
 			push @{ "${caller}::ISA" }, __PACKAGE__;
 		}
 
