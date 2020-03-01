@@ -8,7 +8,6 @@ use warnings;
 package CSI::Language::Java::Actions v1.0.0 {
 	use Ref::Util qw[ is_plain_arrayref ];
 	use Ref::Util qw[ is_blessed_arrayref ];
-
 	use List::Util qw[ first ];
 	use Scalar::Util qw[ blessed ];
 

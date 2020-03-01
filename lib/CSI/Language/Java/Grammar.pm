@@ -44,6 +44,33 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[],
 		;
 
+	insignificant token whitespaces         => dom => 'CSI::Language::Java::Token::Whitespace',
+		qr/(?>
+			\s+
+		)/sx;
+
+	insignificant token comment_c           => dom => 'CSI::Language::Java::Token::Comment::C',
+		qr/(?>
+			\/\*
+			(?! \* [^*] )
+			.*?
+			\*\/
+		)/sx;
+
+	insignificant token comment_cpp         => dom => 'CSI::Language::Java::Token::Comment::Cpp',
+		qr/(?>
+			\/\/
+			\V*
+		)/sx;
+
+	insignificant token comment_javadoc     => dom => 'CSI::Language::Java::Token::Comment::Javadoc',
+		qr/(?>
+			\/\*
+			(?= \* [^*] )
+			.*?
+			\*\/
+		)/sx;
+
 	1;
 };
 
@@ -99,37 +126,6 @@ __END__
 				| (?<octal_escape> (?: (?= [0-7]) [0-3]? [0-7]{1,2} ))
 				| (?: u+ (?<hex_escape> [[:xdigit:]]{4} ))
 			)
-		)/sx;
-	}
-
-	sub whitespaces                 :TOKEN :INSIGNIFICANT {
-		qr/(?>
-			\s+
-		)/sx;
-	}
-
-	sub comment_c                   :TOKEN :INSIGNIFICANT {
-		qr/(?>
-			\/\*
-			(?! \* [^*] )
-			.*?
-			\*\/
-		)/sx;
-	}
-
-	sub comment_cpp                 :TOKEN :INSIGNIFICANT {
-		qr/(?>
-			\/\/
-			\V*
-		)/sx;
-	}
-
-	sub comment_javadoc             :TOKEN :INSIGNIFICANT {
-		qr/(?>
-			\/\*
-			(?= \* [^*] )
-			.*?
-			\*\/
 		)/sx;
 	}
 
