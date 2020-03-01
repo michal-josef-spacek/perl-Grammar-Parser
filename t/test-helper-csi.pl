@@ -8,7 +8,6 @@ use FindBin;
 use lib $FindBin::Bin;
 
 use Grammar::Parser;
-use CSI::Language::Java::Grammar;
 use CSI::Grammar::Actions;
 
 BEGIN { require "test-helper-common.pl" }

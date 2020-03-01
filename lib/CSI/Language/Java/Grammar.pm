@@ -6,44 +6,48 @@ use strict;
 use warnings;
 
 package CSI::Language::Java::Grammar v1.0.0 {
-	use Moo;
-	BEGIN { extends 'CSI::Grammar' };
-
-	register_action_lookup 'CSI::Language::Java::Actions';
+	use CSI::Grammar;
 	require CSI::Language::Java::Actions;
 
-	my %char_escape_map = (
-		# eg: https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-EscapeSequence
-		'b' => 0x0008,
-		't' => 0x0009,
-		'n' => 0x000a,
-		'f' => 0x000c,
-		'r' => 0x000d,
-		'"' => 0x0022,
-		"'" => 0x0027,
-		'\\' => 0x005c,
-	);
+	default_rule_action 'pass_through';
+	default_token_action 'pass_through';
 
-	sub unescape {
-		my ($self, $value) = @_;
+	register_action_lookup 'CSI::Language::Java::Actions';
 
-		my $regex = Escape_Sequence ();
-		$value =~ s{$regex}{
-			my $result;
-			$result //= chr $char_escape_map{$+{char_escape}} if exists $+{char_escape};
-			$result //= chr oct $+{octal_escape} if exists $+{octal_escape};
-			$result //= chr hex $+{hex_escape} if exists $+{hex_escape};
-			$result;
-		}ger;
+	sub word {
+		my ($keyword, @opts) = @_;
+		my $lc = lc $keyword;
+		my $uc = uc $keyword;
+		my $word = ucfirst $lc;
+		my $re = qr/ (?> \b $lc \b ) /sx;
+
+		token $uc => dom => "CSI::Language::Java::Token::Word::$word" => @opts, $re;
 	}
 
-	sub TOP                         :START {
-		[
-			[qw[  compilation_unit  ]],
-			[],
-		];
+	sub operator {
+		my ($name, $dom, @params) = @_;
+
+		my $code = Ref::Util::is_plain_arrayref ($params[-1])
+			? \& rule
+			: \& token
+			;
+
+		$code->(
+			$name,
+			dom => "CSI::Language::Java::Operator::$dom",
+			@params,
+		);
 	}
 
+	start rule TOP                          => dom => 'CSI::Document',
+		[qw[  compilation_unit  ]],
+		[],
+		;
+
+	1;
+};
+
+__END__
 	sub Decimal_Numeral             :REGEX {
 		qr/(?>
 			(?! 0 [_[:digit:]] )

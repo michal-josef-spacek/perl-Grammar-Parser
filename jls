@@ -1,1 +1,1706 @@
+	rule AdditionalBound             =>
+		[qw[ AND InterfaceType ]],
+		;
+
+	rule AdditionalBound_list_1      =>
+		[qw[ AdditionalBound                        ]],
+		[qw[ AdditionalBound AdditionalBound_list_1 ]],
+		;
+
+	rule AdditionalBound_list_2      =>
+		[qw[ AdditionalBound                        ]],
+		[qw[ AdditionalBound AdditionalBound_list_2 ]],
+		;
+
+	rule AdditionalBound_list_3      =>
+		[qw[ AdditionalBound                        ]],
+		[qw[ AdditionalBound AdditionalBound_list_3 ]],
+		;
+
+	rule AdditiveExpression          =>
+		[qw[                          MultiplicativeExpression ]],
+		[qw[  AdditiveExpression PLUS MultiplicativeExpression ]],
+		[qw[ AdditiveExpression MINUS MultiplicativeExpression ]],
+		;
+
+	rule AmbiguousName               =>
+		[qw[                   Identifier ]],
+		[qw[ AmbiguousName DOT Identifier ]],
+		;
+
+	rule AndExpression               =>
+		[qw[                   EqualityExpression ]],
+		[qw[ AndExpression AND EqualityExpression ]],
+		;
+
+	rule Annotation                  =>
+		[qw[        NormalAnnotation ]],
+		[qw[        MarkerAnnotation ]],
+		[qw[ SingleElementAnnotation ]],
+		;
+
+	rule AnnotationTypeBody          =>
+		[qw[ BRACE_OPEN  AnnotationTypeMemberDeclaration_list_1  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                          BRACE_CLOSE ]],
+		;
+
+	rule AnnotationTypeDeclaration   =>
+		[qw[   InterfaceModifier_list_2  AT INTERFACE TypeIdentifier AnnotationTypeBody ]],
+		[qw[                             AT INTERFACE TypeIdentifier AnnotationTypeBody ]],
+		;
+
+	rule AnnotationTypeElementDeclaration=>
+		[qw[   AnnotationTypeElementModifier_list_1  UnannType Identifier PAREN_OPEN PAREN_CLOSE  Dims   DefaultValue  SEMICOLON ]],
+		[qw[                                         UnannType Identifier PAREN_OPEN PAREN_CLOSE  Dims   DefaultValue  SEMICOLON ]],
+		[qw[   AnnotationTypeElementModifier_list_1  UnannType Identifier PAREN_OPEN PAREN_CLOSE         DefaultValue  SEMICOLON ]],
+		[qw[                                         UnannType Identifier PAREN_OPEN PAREN_CLOSE         DefaultValue  SEMICOLON ]],
+		[qw[   AnnotationTypeElementModifier_list_1  UnannType Identifier PAREN_OPEN PAREN_CLOSE  Dims                 SEMICOLON ]],
+		[qw[                                         UnannType Identifier PAREN_OPEN PAREN_CLOSE  Dims                 SEMICOLON ]],
+		[qw[   AnnotationTypeElementModifier_list_1  UnannType Identifier PAREN_OPEN PAREN_CLOSE                       SEMICOLON ]],
+		[qw[                                         UnannType Identifier PAREN_OPEN PAREN_CLOSE                       SEMICOLON ]],
+		;
+
+	rule AnnotationTypeElementModifier=>
+		[qw[         (one of)  ]],
+		[qw[ Annotation PUBLIC ]],
+		[qw[          ABSTRACT ]],
+		;
+
+	rule AnnotationTypeElementModifier_list_1=>
+		[qw[ AnnotationTypeElementModifier                                      ]],
+		[qw[ AnnotationTypeElementModifier AnnotationTypeElementModifier_list_1 ]],
+		;
+
+	rule AnnotationTypeMemberDeclaration=>
+		[qw[ AnnotationTypeElementDeclaration ]],
+		[qw[              ConstantDeclaration ]],
+		[qw[                 ClassDeclaration ]],
+		[qw[             InterfaceDeclaration ]],
+		[qw[                        SEMICOLON ]],
+		;
+
+	rule AnnotationTypeMemberDeclaration_list_1=>
+		[qw[ AnnotationTypeMemberDeclaration                                        ]],
+		[qw[ AnnotationTypeMemberDeclaration AnnotationTypeMemberDeclaration_list_1 ]],
+		;
+
+	rule Annotation_list_1           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_1 ]],
+		;
+
+	rule Annotation_list_10          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_10 ]],
+		;
+
+	rule Annotation_list_11          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_11 ]],
+		;
+
+	rule Annotation_list_12          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_12 ]],
+		;
+
+	rule Annotation_list_13          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_13 ]],
+		;
+
+	rule Annotation_list_14          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_14 ]],
+		;
+
+	rule Annotation_list_15          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_15 ]],
+		;
+
+	rule Annotation_list_16          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_16 ]],
+		;
+
+	rule Annotation_list_17          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_17 ]],
+		;
+
+	rule Annotation_list_18          =>
+		[qw[ Annotation                    ]],
+		[qw[ Annotation Annotation_list_18 ]],
+		;
+
+	rule Annotation_list_2           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_2 ]],
+		;
+
+	rule Annotation_list_3           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_3 ]],
+		;
+
+	rule Annotation_list_4           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_4 ]],
+		;
+
+	rule Annotation_list_5           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_5 ]],
+		;
+
+	rule Annotation_list_6           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_6 ]],
+		;
+
+	rule Annotation_list_7           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_7 ]],
+		;
+
+	rule Annotation_list_8           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_8 ]],
+		;
+
+	rule Annotation_list_9           =>
+		[qw[ Annotation                   ]],
+		[qw[ Annotation Annotation_list_9 ]],
+		;
+
+	rule ArgumentList                =>
+		[qw[ Expression_list_1  ]],
+		;
+
+	rule ArrayAccess                 =>
+		[qw[    ExpressionName BRACKET_OPEN Expression BRACKET_CLOSE ]],
+		[qw[ PrimaryNoNewArray BRACKET_OPEN Expression BRACKET_CLOSE ]],
+		;
+
+	rule ArrayCreationExpression     =>
+		[qw[             NEW PrimitiveType DimExprs  Dims   ]],
+		[qw[             NEW PrimitiveType DimExprs         ]],
+		[qw[      NEW ClassOrInterfaceType DimExprs  Dims   ]],
+		[qw[      NEW ClassOrInterfaceType DimExprs         ]],
+		[qw[        NEW PrimitiveType Dims ArrayInitializer ]],
+		[qw[ NEW ClassOrInterfaceType Dims ArrayInitializer ]],
+		;
+
+	rule ArrayInitializer            =>
+		[qw[ BRACE_OPEN  VariableInitializerList   COMMA  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                            COMMA  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  VariableInitializerList          BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                   BRACE_CLOSE ]],
+		;
+
+	rule ArrayType                   =>
+		[qw[        PrimitiveType Dims ]],
+		[qw[ ClassOrInterfaceType Dims ]],
+		[qw[         TypeVariable Dims ]],
+		;
+
+	rule AssertStatement             =>
+		[qw[                  ASSERT Expression SEMICOLON ]],
+		[qw[ ASSERT Expression COLON Expression SEMICOLON ]],
+		;
+
+	rule Assignment                  =>
+		[qw[ LeftHandSide AssignmentOperator Expression ]],
+		;
+
+	rule AssignmentExpression        =>
+		[qw[ ConditionalExpression ]],
+		[qw[            Assignment ]],
+		;
+
+	rule AssignmentOperator          =>
+		[qw[                                                                  (one of)  ]],
+		[qw[ =  *=  /=  %=  +=  -=  &lt;&lt;=  &gt;&gt;=  &gt;&gt;&gt;=  &amp;=  ^=  |= ]],
+		;
+
+	rule BasicForStatement           =>
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON  Expression  SEMICOLON  ForUpdate  PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON  Expression  SEMICOLON  ForUpdate  PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON              SEMICOLON  ForUpdate  PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON              SEMICOLON  ForUpdate  PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON  Expression  SEMICOLON             PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON  Expression  SEMICOLON             PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON              SEMICOLON             PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON              SEMICOLON             PAREN_CLOSE Statement ]],
+		;
+
+	rule BasicForStatementNoShortIf  =>
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON  Expression  SEMICOLON  ForUpdate  PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON  Expression  SEMICOLON  ForUpdate  PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON              SEMICOLON  ForUpdate  PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON              SEMICOLON  ForUpdate  PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON  Expression  SEMICOLON             PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON  Expression  SEMICOLON             PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN  ForInit  SEMICOLON              SEMICOLON             PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN           SEMICOLON              SEMICOLON             PAREN_CLOSE StatementNoShortIf ]],
+		;
+
+	rule Block                       =>
+		[qw[ BRACE_OPEN  BlockStatements  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                   BRACE_CLOSE ]],
+		;
+
+	rule BlockStatement              =>
+		[qw[ LocalVariableDeclarationStatement ]],
+		[qw[                  ClassDeclaration ]],
+		[qw[                         Statement ]],
+		;
+
+	rule BlockStatement_list_1       =>
+		[qw[ BlockStatement                        ]],
+		[qw[ BlockStatement  BlockStatement_list_1 ]],
+		;
+
+	rule BlockStatements             =>
+		[qw[ BlockStatement_list_1  ]],
+		;
+
+	rule BreakStatement              =>
+		[qw[ BREAK  Identifier  SEMICOLON ]],
+		[qw[ BREAK              SEMICOLON ]],
+		;
+
+	rule CastExpression              =>
+		[qw[                                      PAREN_OPEN PrimitiveType PAREN_CLOSE UnaryExpression ]],
+		[qw[ PAREN_OPEN ReferenceType  AdditionalBound_list_2  PAREN_CLOSE UnaryExpressionNotPlusMinus ]],
+		[qw[ PAREN_OPEN ReferenceType                          PAREN_CLOSE UnaryExpressionNotPlusMinus ]],
+		[qw[            PAREN_OPEN ReferenceType  AdditionalBound_list_3  PAREN_CLOSE LambdaExpression ]],
+		[qw[            PAREN_OPEN ReferenceType                          PAREN_CLOSE LambdaExpression ]],
+		;
+
+	rule CatchClause                 =>
+		[qw[ CATCH PAREN_OPEN CatchFormalParameter PAREN_CLOSE Block ]],
+		;
+
+	rule CatchClause_list_1          =>
+		[qw[ CatchClause                     ]],
+		[qw[ CatchClause  CatchClause_list_1 ]],
+		;
+
+	rule CatchFormalParameter        =>
+		[qw[   VariableModifier_list_6  CatchType VariableDeclaratorId ]],
+		[qw[                            CatchType VariableDeclaratorId ]],
+		;
+
+	rule CatchType                   =>
+		[qw[ UnannClassType {OR ClassType}  ]],
+		;
+
+	rule Catches                     =>
+		[qw[ CatchClause_list_1  ]],
+		;
+
+	rule ClassBody                   =>
+		[qw[ BRACE_OPEN  ClassBodyDeclaration_list_1  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                               BRACE_CLOSE ]],
+		;
+
+	rule ClassBodyDeclaration        =>
+		[qw[ ClassMemberDeclaration ]],
+		[qw[    InstanceInitializer ]],
+		[qw[      StaticInitializer ]],
+		[qw[ ConstructorDeclaration ]],
+		;
+
+	rule ClassBodyDeclaration_list_1 =>
+		[qw[ ClassBodyDeclaration                             ]],
+		[qw[ ClassBodyDeclaration ClassBodyDeclaration_list_1 ]],
+		;
+
+	rule ClassBodyDeclaration_list_2 =>
+		[qw[ ClassBodyDeclaration                             ]],
+		[qw[ ClassBodyDeclaration ClassBodyDeclaration_list_2 ]],
+		;
+
+	rule ClassDeclaration            =>
+		[qw[ NormalClassDeclaration ]],
+		[qw[        EnumDeclaration ]],
+		;
+
+	rule ClassInstanceCreationExpression=>
+		[qw[                    UnqualifiedClassInstanceCreationExpression ]],
+		[qw[ ExpressionName DOT UnqualifiedClassInstanceCreationExpression ]],
+		[qw[        Primary DOT UnqualifiedClassInstanceCreationExpression ]],
+		;
+
+	rule ClassLiteral                =>
+		[qw[    TypeName {BRACKET_OPEN BRACKET_CLOSE} DOT CLASS ]],
+		[qw[ NumericType {BRACKET_OPEN BRACKET_CLOSE} DOT CLASS ]],
+		[qw[     BOOLEAN {BRACKET_OPEN BRACKET_CLOSE} DOT CLASS ]],
+		[qw[                                     VOID DOT CLASS ]],
+		;
+
+	rule ClassMemberDeclaration      =>
+		[qw[     FieldDeclaration ]],
+		[qw[    MethodDeclaration ]],
+		[qw[     ClassDeclaration ]],
+		[qw[ InterfaceDeclaration ]],
+		[qw[            SEMICOLON ]],
+		;
+
+	rule ClassModifier               =>
+		[qw[                           (one of)  ]],
+		[qw[ Annotation PUBLIC PROTECTED PRIVATE ]],
+		[qw[      ABSTRACT STATIC FINAL STRICTFP ]],
+		;
+
+	rule ClassModifier_list_1        =>
+		[qw[ ClassModifier                      ]],
+		[qw[ ClassModifier ClassModifier_list_1 ]],
+		;
+
+	rule ClassModifier_list_2        =>
+		[qw[ ClassModifier                      ]],
+		[qw[ ClassModifier ClassModifier_list_2 ]],
+		;
+
+	rule ClassOrInterfaceType        =>
+		[qw[     ClassType ]],
+		[qw[ InterfaceType ]],
+		;
+
+	rule ClassOrInterfaceTypeToInstantiate=>
+		[qw[   Annotation_list_16  Identifier {DOT  Annotation_list_17  Identifier}  TypeArgumentsOrDiamond   ]],
+		[qw[                       Identifier {DOT  Annotation_list_17  Identifier}  TypeArgumentsOrDiamond   ]],
+		[qw[   Annotation_list_16  Identifier {DOT                      Identifier}  TypeArgumentsOrDiamond   ]],
+		[qw[                       Identifier {DOT                      Identifier}  TypeArgumentsOrDiamond   ]],
+		[qw[   Annotation_list_16  Identifier {DOT  Annotation_list_17  Identifier}                           ]],
+		[qw[                       Identifier {DOT  Annotation_list_17  Identifier}                           ]],
+		[qw[   Annotation_list_16  Identifier {DOT                      Identifier}                           ]],
+		[qw[                       Identifier {DOT                      Identifier}                           ]],
+		;
+
+	rule ClassType                   =>
+		[qw[                           Annotation_list_11  TypeIdentifier  TypeArguments   ]],
+		[qw[                                               TypeIdentifier  TypeArguments   ]],
+		[qw[                           Annotation_list_11  TypeIdentifier                  ]],
+		[qw[                                               TypeIdentifier                  ]],
+		[qw[          PackageName DOT  Annotation_list_12  TypeIdentifier  TypeArguments   ]],
+		[qw[          PackageName DOT                      TypeIdentifier  TypeArguments   ]],
+		[qw[          PackageName DOT  Annotation_list_12  TypeIdentifier                  ]],
+		[qw[          PackageName DOT                      TypeIdentifier                  ]],
+		[qw[ ClassOrInterfaceType DOT  Annotation_list_13  TypeIdentifier  TypeArguments   ]],
+		[qw[ ClassOrInterfaceType DOT                      TypeIdentifier  TypeArguments   ]],
+		[qw[ ClassOrInterfaceType DOT  Annotation_list_13  TypeIdentifier                  ]],
+		[qw[ ClassOrInterfaceType DOT                      TypeIdentifier                  ]],
+		;
+
+	rule CompilationUnit             =>
+		[qw[ OrdinaryCompilationUnit ]],
+		[qw[  ModularCompilationUnit ]],
+		;
+
+	rule ConditionalAndExpression    =>
+		[qw[                                      InclusiveOrExpression ]],
+		[qw[ ConditionalAndExpression LOGICAL_AND InclusiveOrExpression ]],
+		;
+
+	rule ConditionalExpression       =>
+		[qw[                                                      ConditionalOrExpression ]],
+		[qw[ ConditionalOrExpression QUESTION_MARK Expression COLON ConditionalExpression ]],
+		[qw[      ConditionalOrExpression QUESTION_MARK Expression COLON LambdaExpression ]],
+		;
+
+	rule ConditionalOrExpression     =>
+		[qw[                                     ConditionalAndExpression ]],
+		[qw[ ConditionalOrExpression LOGICAL_OR ConditionalAndExpression  ]],
+		;
+
+	rule ConstantDeclaration         =>
+		[qw[   ConstantModifier_list_1  UnannType VariableDeclaratorList SEMICOLON ]],
+		[qw[                            UnannType VariableDeclaratorList SEMICOLON ]],
+		;
+
+	rule ConstantExpression          =>
+		[qw[ Expression ]],
+		;
+
+	rule ConstantModifier            =>
+		[qw[         (one of)  ]],
+		[qw[ Annotation PUBLIC ]],
+		[qw[      STATIC FINAL ]],
+		;
+
+	rule ConstantModifier_list_1     =>
+		[qw[ ConstantModifier                         ]],
+		[qw[ ConstantModifier ConstantModifier_list_1 ]],
+		;
+
+	rule ConstructorBody             =>
+		[qw[ BRACE_OPEN  ExplicitConstructorInvocation   BlockStatements  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                  BlockStatements  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  ExplicitConstructorInvocation                    BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                                   BRACE_CLOSE ]],
+		;
+
+	rule ConstructorDeclaration      =>
+		[qw[   ConstructorModifier_list_1  ConstructorDeclarator  Throws  ConstructorBody ]],
+		[qw[                               ConstructorDeclarator  Throws  ConstructorBody ]],
+		[qw[   ConstructorModifier_list_1  ConstructorDeclarator          ConstructorBody ]],
+		[qw[                               ConstructorDeclarator          ConstructorBody ]],
+		;
+
+	rule ConstructorDeclarator       =>
+		[qw[   TypeParameters  SimpleTypeName PAREN_OPEN  ReceiverParameter COMMA   FormalParameterList  PAREN_CLOSE ]],
+		[qw[                   SimpleTypeName PAREN_OPEN  ReceiverParameter COMMA   FormalParameterList  PAREN_CLOSE ]],
+		[qw[   TypeParameters  SimpleTypeName PAREN_OPEN                            FormalParameterList  PAREN_CLOSE ]],
+		[qw[                   SimpleTypeName PAREN_OPEN                            FormalParameterList  PAREN_CLOSE ]],
+		[qw[   TypeParameters  SimpleTypeName PAREN_OPEN  ReceiverParameter COMMA                        PAREN_CLOSE ]],
+		[qw[                   SimpleTypeName PAREN_OPEN  ReceiverParameter COMMA                        PAREN_CLOSE ]],
+		[qw[   TypeParameters  SimpleTypeName PAREN_OPEN                                                 PAREN_CLOSE ]],
+		[qw[                   SimpleTypeName PAREN_OPEN                                                 PAREN_CLOSE ]],
+		;
+
+	rule ConstructorModifier         =>
+		[qw[                           (one of)  ]],
+		[qw[ Annotation PUBLIC PROTECTED PRIVATE ]],
+		;
+
+	rule ConstructorModifier_list_1  =>
+		[qw[ ConstructorModifier                            ]],
+		[qw[ ConstructorModifier ConstructorModifier_list_1 ]],
+		;
+
+	rule ContinueStatement           =>
+		[qw[ CONTINUE  Identifier  SEMICOLON ]],
+		[qw[ CONTINUE              SEMICOLON ]],
+		;
+
+	rule DefaultValue                =>
+		[qw[ DEFAULT ElementValue ]],
+		;
+
+	rule DimExpr                     =>
+		[qw[   Annotation_list_18  BRACKET_OPEN Expression BRACKET_CLOSE ]],
+		[qw[                       BRACKET_OPEN Expression BRACKET_CLOSE ]],
+		;
+
+	rule DimExpr_list_1              =>
+		[qw[ DimExpr                 ]],
+		[qw[ DimExpr  DimExpr_list_1 ]],
+		;
+
+	rule DimExprs                    =>
+		[qw[ DimExpr_list_1  ]],
+		;
+
+	rule Dims                        =>
+		[qw[   Annotation_list_4  BRACKET_OPEN BRACKET_CLOSE { Annotation_list_5  BRACKET_OPEN BRACKET_CLOSE}  ]],
+		[qw[                      BRACKET_OPEN BRACKET_CLOSE { Annotation_list_5  BRACKET_OPEN BRACKET_CLOSE}  ]],
+		[qw[   Annotation_list_4  BRACKET_OPEN BRACKET_CLOSE {                    BRACKET_OPEN BRACKET_CLOSE}  ]],
+		[qw[                      BRACKET_OPEN BRACKET_CLOSE {                    BRACKET_OPEN BRACKET_CLOSE}  ]],
+		;
+
+	rule DoStatement                 =>
+		[qw[ DO Statement WHILE PAREN_OPEN Expression PAREN_CLOSE SEMICOLON ]],
+		;
+
+	rule ElementValue                =>
+		[qw[        ConditionalExpression ]],
+		[qw[ ElementValueArrayInitializer ]],
+		[qw[                   Annotation ]],
+		;
+
+	rule ElementValueArrayInitializer=>
+		[qw[ BRACE_OPEN  ElementValueList   COMMA  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                     COMMA  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  ElementValueList          BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                            BRACE_CLOSE ]],
+		;
+
+	rule ElementValueList            =>
+		[qw[ ElementValue_list_1  ]],
+		;
+
+	rule ElementValuePair            =>
+		[qw[ Identifier ASSIGN ElementValue ]],
+		;
+
+	rule ElementValuePairList        =>
+		[qw[ ElementValuePair_list_1  ]],
+		;
+
+	rule ElementValuePair_list_1     =>
+		[qw[ ElementValuePair                                ]],
+		[qw[ ElementValuePair COMMA  ElementValuePair_list_1 ]],
+		;
+
+	rule ElementValue_list_1         =>
+		[qw[ ElementValue                            ]],
+		[qw[ ElementValue COMMA  ElementValue_list_1 ]],
+		;
+
+	rule EmptyStatement              =>
+		[qw[ SEMICOLON ]],
+		;
+
+	rule EnhancedForStatement        =>
+		[qw[ FOR PAREN_OPEN  VariableModifier_list_4  LocalVariableType VariableDeclaratorId COLON Expression PAREN_CLOSE Statement ]],
+		[qw[ FOR PAREN_OPEN                           LocalVariableType VariableDeclaratorId COLON Expression PAREN_CLOSE Statement ]],
+		;
+
+	rule EnhancedForStatementNoShortIf=>
+		[qw[ FOR PAREN_OPEN  VariableModifier_list_5  LocalVariableType VariableDeclaratorId COLON Expression PAREN_CLOSE StatementNoShortIf ]],
+		[qw[ FOR PAREN_OPEN                           LocalVariableType VariableDeclaratorId COLON Expression PAREN_CLOSE StatementNoShortIf ]],
+		;
+
+	rule EnumBody                    =>
+		[qw[ BRACE_OPEN  EnumConstantList   COMMA   EnumBodyDeclarations  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                     COMMA   EnumBodyDeclarations  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  EnumConstantList           EnumBodyDeclarations  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                             EnumBodyDeclarations  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  EnumConstantList   COMMA                         BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                     COMMA                         BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  EnumConstantList                                 BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                                   BRACE_CLOSE ]],
+		;
+
+	rule EnumBodyDeclarations        =>
+		[qw[ SEMICOLON  ClassBodyDeclaration_list_2   ]],
+		[qw[ SEMICOLON                                ]],
+		;
+
+	rule EnumConstant                =>
+		[qw[   EnumConstantModifier_list_1  Identifier  PAREN_OPEN [ArgumentList  PAREN_CLOSE]  ClassBody   ]],
+		[qw[                                Identifier  PAREN_OPEN [ArgumentList  PAREN_CLOSE]  ClassBody   ]],
+		[qw[   EnumConstantModifier_list_1  Identifier                            PAREN_CLOSE]  ClassBody   ]],
+		[qw[                                Identifier                            PAREN_CLOSE]  ClassBody   ]],
+		[qw[   EnumConstantModifier_list_1  Identifier  PAREN_OPEN [ArgumentList  PAREN_CLOSE]              ]],
+		[qw[                                Identifier  PAREN_OPEN [ArgumentList  PAREN_CLOSE]              ]],
+		[qw[   EnumConstantModifier_list_1  Identifier                            PAREN_CLOSE]              ]],
+		[qw[                                Identifier                            PAREN_CLOSE]              ]],
+		;
+
+	rule EnumConstantList            =>
+		[qw[ EnumConstant_list_1  ]],
+		;
+
+	rule EnumConstantModifier        =>
+		[qw[ Annotation ]],
+		;
+
+	rule EnumConstantModifier_list_1 =>
+		[qw[ EnumConstantModifier                             ]],
+		[qw[ EnumConstantModifier EnumConstantModifier_list_1 ]],
+		;
+
+	rule EnumConstantName            =>
+		[qw[ Identifier ]],
+		;
+
+	rule EnumConstant_list_1         =>
+		[qw[ EnumConstant                            ]],
+		[qw[ EnumConstant COMMA  EnumConstant_list_1 ]],
+		;
+
+	rule EnumDeclaration             =>
+		[qw[   ClassModifier_list_2  ENUM TypeIdentifier  Superinterfaces  EnumBody ]],
+		[qw[                         ENUM TypeIdentifier  Superinterfaces  EnumBody ]],
+		[qw[   ClassModifier_list_2  ENUM TypeIdentifier                   EnumBody ]],
+		[qw[                         ENUM TypeIdentifier                   EnumBody ]],
+		;
+
+	rule EqualityExpression          =>
+		[qw[                               RelationalExpression ]],
+		[qw[     EqualityExpression EQUALS RelationalExpression ]],
+		[qw[ EqualityExpression NOT_EQUALS RelationalExpression ]],
+		;
+
+	rule ExceptionType               =>
+		[qw[    ClassType ]],
+		[qw[ TypeVariable ]],
+		;
+
+	rule ExceptionTypeList           =>
+		[qw[ ExceptionType_list_1  ]],
+		;
+
+	rule ExceptionType_list_1        =>
+		[qw[ ExceptionType                             ]],
+		[qw[ ExceptionType COMMA  ExceptionType_list_1 ]],
+		;
+
+	rule ExclusiveOrExpression       =>
+		[qw[                           AndExpression ]],
+		[qw[ ExclusiveOrExpression XOR AndExpression ]],
+		;
+
+	rule ExplicitConstructorInvocation=>
+		[qw[                      TypeArguments  THIS PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[                                     THIS PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[                      TypeArguments  THIS PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[                                     THIS PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[                     TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[                                    SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[                     TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[                                    SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[ ExpressionName DOT  TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[ ExpressionName DOT                 SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[ ExpressionName DOT  TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[ ExpressionName DOT                 SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[        Primary DOT  TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[        Primary DOT                 SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[        Primary DOT  TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[        Primary DOT                 SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		;
+
+	rule Expression                  =>
+		[qw[     LambdaExpression ]],
+		[qw[ AssignmentExpression ]],
+		;
+
+	rule ExpressionName              =>
+		[qw[                   Identifier ]],
+		[qw[ AmbiguousName DOT Identifier ]],
+		;
+
+	rule ExpressionStatement         =>
+		[qw[ StatementExpression SEMICOLON ]],
+		;
+
+	rule Expression_list_1           =>
+		[qw[ Expression                          ]],
+		[qw[ Expression COMMA  Expression_list_1 ]],
+		;
+
+	rule ExtendsInterfaces           =>
+		[qw[ EXTENDS InterfaceTypeList ]],
+		;
+
+	rule FieldAccess                 =>
+		[qw[            Primary DOT Identifier ]],
+		[qw[              SUPER DOT Identifier ]],
+		[qw[ TypeName DOT SUPER DOT Identifier ]],
+		;
+
+	rule FieldDeclaration            =>
+		[qw[   FieldModifier_list_1  UnannType VariableDeclaratorList SEMICOLON ]],
+		[qw[                         UnannType VariableDeclaratorList SEMICOLON ]],
+		;
+
+	rule FieldModifier               =>
+		[qw[                           (one of)  ]],
+		[qw[ Annotation PUBLIC PROTECTED PRIVATE ]],
+		[qw[     STATIC FINAL TRANSIENT VOLATILE ]],
+		;
+
+	rule FieldModifier_list_1        =>
+		[qw[ FieldModifier                      ]],
+		[qw[ FieldModifier FieldModifier_list_1 ]],
+		;
+
+	rule Finally                     =>
+		[qw[ FINALLY Block ]],
+		;
+
+	rule FloatingPointType           =>
+		[qw[    (one of)  ]],
+		[qw[ FLOAT DOUBLE ]],
+		;
+
+	rule ForInit                     =>
+		[qw[  StatementExpressionList ]],
+		[qw[ LocalVariableDeclaration ]],
+		;
+
+	rule ForStatement                =>
+		[qw[    BasicForStatement ]],
+		[qw[ EnhancedForStatement ]],
+		;
+
+	rule ForStatementNoShortIf       =>
+		[qw[    BasicForStatementNoShortIf ]],
+		[qw[ EnhancedForStatementNoShortIf ]],
+		;
+
+	rule ForUpdate                   =>
+		[qw[ StatementExpressionList ]],
+		;
+
+	rule FormalParameter             =>
+		[qw[   VariableModifier_list_1  UnannType VariableDeclaratorId ]],
+		[qw[                            UnannType VariableDeclaratorId ]],
+		[qw[                                    VariableArityParameter ]],
+		;
+
+	rule FormalParameterList         =>
+		[qw[ FormalParameter_list_1  ]],
+		;
+
+	rule FormalParameter_list_1      =>
+		[qw[ FormalParameter                               ]],
+		[qw[ FormalParameter COMMA  FormalParameter_list_1 ]],
+		;
+
+	rule Identifier_list_1           =>
+		[qw[ Identifier                        ]],
+		[qw[ Identifier DOT  Identifier_list_1 ]],
+		;
+
+	rule Identifier_list_2           =>
+		[qw[ Identifier                        ]],
+		[qw[ Identifier DOT  Identifier_list_2 ]],
+		;
+
+	rule Identifier_list_3           =>
+		[qw[ Identifier                          ]],
+		[qw[ Identifier COMMA  Identifier_list_3 ]],
+		;
+
+	rule IfThenElseStatement         =>
+		[qw[ IF PAREN_OPEN Expression PAREN_CLOSE StatementNoShortIf ELSE Statement ]],
+		;
+
+	rule IfThenElseStatementNoShortIf=>
+		[qw[ IF PAREN_OPEN Expression PAREN_CLOSE StatementNoShortIf ELSE StatementNoShortIf ]],
+		;
+
+	rule IfThenStatement             =>
+		[qw[ IF PAREN_OPEN Expression PAREN_CLOSE Statement ]],
+		;
+
+	rule ImportDeclaration           =>
+		[qw[     SingleTypeImportDeclaration ]],
+		[qw[   TypeImportOnDemandDeclaration ]],
+		[qw[   SingleStaticImportDeclaration ]],
+		[qw[ StaticImportOnDemandDeclaration ]],
+		;
+
+	rule ImportDeclaration_list_1    =>
+		[qw[ ImportDeclaration                          ]],
+		[qw[ ImportDeclaration ImportDeclaration_list_1 ]],
+		;
+
+	rule ImportDeclaration_list_2    =>
+		[qw[ ImportDeclaration                          ]],
+		[qw[ ImportDeclaration ImportDeclaration_list_2 ]],
+		;
+
+	rule InclusiveOrExpression       =>
+		[qw[                          ExclusiveOrExpression ]],
+		[qw[ InclusiveOrExpression OR ExclusiveOrExpression ]],
+		;
+
+	rule InstanceInitializer         =>
+		[qw[ Block ]],
+		;
+
+	rule IntegralType                =>
+		[qw[                (one of)  ]],
+		[qw[ BYTE SHORT INT LONG CHAR ]],
+		;
+
+	rule InterfaceBody               =>
+		[qw[ BRACE_OPEN  InterfaceMemberDeclaration_list_1  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                     BRACE_CLOSE ]],
+		;
+
+	rule InterfaceDeclaration        =>
+		[qw[ NormalInterfaceDeclaration ]],
+		[qw[  AnnotationTypeDeclaration ]],
+		;
+
+	rule InterfaceMemberDeclaration  =>
+		[qw[        ConstantDeclaration ]],
+		[qw[ InterfaceMethodDeclaration ]],
+		[qw[           ClassDeclaration ]],
+		[qw[       InterfaceDeclaration ]],
+		[qw[                  SEMICOLON ]],
+		;
+
+	rule InterfaceMemberDeclaration_list_1=>
+		[qw[ InterfaceMemberDeclaration                                   ]],
+		[qw[ InterfaceMemberDeclaration InterfaceMemberDeclaration_list_1 ]],
+		;
+
+	rule InterfaceMethodDeclaration  =>
+		[qw[   InterfaceMethodModifier_list_1  MethodHeader MethodBody ]],
+		[qw[                                   MethodHeader MethodBody ]],
+		;
+
+	rule InterfaceMethodModifier     =>
+		[qw[                        (one of)  ]],
+		[qw[        Annotation PUBLIC PRIVATE ]],
+		[qw[ ABSTRACT DEFAULT STATIC STRICTFP ]],
+		;
+
+	rule InterfaceMethodModifier_list_1=>
+		[qw[ InterfaceMethodModifier                                ]],
+		[qw[ InterfaceMethodModifier InterfaceMethodModifier_list_1 ]],
+		;
+
+	rule InterfaceModifier           =>
+		[qw[                           (one of)  ]],
+		[qw[ Annotation PUBLIC PROTECTED PRIVATE ]],
+		[qw[            ABSTRACT STATIC STRICTFP ]],
+		;
+
+	rule InterfaceModifier_list_1    =>
+		[qw[ InterfaceModifier                          ]],
+		[qw[ InterfaceModifier InterfaceModifier_list_1 ]],
+		;
+
+	rule InterfaceModifier_list_2    =>
+		[qw[ InterfaceModifier                          ]],
+		[qw[ InterfaceModifier InterfaceModifier_list_2 ]],
+		;
+
+	rule InterfaceType               =>
+		[qw[ ClassType ]],
+		;
+
+	rule InterfaceTypeList           =>
+		[qw[ InterfaceType_list_1  ]],
+		;
+
+	rule InterfaceType_list_1        =>
+		[qw[ InterfaceType                             ]],
+		[qw[ InterfaceType COMMA  InterfaceType_list_1 ]],
+		;
+
+	rule LabeledStatement            =>
+		[qw[ Identifier COLON Statement ]],
+		;
+
+	rule LabeledStatementNoShortIf   =>
+		[qw[ Identifier COLON StatementNoShortIf ]],
+		;
+
+	rule LambdaBody                  =>
+		[qw[ Expression ]],
+		[qw[      Block ]],
+		;
+
+	rule LambdaExpression            =>
+		[qw[ LambdaParameters LAMBDA LambdaBody ]],
+		;
+
+	rule LambdaParameter             =>
+		[qw[   VariableModifier_list_8  LambdaParameterType VariableDeclaratorId ]],
+		[qw[                            LambdaParameterType VariableDeclaratorId ]],
+		[qw[                                              VariableArityParameter ]],
+		;
+
+	rule LambdaParameterList         =>
+		[qw[ LambdaParameter_list_1  ]],
+		[qw[      Identifier_list_3  ]],
+		;
+
+	rule LambdaParameterType         =>
+		[qw[ UnannType ]],
+		[qw[       VAR ]],
+		;
+
+	rule LambdaParameter_list_1      =>
+		[qw[ LambdaParameter                               ]],
+		[qw[ LambdaParameter COMMA  LambdaParameter_list_1 ]],
+		;
+
+	rule LambdaParameters            =>
+		[qw[ PAREN_OPEN  LambdaParameterList  PAREN_CLOSE ]],
+		[qw[ PAREN_OPEN                       PAREN_CLOSE ]],
+		[qw[                                   Identifier ]],
+		;
+
+	rule LeftHandSide                =>
+		[qw[ ExpressionName ]],
+		[qw[    FieldAccess ]],
+		[qw[    ArrayAccess ]],
+		;
+
+	rule Literal                     =>
+		[qw[       IntegerLiteral ]],
+		[qw[ FloatingPointLiteral ]],
+		[qw[       BooleanLiteral ]],
+		[qw[     CharacterLiteral ]],
+		[qw[        StringLiteral ]],
+		[qw[          NullLiteral ]],
+		;
+
+	rule LocalVariableDeclaration    =>
+		[qw[   VariableModifier_list_3  LocalVariableType VariableDeclaratorList ]],
+		[qw[                            LocalVariableType VariableDeclaratorList ]],
+		;
+
+	rule LocalVariableDeclarationStatement=>
+		[qw[ LocalVariableDeclaration SEMICOLON ]],
+		;
+
+	rule LocalVariableType           =>
+		[qw[ UnannType ]],
+		[qw[       VAR ]],
+		;
+
+	rule MarkerAnnotation            =>
+		[qw[ AT TypeName ]],
+		;
+
+	rule MethodBody                  =>
+		[qw[     Block ]],
+		[qw[ SEMICOLON ]],
+		;
+
+	rule MethodDeclaration           =>
+		[qw[   MethodModifier_list_1  MethodHeader MethodBody ]],
+		[qw[                          MethodHeader MethodBody ]],
+		;
+
+	rule MethodDeclarator            =>
+		[qw[ Identifier PAREN_OPEN  ReceiverParameter COMMA   FormalParameterList  PAREN_CLOSE  Dims   ]],
+		[qw[ Identifier PAREN_OPEN                            FormalParameterList  PAREN_CLOSE  Dims   ]],
+		[qw[ Identifier PAREN_OPEN  ReceiverParameter COMMA                        PAREN_CLOSE  Dims   ]],
+		[qw[ Identifier PAREN_OPEN                                                 PAREN_CLOSE  Dims   ]],
+		[qw[ Identifier PAREN_OPEN  ReceiverParameter COMMA   FormalParameterList  PAREN_CLOSE         ]],
+		[qw[ Identifier PAREN_OPEN                            FormalParameterList  PAREN_CLOSE         ]],
+		[qw[ Identifier PAREN_OPEN  ReceiverParameter COMMA                        PAREN_CLOSE         ]],
+		[qw[ Identifier PAREN_OPEN                                                 PAREN_CLOSE         ]],
+		;
+
+	rule MethodHeader                =>
+		[qw[                                    Result MethodDeclarator  Throws   ]],
+		[qw[                                    Result MethodDeclarator           ]],
+		[qw[ TypeParameters  Annotation_list_6  Result MethodDeclarator  Throws   ]],
+		[qw[ TypeParameters                     Result MethodDeclarator  Throws   ]],
+		[qw[ TypeParameters  Annotation_list_6  Result MethodDeclarator           ]],
+		[qw[ TypeParameters                     Result MethodDeclarator           ]],
+		;
+
+	rule MethodInvocation            =>
+		[qw[                                        MethodName PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[                                        MethodName PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[           TypeName DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[           TypeName DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[           TypeName DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[           TypeName DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[     ExpressionName DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[     ExpressionName DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[     ExpressionName DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[     ExpressionName DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[            Primary DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[            Primary DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[            Primary DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[            Primary DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[              SUPER DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[              SUPER DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[              SUPER DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[              SUPER DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[ TypeName DOT SUPER DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[ TypeName DOT SUPER DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[ TypeName DOT SUPER DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[ TypeName DOT SUPER DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		;
+
+	rule MethodModifier              =>
+		[qw[                                          (one of)  ]],
+		[qw[                Annotation PUBLIC PROTECTED PRIVATE ]],
+		[qw[ ABSTRACT STATIC FINAL SYNCHRONIZED NATIVE STRICTFP ]],
+		;
+
+	rule MethodModifier_list_1       =>
+		[qw[ MethodModifier                       ]],
+		[qw[ MethodModifier MethodModifier_list_1 ]],
+		;
+
+	rule MethodName                  =>
+		[qw[ Identifier ]],
+		;
+
+	rule MethodReference             =>
+		[qw[     ExpressionName DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[     ExpressionName DOUBLE_COLON                 Identifier ]],
+		[qw[            Primary DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[            Primary DOUBLE_COLON                 Identifier ]],
+		[qw[      ReferenceType DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[      ReferenceType DOUBLE_COLON                 Identifier ]],
+		[qw[              SUPER DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[              SUPER DOUBLE_COLON                 Identifier ]],
+		[qw[ TypeName DOT SUPER DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[ TypeName DOT SUPER DOUBLE_COLON                 Identifier ]],
+		[qw[                 ClassType DOUBLE_COLON  TypeArguments  NEW ]],
+		[qw[                 ClassType DOUBLE_COLON                 NEW ]],
+		[qw[                                 ArrayType DOUBLE_COLON NEW ]],
+		;
+
+	rule ModularCompilationUnit      =>
+		[qw[   ImportDeclaration_list_2  ModuleDeclaration ]],
+		[qw[                             ModuleDeclaration ]],
+		;
+
+	rule ModuleDeclaration           =>
+		[qw[   Annotation_list_1   OPEN  MODULE Identifier_list_2 BRACE_OPEN  ModuleDirective_list_1  BRACE_CLOSE ]],
+		[qw[                       OPEN  MODULE Identifier_list_2 BRACE_OPEN  ModuleDirective_list_1  BRACE_CLOSE ]],
+		[qw[   Annotation_list_1         MODULE Identifier_list_2 BRACE_OPEN  ModuleDirective_list_1  BRACE_CLOSE ]],
+		[qw[                             MODULE Identifier_list_2 BRACE_OPEN  ModuleDirective_list_1  BRACE_CLOSE ]],
+		[qw[   Annotation_list_1   OPEN  MODULE Identifier_list_2 BRACE_OPEN                          BRACE_CLOSE ]],
+		[qw[                       OPEN  MODULE Identifier_list_2 BRACE_OPEN                          BRACE_CLOSE ]],
+		[qw[   Annotation_list_1         MODULE Identifier_list_2 BRACE_OPEN                          BRACE_CLOSE ]],
+		[qw[                             MODULE Identifier_list_2 BRACE_OPEN                          BRACE_CLOSE ]],
+		;
+
+	rule ModuleDirective             =>
+		[qw[ REQUIRES  RequiresModifier_list_1  ModuleName SEMICOLON ]],
+		[qw[ REQUIRES                           ModuleName SEMICOLON ]],
+		[qw[    EXPORTS PackageName  TO ModuleName_list_1  SEMICOLON ]],
+		[qw[    EXPORTS PackageName                        SEMICOLON ]],
+		[qw[      OPENS PackageName  TO ModuleName_list_2  SEMICOLON ]],
+		[qw[      OPENS PackageName                        SEMICOLON ]],
+		[qw[                                 USES TypeName SEMICOLON ]],
+		[qw[        PROVIDES TypeName WITH TypeName_list_1 SEMICOLON ]],
+		;
+
+	rule ModuleDirective_list_1      =>
+		[qw[ ModuleDirective                        ]],
+		[qw[ ModuleDirective ModuleDirective_list_1 ]],
+		;
+
+	rule ModuleName                  =>
+		[qw[                Identifier ]],
+		[qw[ ModuleName DOT Identifier ]],
+		;
+
+	rule ModuleName_list_1           =>
+		[qw[ ModuleName                          ]],
+		[qw[ ModuleName COMMA  ModuleName_list_1 ]],
+		;
+
+	rule ModuleName_list_2           =>
+		[qw[ ModuleName                          ]],
+		[qw[ ModuleName COMMA  ModuleName_list_2 ]],
+		;
+
+	rule MultiplicativeExpression    =>
+		[qw[                                   UnaryExpression ]],
+		[qw[ MultiplicativeExpression MULTIPLY UnaryExpression ]],
+		[qw[   MultiplicativeExpression DIVIDE UnaryExpression ]],
+		[qw[   MultiplicativeExpression MODULO UnaryExpression ]],
+		;
+
+	rule NormalAnnotation            =>
+		[qw[ AT TypeName PAREN_OPEN  ElementValuePairList  PAREN_CLOSE ]],
+		[qw[ AT TypeName PAREN_OPEN                        PAREN_CLOSE ]],
+		;
+
+	rule NormalClassDeclaration      =>
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier  TypeParameters   Superclass   Superinterfaces  ClassBody ]],
+		[qw[                         CLASS TypeIdentifier  TypeParameters   Superclass   Superinterfaces  ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier                   Superclass   Superinterfaces  ClassBody ]],
+		[qw[                         CLASS TypeIdentifier                   Superclass   Superinterfaces  ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier  TypeParameters                Superinterfaces  ClassBody ]],
+		[qw[                         CLASS TypeIdentifier  TypeParameters                Superinterfaces  ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier                                Superinterfaces  ClassBody ]],
+		[qw[                         CLASS TypeIdentifier                                Superinterfaces  ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier  TypeParameters   Superclass                    ClassBody ]],
+		[qw[                         CLASS TypeIdentifier  TypeParameters   Superclass                    ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier                   Superclass                    ClassBody ]],
+		[qw[                         CLASS TypeIdentifier                   Superclass                    ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier  TypeParameters                                 ClassBody ]],
+		[qw[                         CLASS TypeIdentifier  TypeParameters                                 ClassBody ]],
+		[qw[   ClassModifier_list_1  CLASS TypeIdentifier                                                 ClassBody ]],
+		[qw[                         CLASS TypeIdentifier                                                 ClassBody ]],
+		;
+
+	rule NormalInterfaceDeclaration  =>
+		[qw[   InterfaceModifier_list_1  INTERFACE TypeIdentifier  TypeParameters   ExtendsInterfaces  InterfaceBody ]],
+		[qw[                             INTERFACE TypeIdentifier  TypeParameters   ExtendsInterfaces  InterfaceBody ]],
+		[qw[   InterfaceModifier_list_1  INTERFACE TypeIdentifier                   ExtendsInterfaces  InterfaceBody ]],
+		[qw[                             INTERFACE TypeIdentifier                   ExtendsInterfaces  InterfaceBody ]],
+		[qw[   InterfaceModifier_list_1  INTERFACE TypeIdentifier  TypeParameters                      InterfaceBody ]],
+		[qw[                             INTERFACE TypeIdentifier  TypeParameters                      InterfaceBody ]],
+		[qw[   InterfaceModifier_list_1  INTERFACE TypeIdentifier                                      InterfaceBody ]],
+		[qw[                             INTERFACE TypeIdentifier                                      InterfaceBody ]],
+		;
+
+	rule NumericType                 =>
+		[qw[      IntegralType ]],
+		[qw[ FloatingPointType ]],
+		;
+
+	rule OrdinaryCompilationUnit     =>
+		[qw[   PackageDeclaration   ImportDeclaration_list_1   TypeDeclaration_list_1   ]],
+		[qw[                        ImportDeclaration_list_1   TypeDeclaration_list_1   ]],
+		[qw[   PackageDeclaration                              TypeDeclaration_list_1   ]],
+		[qw[                                                   TypeDeclaration_list_1   ]],
+		[qw[   PackageDeclaration   ImportDeclaration_list_1                            ]],
+		[qw[                        ImportDeclaration_list_1                            ]],
+		[qw[   PackageDeclaration                                                       ]],
+		[qw[                                                                            ]],
+		;
+
+	rule PackageDeclaration          =>
+		[qw[   PackageModifier_list_1  PACKAGE Identifier_list_1 SEMICOLON ]],
+		[qw[                           PACKAGE Identifier_list_1 SEMICOLON ]],
+		;
+
+	rule PackageModifier             =>
+		[qw[ Annotation ]],
+		;
+
+	rule PackageModifier_list_1      =>
+		[qw[ PackageModifier                        ]],
+		[qw[ PackageModifier PackageModifier_list_1 ]],
+		;
+
+	rule PackageName                 =>
+		[qw[                 Identifier ]],
+		[qw[ PackageName DOT Identifier ]],
+		;
+
+	rule PackageOrTypeName           =>
+		[qw[                       Identifier ]],
+		[qw[ PackageOrTypeName DOT Identifier ]],
+		;
+
+	rule PostDecrementExpression     =>
+		[qw[ PostfixExpression DECREMENT ]],
+		;
+
+	rule PostIncrementExpression     =>
+		[qw[ PostfixExpression INCREMENT ]],
+		;
+
+	rule PostfixExpression           =>
+		[qw[                 Primary ]],
+		[qw[          ExpressionName ]],
+		[qw[ PostIncrementExpression ]],
+		[qw[ PostDecrementExpression ]],
+		;
+
+	rule PreDecrementExpression      =>
+		[qw[ DECREMENT UnaryExpression ]],
+		;
+
+	rule PreIncrementExpression      =>
+		[qw[ INCREMENT UnaryExpression ]],
+		;
+
+	rule Primary                     =>
+		[qw[       PrimaryNoNewArray ]],
+		[qw[ ArrayCreationExpression ]],
+		;
+
+	rule PrimaryNoNewArray           =>
+		[qw[                           Literal ]],
+		[qw[                      ClassLiteral ]],
+		[qw[                              THIS ]],
+		[qw[                 TypeName DOT THIS ]],
+		[qw[ PAREN_OPEN Expression PAREN_CLOSE ]],
+		[qw[   ClassInstanceCreationExpression ]],
+		[qw[                       FieldAccess ]],
+		[qw[                       ArrayAccess ]],
+		[qw[                  MethodInvocation ]],
+		[qw[                   MethodReference ]],
+		;
+
+	rule PrimitiveType               =>
+		[qw[   Annotation_list_9  NumericType ]],
+		[qw[                      NumericType ]],
+		[qw[      Annotation_list_10  BOOLEAN ]],
+		[qw[                          BOOLEAN ]],
+		;
+
+	rule ReceiverParameter           =>
+		[qw[   Annotation_list_7  UnannType  Identifier DOT  THIS ]],
+		[qw[                      UnannType  Identifier DOT  THIS ]],
+		[qw[   Annotation_list_7  UnannType                  THIS ]],
+		[qw[                      UnannType                  THIS ]],
+		;
+
+	rule ReferenceType               =>
+		[qw[ ClassOrInterfaceType ]],
+		[qw[         TypeVariable ]],
+		[qw[            ArrayType ]],
+		;
+
+	rule RelationalExpression        =>
+		[qw[                                             ShiftExpression ]],
+		[qw[              RelationalExpression LESS_THEN ShiftExpression ]],
+		[qw[           RelationalExpression GREATER_THEN ShiftExpression ]],
+		[qw[    RelationalExpression LESS_THAN_OR_EQUALS ShiftExpression ]],
+		[qw[ RelationalExpression GREATER_THAN_OR_EQUALS ShiftExpression ]],
+		[qw[               RelationalExpression INSTANCEOF ReferenceType ]],
+		;
+
+	rule RequiresModifier            =>
+		[qw[         (one of)  ]],
+		[qw[ TRANSITIVE STATIC ]],
+		;
+
+	rule RequiresModifier_list_1     =>
+		[qw[ RequiresModifier                         ]],
+		[qw[ RequiresModifier RequiresModifier_list_1 ]],
+		;
+
+	rule Resource                    =>
+		[qw[   VariableModifier_list_7  LocalVariableType Identifier ASSIGN Expression ]],
+		[qw[                            LocalVariableType Identifier ASSIGN Expression ]],
+		[qw[                                                            VariableAccess ]],
+		;
+
+	rule ResourceList                =>
+		[qw[ Resource_list_1  ]],
+		;
+
+	rule ResourceSpecification       =>
+		[qw[ PAREN_OPEN ResourceList  SEMICOLON  PAREN_CLOSE ]],
+		[qw[ PAREN_OPEN ResourceList             PAREN_CLOSE ]],
+		;
+
+	rule Resource_list_1             =>
+		[qw[ Resource                            ]],
+		[qw[ Resource SEMICOLON  Resource_list_1 ]],
+		;
+
+	rule Result                      =>
+		[qw[ UnannType ]],
+		[qw[      VOID ]],
+		;
+
+	rule ReturnStatement             =>
+		[qw[ RETURN  Expression  SEMICOLON ]],
+		[qw[ RETURN              SEMICOLON ]],
+		;
+
+	rule ShiftExpression             =>
+		[qw[                                      AdditiveExpression ]],
+		[qw[           ShiftExpression LEFT_SHIFT AdditiveExpression ]],
+		[qw[          ShiftExpression RIGHT_SHIFT AdditiveExpression ]],
+		[qw[ ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression ]],
+		;
+
+	rule SimpleTypeName              =>
+		[qw[ TypeIdentifier ]],
+		;
+
+	rule SingleElementAnnotation     =>
+		[qw[ AT TypeName PAREN_OPEN ElementValue PAREN_CLOSE ]],
+		;
+
+	rule SingleStaticImportDeclaration=>
+		[qw[ IMPORT STATIC TypeName DOT Identifier SEMICOLON ]],
+		;
+
+	rule SingleTypeImportDeclaration =>
+		[qw[ IMPORT TypeName SEMICOLON ]],
+		;
+
+	rule Statement                   =>
+		[qw[ StatementWithoutTrailingSubstatement ]],
+		[qw[                     LabeledStatement ]],
+		[qw[                      IfThenStatement ]],
+		[qw[                  IfThenElseStatement ]],
+		[qw[                       WhileStatement ]],
+		[qw[                         ForStatement ]],
+		;
+
+	rule StatementExpression         =>
+		[qw[                      Assignment ]],
+		[qw[          PreIncrementExpression ]],
+		[qw[          PreDecrementExpression ]],
+		[qw[         PostIncrementExpression ]],
+		[qw[         PostDecrementExpression ]],
+		[qw[                MethodInvocation ]],
+		[qw[ ClassInstanceCreationExpression ]],
+		;
+
+	rule StatementExpressionList     =>
+		[qw[ StatementExpression_list_1  ]],
+		;
+
+	rule StatementExpression_list_1  =>
+		[qw[ StatementExpression                                   ]],
+		[qw[ StatementExpression COMMA  StatementExpression_list_1 ]],
+		;
+
+	rule StatementNoShortIf          =>
+		[qw[ StatementWithoutTrailingSubstatement ]],
+		[qw[            LabeledStatementNoShortIf ]],
+		[qw[         IfThenElseStatementNoShortIf ]],
+		[qw[              WhileStatementNoShortIf ]],
+		[qw[                ForStatementNoShortIf ]],
+		;
+
+	rule StatementWithoutTrailingSubstatement=>
+		[qw[                 Block ]],
+		[qw[        EmptyStatement ]],
+		[qw[   ExpressionStatement ]],
+		[qw[       AssertStatement ]],
+		[qw[       SwitchStatement ]],
+		[qw[           DoStatement ]],
+		[qw[        BreakStatement ]],
+		[qw[     ContinueStatement ]],
+		[qw[       ReturnStatement ]],
+		[qw[ SynchronizedStatement ]],
+		[qw[        ThrowStatement ]],
+		[qw[          TryStatement ]],
+		;
+
+	rule StaticImportOnDemandDeclaration=>
+		[qw[ IMPORT STATIC TypeName DOT MULTIPLY SEMICOLON ]],
+		;
+
+	rule StaticInitializer           =>
+		[qw[ STATIC Block ]],
+		;
+
+	rule Superclass                  =>
+		[qw[ EXTENDS ClassType ]],
+		;
+
+	rule Superinterfaces             =>
+		[qw[ IMPLEMENTS InterfaceTypeList ]],
+		;
+
+	rule SwitchBlock                 =>
+		[qw[ BRACE_OPEN  SwitchBlockStatementGroup_list_1   SwitchLabel_list_1  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                     SwitchLabel_list_1  BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN  SwitchBlockStatementGroup_list_1                       BRACE_CLOSE ]],
+		[qw[ BRACE_OPEN                                                         BRACE_CLOSE ]],
+		;
+
+	rule SwitchBlockStatementGroup   =>
+		[qw[ SwitchLabels BlockStatements ]],
+		;
+
+	rule SwitchBlockStatementGroup_list_1=>
+		[qw[ SwitchBlockStatementGroup                                  ]],
+		[qw[ SwitchBlockStatementGroup SwitchBlockStatementGroup_list_1 ]],
+		;
+
+	rule SwitchLabel                 =>
+		[qw[ CASE ConstantExpression COLON ]],
+		[qw[   CASE EnumConstantName COLON ]],
+		[qw[                 DEFAULT COLON ]],
+		;
+
+	rule SwitchLabel_list_1          =>
+		[qw[ SwitchLabel                    ]],
+		[qw[ SwitchLabel SwitchLabel_list_1 ]],
+		;
+
+	rule SwitchLabel_list_2          =>
+		[qw[ SwitchLabel                     ]],
+		[qw[ SwitchLabel  SwitchLabel_list_2 ]],
+		;
+
+	rule SwitchLabels                =>
+		[qw[ SwitchLabel_list_2  ]],
+		;
+
+	rule SwitchStatement             =>
+		[qw[ SWITCH PAREN_OPEN Expression PAREN_CLOSE SwitchBlock ]],
+		;
+
+	rule SynchronizedStatement       =>
+		[qw[ SYNCHRONIZED PAREN_OPEN Expression PAREN_CLOSE Block ]],
+		;
+
+	rule ThrowStatement              =>
+		[qw[ THROW Expression SEMICOLON ]],
+		;
+
+	rule Throws                      =>
+		[qw[ THROWS ExceptionTypeList ]],
+		;
+
+	rule TryStatement                =>
+		[qw[           TRY Block Catches ]],
+		[qw[ TRY Block  Catches  Finally ]],
+		[qw[ TRY Block           Finally ]],
+		[qw[   TryWithResourcesStatement ]],
+		;
+
+	rule TryWithResourcesStatement   =>
+		[qw[ TRY ResourceSpecification Block  Catches   Finally   ]],
+		[qw[ TRY ResourceSpecification Block            Finally   ]],
+		[qw[ TRY ResourceSpecification Block  Catches             ]],
+		[qw[ TRY ResourceSpecification Block                      ]],
+		;
+
+	rule Type                        =>
+		[qw[ PrimitiveType ]],
+		[qw[ ReferenceType ]],
+		;
+
+	rule TypeArgument                =>
+		[qw[ ReferenceType ]],
+		[qw[      Wildcard ]],
+		;
+
+	rule TypeArgumentList            =>
+		[qw[ TypeArgument_list_1  ]],
+		;
+
+	rule TypeArgument_list_1         =>
+		[qw[ TypeArgument                            ]],
+		[qw[ TypeArgument COMMA  TypeArgument_list_1 ]],
+		;
+
+	rule TypeArguments               =>
+		[qw[ LESS_THEN TypeArgumentList GREATER_THEN ]],
+		;
+
+	rule TypeArgumentsOrDiamond      =>
+		[qw[ TypeArguments ]],
+		[qw[       DIAMOND ]],
+		;
+
+	rule TypeBound                   =>
+		[qw[                                   EXTENDS TypeVariable ]],
+		[qw[ EXTENDS ClassOrInterfaceType  AdditionalBound_list_1   ]],
+		[qw[ EXTENDS ClassOrInterfaceType                           ]],
+		;
+
+	rule TypeDeclaration             =>
+		[qw[     ClassDeclaration ]],
+		[qw[ InterfaceDeclaration ]],
+		[qw[            SEMICOLON ]],
+		;
+
+	rule TypeDeclaration_list_1      =>
+		[qw[ TypeDeclaration                        ]],
+		[qw[ TypeDeclaration TypeDeclaration_list_1 ]],
+		;
+
+	rule TypeImportOnDemandDeclaration=>
+		[qw[ IMPORT PackageOrTypeName DOT MULTIPLY SEMICOLON ]],
+		;
+
+	rule TypeName                    =>
+		[qw[                       TypeIdentifier ]],
+		[qw[ PackageOrTypeName DOT TypeIdentifier ]],
+		;
+
+	rule TypeName_list_1             =>
+		[qw[ TypeName                        ]],
+		[qw[ TypeName COMMA  TypeName_list_1 ]],
+		;
+
+	rule TypeParameter               =>
+		[qw[   TypeParameterModifier_list_1  TypeIdentifier  TypeBound   ]],
+		[qw[                                 TypeIdentifier  TypeBound   ]],
+		[qw[   TypeParameterModifier_list_1  TypeIdentifier              ]],
+		[qw[                                 TypeIdentifier              ]],
+		;
+
+	rule TypeParameterList           =>
+		[qw[ TypeParameter_list_1  ]],
+		;
+
+	rule TypeParameterModifier       =>
+		[qw[ Annotation ]],
+		;
+
+	rule TypeParameterModifier_list_1=>
+		[qw[ TypeParameterModifier                              ]],
+		[qw[ TypeParameterModifier TypeParameterModifier_list_1 ]],
+		;
+
+	rule TypeParameter_list_1        =>
+		[qw[ TypeParameter                             ]],
+		[qw[ TypeParameter COMMA  TypeParameter_list_1 ]],
+		;
+
+	rule TypeParameters              =>
+		[qw[ LESS_THEN TypeParameterList GREATER_THEN ]],
+		;
+
+	rule TypeVariable                =>
+		[qw[   Annotation_list_14  TypeIdentifier ]],
+		[qw[                       TypeIdentifier ]],
+		;
+
+	rule UnannArrayType              =>
+		[qw[        UnannPrimitiveType Dims ]],
+		[qw[ UnannClassOrInterfaceType Dims ]],
+		[qw[         UnannTypeVariable Dims ]],
+		;
+
+	rule UnannClassOrInterfaceType   =>
+		[qw[     UnannClassType ]],
+		[qw[ UnannInterfaceType ]],
+		;
+
+	rule UnannClassType              =>
+		[qw[                                                   TypeIdentifier  TypeArguments   ]],
+		[qw[                                                   TypeIdentifier                  ]],
+		[qw[               PackageName DOT  Annotation_list_2  TypeIdentifier  TypeArguments   ]],
+		[qw[               PackageName DOT                     TypeIdentifier  TypeArguments   ]],
+		[qw[               PackageName DOT  Annotation_list_2  TypeIdentifier                  ]],
+		[qw[               PackageName DOT                     TypeIdentifier                  ]],
+		[qw[ UnannClassOrInterfaceType DOT  Annotation_list_3  TypeIdentifier  TypeArguments   ]],
+		[qw[ UnannClassOrInterfaceType DOT                     TypeIdentifier  TypeArguments   ]],
+		[qw[ UnannClassOrInterfaceType DOT  Annotation_list_3  TypeIdentifier                  ]],
+		[qw[ UnannClassOrInterfaceType DOT                     TypeIdentifier                  ]],
+		;
+
+	rule UnannInterfaceType          =>
+		[qw[ UnannClassType ]],
+		;
+
+	rule UnannPrimitiveType          =>
+		[qw[ NumericType ]],
+		[qw[     BOOLEAN ]],
+		;
+
+	rule UnannReferenceType          =>
+		[qw[ UnannClassOrInterfaceType ]],
+		[qw[         UnannTypeVariable ]],
+		[qw[            UnannArrayType ]],
+		;
+
+	rule UnannType                   =>
+		[qw[ UnannPrimitiveType ]],
+		[qw[ UnannReferenceType ]],
+		;
+
+	rule UnannTypeVariable           =>
+		[qw[ TypeIdentifier ]],
+		;
+
+	rule UnaryExpression             =>
+		[qw[      PreIncrementExpression ]],
+		[qw[      PreDecrementExpression ]],
+		[qw[        PLUS UnaryExpression ]],
+		[qw[       MINUS UnaryExpression ]],
+		[qw[ UnaryExpressionNotPlusMinus ]],
+		;
+
+	rule UnaryExpressionNotPlusMinus =>
+		[qw[          PostfixExpression ]],
+		[qw[ BIT_NEGATE UnaryExpression ]],
+		[qw[        NOT UnaryExpression ]],
+		[qw[             CastExpression ]],
+		;
+
+	rule UnqualifiedClassInstanceCreationExpression=>
+		[qw[ NEW  TypeArguments  ClassOrInterfaceTypeToInstantiate PAREN_OPEN  ArgumentList  PAREN_CLOSE  ClassBody   ]],
+		[qw[ NEW                 ClassOrInterfaceTypeToInstantiate PAREN_OPEN  ArgumentList  PAREN_CLOSE  ClassBody   ]],
+		[qw[ NEW  TypeArguments  ClassOrInterfaceTypeToInstantiate PAREN_OPEN                PAREN_CLOSE  ClassBody   ]],
+		[qw[ NEW                 ClassOrInterfaceTypeToInstantiate PAREN_OPEN                PAREN_CLOSE  ClassBody   ]],
+		[qw[ NEW  TypeArguments  ClassOrInterfaceTypeToInstantiate PAREN_OPEN  ArgumentList  PAREN_CLOSE              ]],
+		[qw[ NEW                 ClassOrInterfaceTypeToInstantiate PAREN_OPEN  ArgumentList  PAREN_CLOSE              ]],
+		[qw[ NEW  TypeArguments  ClassOrInterfaceTypeToInstantiate PAREN_OPEN                PAREN_CLOSE              ]],
+		[qw[ NEW                 ClassOrInterfaceTypeToInstantiate PAREN_OPEN                PAREN_CLOSE              ]],
+		;
+
+	rule VariableAccess              =>
+		[qw[ ExpressionName ]],
+		[qw[    FieldAccess ]],
+		;
+
+	rule VariableArityParameter      =>
+		[qw[   VariableModifier_list_2  UnannType  Annotation_list_8  ELIPSIS Identifier ]],
+		[qw[                            UnannType  Annotation_list_8  ELIPSIS Identifier ]],
+		[qw[   VariableModifier_list_2  UnannType                     ELIPSIS Identifier ]],
+		[qw[                            UnannType                     ELIPSIS Identifier ]],
+		;
+
+	rule VariableDeclarator          =>
+		[qw[ VariableDeclaratorId  ASSIGN VariableInitializer   ]],
+		[qw[ VariableDeclaratorId                               ]],
+		;
+
+	rule VariableDeclaratorId        =>
+		[qw[ Identifier  Dims   ]],
+		[qw[ Identifier         ]],
+		;
+
+	rule VariableDeclaratorList      =>
+		[qw[ VariableDeclarator_list_1  ]],
+		;
+
+	rule VariableDeclarator_list_1   =>
+		[qw[ VariableDeclarator                                  ]],
+		[qw[ VariableDeclarator COMMA  VariableDeclarator_list_1 ]],
+		;
+
+	rule VariableInitializer         =>
+		[qw[       Expression ]],
+		[qw[ ArrayInitializer ]],
+		;
+
+	rule VariableInitializerList     =>
+		[qw[ VariableInitializer_list_1  ]],
+		;
+
+	rule VariableInitializer_list_1  =>
+		[qw[ VariableInitializer                                   ]],
+		[qw[ VariableInitializer COMMA  VariableInitializer_list_1 ]],
+		;
+
+	rule VariableModifier            =>
+		[qw[ Annotation ]],
+		[qw[      FINAL ]],
+		;
+
+	rule VariableModifier_list_1     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_1 ]],
+		;
+
+	rule VariableModifier_list_2     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_2 ]],
+		;
+
+	rule VariableModifier_list_3     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_3 ]],
+		;
+
+	rule VariableModifier_list_4     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_4 ]],
+		;
+
+	rule VariableModifier_list_5     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_5 ]],
+		;
+
+	rule VariableModifier_list_6     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_6 ]],
+		;
+
+	rule VariableModifier_list_7     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_7 ]],
+		;
+
+	rule VariableModifier_list_8     =>
+		[qw[ VariableModifier                         ]],
+		[qw[ VariableModifier VariableModifier_list_8 ]],
+		;
+
+	rule WhileStatement              =>
+		[qw[ WHILE PAREN_OPEN Expression PAREN_CLOSE Statement ]],
+		;
+
+	rule WhileStatementNoShortIf     =>
+		[qw[ WHILE PAREN_OPEN Expression PAREN_CLOSE StatementNoShortIf ]],
+		;
+
+	rule Wildcard                    =>
+		[qw[   Annotation_list_15  QUESTION_MARK  WildcardBounds   ]],
+		[qw[                       QUESTION_MARK  WildcardBounds   ]],
+		[qw[   Annotation_list_15  QUESTION_MARK                   ]],
+		[qw[                       QUESTION_MARK                   ]],
+		;
+
+	rule WildcardBounds              =>
+		[qw[ EXTENDS ReferenceType ]],
+		[qw[   SUPER ReferenceType ]],
+		;
 
