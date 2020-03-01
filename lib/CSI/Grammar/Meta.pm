@@ -18,6 +18,12 @@ package CSI::Grammar::Meta v1.0.0 {
 		default => sub { +{} },
 	);
 
+	has _dom => (
+		is => 'ro',
+		init_arg => undef,
+		default => sub { +{} },
+	);
+
 	has actions => (
 		is => 'ro',
 		init_arg => undef,
@@ -83,6 +89,18 @@ package CSI::Grammar::Meta v1.0.0 {
 		my ($self, @loookup) = @_;
 
 		unshift @{ $self->action_lookup }, @loookup;
+	}
+
+	sub add_dom {
+		my ($self, $rule, $class) = @_;
+
+		$self->_dom->{$rule} = $class;
+	}
+
+	sub dom_for {
+		my ($self, $rule) = @_;
+
+		$self->_dom->{$rule};
 	}
 };
 
