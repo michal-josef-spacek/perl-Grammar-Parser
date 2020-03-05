@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 7;
+plan tests => 9;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -611,6 +611,84 @@ subtest "expect_reference"  => sub {
 			{ 'CSI::Language::Java::Identifier' => 'var' },
 		] },
 		;
+
+	done_testing;
+};
+
+subtest "expect_import_declaration"     => sub {
+	plan tests => 4;
+
+	is "expect_import_declaration / import" =>
+		expect => expect_import_declaration (
+			[qw[ foo bar ]],
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / static import" =>
+		expect => expect_import_declaration (
+			'static',
+			[qw[ foo bar ]],
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Token::Word::Static' => 'static'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / type import" =>
+		expect => expect_import_declaration (
+			[qw[ foo bar ]],
+			'*',
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Dot' => '.' },
+			{ 'CSI::Language::Java::Token::Import::Type' => '*' },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / static type import" =>
+		expect => expect_import_declaration (
+			'static',
+			[qw[ foo bar ]],
+			'*',
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Token::Word::Static' => 'static'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Dot' => '.' },
+			{ 'CSI::Language::Java::Token::Import::Type' => '*' },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	done_testing;
 };
 
 subtest "expect_package_declaration"    => sub {
@@ -649,6 +727,82 @@ subtest "expect_package_declaration"    => sub {
 				{ 'CSI::Language::Java::Token::Dot' => '.' },
 				{ 'CSI::Language::Java::Identifier' => 'bar' },
 			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	done_testing;
+};
+
+subtest "expect_import_declaration"     => sub {
+	plan tests => 4;
+
+	is "expect_import_declaration / single type" =>
+		expect => expect_import_declaration (
+			[qw[ foo bar ]],
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / static single type" =>
+		expect => expect_import_declaration (
+			'static',
+			[qw[ foo bar ]],
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Token::Word::Static' => 'static'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / type import" =>
+		expect => expect_import_declaration (
+			[qw[ foo bar ]],
+			'*',
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Dot' => '.' },
+			{ 'CSI::Language::Java::Token::Import::Type' => '*' },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_import_declaration / static type import" =>
+		expect => expect_import_declaration (
+			'static',
+			[qw[ foo bar ]],
+			'*',
+		),
+		got    => { 'CSI::Language::Java::Import::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Import' => 'import'},
+			{ 'CSI::Language::Java::Token::Word::Static' => 'static'},
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Dot' => '.' },
+			{ 'CSI::Language::Java::Token::Import::Type' => '*' },
 			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
 		] },
 		;
