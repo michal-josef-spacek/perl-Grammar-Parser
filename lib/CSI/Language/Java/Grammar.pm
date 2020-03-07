@@ -452,6 +452,26 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  constructor_modifier                         ]],
 		;
 
+	rule  enum_body                         => dom => 'CSI::Language::Java::Enum::Body',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-EnumBody
+		[qw[  BRACE_OPEN  enum_constants  COMMA  enum_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  enum_constants  COMMA                          BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  enum_constants         enum_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  enum_constants                                 BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                  COMMA  enum_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                  COMMA                          BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                         enum_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                                 BRACE_CLOSE  ]],
+		;
+
+	rule  enum_declaration                  => dom => 'CSI::Language::Java::Enum::Declaration',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-EnumDeclaration
+		[qw[  class_modifiers  enum  type_name  class_implements  enum_body  ]],
+		[qw[  class_modifiers  enum  type_name                    enum_body  ]],
+		[qw[                   enum  type_name  class_implements  enum_body  ]],
+		[qw[                   enum  type_name                    enum_body  ]],
+		;
+
 	rule  field_modifier                    => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  private     ]],
@@ -1192,19 +1212,6 @@ __END__
 		];
 	}
 
-	sub enum_body                   :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN                                                       BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                               enum_body_declarations  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                       COMMA                           BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                       COMMA   enum_body_declarations  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  enum_constant_list                                   BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  enum_constant_list           enum_body_declarations  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  enum_constant_list   COMMA                           BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  enum_constant_list   COMMA   enum_body_declarations  BRACE_CLOSE ]],
-		];
-	}
-
 	sub enum_body_declarations      :RULE :ACTION_DEFAULT {
 		[
 			[qw[ SEMICOLON  class_body_declaration_list   ]],
@@ -1252,15 +1259,6 @@ __END__
 	sub enum_constant_name          :RULE :ACTION_ALIAS {
 		[
 			[qw[ identifier ]],
-		];
-	}
-
-	sub enum_declaration            :RULE :ACTION_DEFAULT {
-		[
-			[qw[                        ENUM type_identifier                   enum_body ]],
-			[qw[                        ENUM type_identifier  superinterfaces  enum_body ]],
-			[qw[   class_modifier_list  ENUM type_identifier                   enum_body ]],
-			[qw[   class_modifier_list  ENUM type_identifier  superinterfaces  enum_body ]],
 		];
 	}
 
