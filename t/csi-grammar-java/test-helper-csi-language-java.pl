@@ -236,6 +236,16 @@ sub expect_class_extends                {
 	));
 }
 
+sub expect_class_implements             {
+	expect_element ('CSI::Language::Java::Class::Implements' => (
+		expect_word_implements,
+		_list_with_separator (
+			[ expect_token_comma ],
+			map expect_class_type (@$_), @_,
+		),
+	));
+}
+
 sub expect_class_type                   {
 	my ($class) = @_;
 
