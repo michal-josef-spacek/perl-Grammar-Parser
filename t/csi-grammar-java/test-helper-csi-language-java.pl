@@ -277,6 +277,13 @@ sub expect_import_declaration           {
 	));
 }
 
+sub expect_interface_extends            {
+	expect_element ('CSI::Language::Java::Interface::Extends' => (
+		expect_word_extends,
+		_list_with_separator ([ expect_token_comma ], @_),
+	));
+}
+
 sub expect_modifiers                    {
 	map {
 		exists $_->{'CSI::Language::Java::Annotation'}
