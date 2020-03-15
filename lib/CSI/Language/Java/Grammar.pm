@@ -798,6 +798,16 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  class_type       ]],
 		;
 
+	rule  type_argument                     =>
+		[qw[  reference_type  ]],
+		[qw[  type_wildcard   ]],
+		;
+
+	rule  type_argument_list                =>
+		[qw[  type_argument  COMMA  type_argument_list  ]],
+		[qw[  type_argument                             ]],
+		;
+
 	rule  type_arguments                    => dom => 'CSI::Language::Java::Type::Arguments',
 		[qw[  TYPE_LIST_OPEN  type_argument_list  TYPE_LIST_CLOSE  ]],
 		[qw[  TYPE_LIST_OPEN                      TYPE_LIST_CLOSE  ]],
@@ -865,6 +875,18 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  type_variable                     => dom => 'CSI::Language::Java::Type::Variable',
 		[qw[  class_type  type_bound  ]],
+		;
+
+	rule  type_wildcard                     => dom => 'CSI::Language::Java::Type::Wildcard',
+		[qw[  annotations  QUESTION_MARK  type_wildcard_bounds  ]],
+		[qw[  annotations  QUESTION_MARK                        ]],
+		[qw[               QUESTION_MARK  type_wildcard_bounds  ]],
+		[qw[               QUESTION_MARK                        ]],
+		;
+
+	rule  type_wildcard_bounds              =>
+		[qw[  extends  reference_type  ]],
+		[qw[  super    reference_type  ]],
 		;
 
 	rule  variable_modifier                 => dom => 'CSI::Language::Java::Modifier',
@@ -1282,12 +1304,6 @@ __END__
 	sub default_value               :RULE :ACTION_DEFAULT {
 		[
 			[qw[ DEFAULT element_value ]],
-		];
-	}
-
-	sub diamond                     :RULE :ACTION_SYMBOL {
-		[
-			[qw[ LESS_THAN GREATER_THAN ]],
 		];
 	}
 
@@ -2165,33 +2181,6 @@ __END__
 		]
 	}
 
-	sub type_argument               :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ reference_type ]],
-			[qw[       wildcard ]],
-		]
-	}
-
-	sub type_argument_list          :RULE :ACTION_LIST {
-		[
-			[qw[ type_argument ]],
-			[qw[ type_argument COMMA type_argument_list  ]],
-		]
-	}
-
-	sub type_arguments              :RULE :ACTION_DEFAULT {
-		[
-			[qw[ LESS_THAN type_argument_list GREATER_THAN ]],
-		]
-	}
-
-	sub type_arguments_or_diamond   :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ type_arguments ]],
-			[qw[        diamond ]],
-		]
-	}
-
 	sub type_name                   :RULE :ACTION_ALIAS {
 		[
 			[qw[ qualified_identifier ]],
@@ -2354,22 +2343,6 @@ __END__
 	sub while_statement_no_short_if :RULE :ACTION_DEFAULT {
 		[
 			[qw[ WHILE PAREN_OPEN expression PAREN_CLOSE statement_no_short_if ]],
-		]
-	}
-
-	sub wildcard                    :RULE :ACTION_DEFAULT {
-		[
-			[qw[   annotation_list  QUESTION_MARK  wildcard_bounds   ]],
-			[qw[                    QUESTION_MARK  wildcard_bounds   ]],
-			[qw[   annotation_list  QUESTION_MARK                    ]],
-			[qw[                    QUESTION_MARK                    ]],
-		]
-	}
-
-	sub wildcard_bounds             :RULE :ACTION_DEFAULT {
-		[
-			[qw[ EXTENDS reference_type ]],
-			[qw[   SUPER reference_type ]],
 		]
 	}
 

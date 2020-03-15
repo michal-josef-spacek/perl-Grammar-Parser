@@ -225,6 +225,21 @@ sub expect_annotation                   {
 	));
 }
 
+sub expect_array_type                   {
+	my ($array) = @_;
+
+	return $array
+		unless Ref::Util::is_plain_arrayref ($array);
+
+	expect_element ('CSI::Language::Java::Type::Array' => (
+		expect_array_type ($array->[0]),
+		expect_element ('CSI::Language::Java::Array::Dimension' => (
+			expect_token_bracket_open,
+			expect_token_bracket_close,
+		)),
+	));
+}
+
 sub expect_identifier                   {
 	expect_token '::Identifier' => @_
 }
