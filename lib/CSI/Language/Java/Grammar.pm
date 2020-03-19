@@ -455,6 +455,24 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                   class  type_name                                                    class_body  ]],
 		;
 
+	rule  class_literal                     => dom => 'CSI::Language::Java::Literal::Class',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ClassLiteral
+		[qw[  type_reference  class_literal_dims  DOT  class  ]],
+		[qw[  type_reference                      DOT  class  ]],
+		[qw[  primitive_type  class_literal_dims  DOT  class  ]],
+		[qw[  primitive_type                      DOT  class  ]],
+		[qw[  void                                DOT  class  ]],
+		;
+
+	rule  class_literal_dim                 => dom => 'CSI::Language::Java::Literal::Class::Dim',
+		[qw[  BRACKET_OPEN  BRACKET_CLOSE  ]],
+		;
+
+	rule  class_literal_dims                =>
+		[qw[  class_literal_dim  class_literal_dims  ]],
+		[qw[  class_literal_dim                      ]],
+		;
+
 	rule  class_modifier                    => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  private     ]],
@@ -1076,18 +1094,6 @@ __END__
 			[qw[                     unqualified_class_instance_creation_expression ]],
 			[qw[ expression_name DOT unqualified_class_instance_creation_expression ]],
 			[qw[         primary DOT unqualified_class_instance_creation_expression ]],
-		];
-	}
-
-	sub class_literal               :RULE :ACTION_DEFAULT {
-		[
-			[qw[    type_name                            DOT CLASS ]],
-			[qw[    type_name BRACKET_OPEN BRACKET_CLOSE DOT CLASS ]],
-			[qw[ numeric_type                            DOT CLASS ]],
-			[qw[ numeric_type BRACKET_OPEN BRACKET_CLOSE DOT CLASS ]],
-			[qw[      BOOLEAN                            DOT CLASS ]],
-			[qw[      BOOLEAN BRACKET_OPEN BRACKET_CLOSE DOT CLASS ]],
-			[qw[         VOID                            DOT CLASS ]],
 		];
 	}
 
