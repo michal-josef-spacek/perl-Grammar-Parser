@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 9;
+plan tests => 10;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -567,6 +567,21 @@ subtest "expect_annotation" => sub {
 			] },
 			{ 'CSI::Language::Java::Token::Paren::Open'  => '(' },
 			{ 'CSI::Language::Java::Token::Paren::Close' => ')' },
+		] },
+		;
+
+	done_testing;
+};
+
+subtest "expect_type_class"             => sub {
+	#plan tests => 3;
+
+	is "expect_type_class / short type name" =>
+		expect => expect_type_class ([qw[ Map ]]),
+		got    => { 'CSI::Language::Java::Type::Class' => [
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'Map' },
+			] },
 		] },
 		;
 

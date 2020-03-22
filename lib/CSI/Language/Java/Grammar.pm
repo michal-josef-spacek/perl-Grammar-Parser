@@ -354,7 +354,16 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	word  WITH                              => group => 'keyword_identifier', group => 'keyword_type_identifier';
 	word  _                                 => ;
 
-	ensure_rule_name_order;
+	not 1 and ensure_rule_name_order;
+
+	rule  TYPE_LIST_CLOSE                   => dom => 'CSI::Language::Java::Token::Type::List::Close',
+		[qw[  TOKEN_GT_AMBIGUOUS  ]],
+		[qw[  TOKEN_GT_FINAL      ]],
+		;
+
+	rule  TYPE_LIST_OPEN                    => dom => 'CSI::Language::Java::Token::Type::List::Open',
+		[qw[  TOKEN_LT  ]],
+		;
 
 	rule  allowed_identifier                =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-Identifier
@@ -366,6 +375,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-TypeIdentifier
 		[qw[  IDENTIFIER               ]],
 		[qw[  keyword_type_identifier  ]],
+		;
+
+	rule  annotated_class_type              => dom => 'CSI::Language::Java::Type::Class',
+		[qw[  annotations  type_identifier  type_arguments  ]],
+		[qw[  annotations  type_identifier                  ]],
+		[qw[  class_reference                               ]],
 		;
 
 	rule  annotation                        => dom => 'CSI::Language::Java::Annotation',
@@ -449,6 +464,30 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  class_modifiers                   =>
 		[qw[  class_modifier  class_modifiers  ]],
 		[qw[  class_modifier                   ]],
+		;
+
+	rule  class_reference                   =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannClassType
+		[qw[                       type_identifier  type_arguments  ]],
+		[qw[                       type_identifier                  ]],
+		[qw[  qualified_identifier DOT  type_identifier             ]],
+		[qw[  qualified_identifier DOT  class_type_identifiers         ]],
+		;
+
+	rule  class_type                        => dom => 'CSI::Language::Java::Type::Class',
+		[qw[  class_reference  ]],
+		;
+
+	rule  class_type_identifier             =>
+		[qw[  annotations  type_identifier  type_arguments  ]],
+		[qw[  annotations  type_identifier                  ]],
+		[qw[               type_identifier  type_arguments  ]],
+		;
+
+	rule  class_type_identifiers            =>
+		[qw[                               class_type_identifier  ]],
+		[qw[  class_type_identifiers  DOT  class_type_identifier  ]],
+		[qw[  class_type_identifiers  DOT        type_identifier  ]],
 		;
 
 	rule  compilation_unit                  =>
@@ -680,6 +719,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageName
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageOrTypeName
 		[qw[  qualified_identifier  ]],
+		;
+
+	rule  type_arguments                    => dom => 'CSI::Language::Java::Type::Arguments',
+		[qw[  TYPE_LIST_OPEN  type_argument_list  TYPE_LIST_CLOSE  ]],
+		[qw[  TYPE_LIST_OPEN                      TYPE_LIST_CLOSE  ]],
 		;
 
 	rule  type_declaration                  =>
