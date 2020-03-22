@@ -380,6 +380,32 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  annotation               ]],
 		;
 
+	rule  class_body                        => dom => 'CSI::Language::Java::Class::Body',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-ClassBody
+		[qw[  BRACE_OPEN  class_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                           BRACE_CLOSE  ]],
+		;
+
+	rule  class_declaration                 => dom => 'CSI::Language::Java::Class::Declaration',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-NormalClassDeclaration
+		[qw[  class_modifiers  class  type_name  type_parameters  class_extends  class_implements  class_body  ]],
+		[qw[  class_modifiers  class  type_name  type_parameters  class_extends                    class_body  ]],
+		[qw[  class_modifiers  class  type_name  type_parameters                 class_implements  class_body  ]],
+		[qw[  class_modifiers  class  type_name  type_parameters                                   class_body  ]],
+		[qw[  class_modifiers  class  type_name                   class_extends  class_implements  class_body  ]],
+		[qw[  class_modifiers  class  type_name                   class_extends                    class_body  ]],
+		[qw[  class_modifiers  class  type_name                                  class_implements  class_body  ]],
+		[qw[  class_modifiers  class  type_name                                                    class_body  ]],
+		[qw[                   class  type_name  type_parameters  class_extends  class_implements  class_body  ]],
+		[qw[                   class  type_name  type_parameters  class_extends                    class_body  ]],
+		[qw[                   class  type_name  type_parameters                 class_implements  class_body  ]],
+		[qw[                   class  type_name  type_parameters                                   class_body  ]],
+		[qw[                   class  type_name                   class_extends  class_implements  class_body  ]],
+		[qw[                   class  type_name                   class_extends                    class_body  ]],
+		[qw[                   class  type_name                                  class_implements  class_body  ]],
+		[qw[                   class  type_name                                                    class_body  ]],
+		;
+
 	rule  class_modifier                    => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  private     ]],
@@ -589,8 +615,28 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  qualified_identifier  ]],
 		;
 
+	rule  type_declaration                  =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-7.html#jls-TypeDeclaration
+		[qw[  annotation_declaration   ]],
+		[qw[  class_declaration        ]],
+		[qw[  enum_declaration         ]],
+		[qw[  interface_declaration    ]],
+		[qw[  SEMICOLON                ]],
+		;
+
+	rule  type_declarations                 =>
+		[qw[  type_declaration                     ]],
+		[qw[  type_declaration  type_declarations  ]],
+		;
+
 	rule  type_identifier                   => dom => 'CSI::Language::Java::Identifier',
 		[qw[  allowed_type_identifier  ]],
+		;
+
+	rule  type_name                         => dom => 'CSI::Language::Java::Type::Name',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-TypeIdentifier
+		[qw[  IDENTIFIER               ]],
+		[qw[  keyword_type_identifier  ]],
 		;
 
 	rule  type_reference                    => dom => 'CSI::Language::Java::Reference',
@@ -879,13 +925,6 @@ __END__
 		];
 	}
 
-	sub class_body                  :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  class_body_declaration_list  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                               BRACE_CLOSE ]],
-		];
-	}
-
 	sub class_body_declaration      :RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[ class_member_declaration ]],
@@ -899,13 +938,6 @@ __END__
 		[
 			[qw[ class_body_declaration                             ]],
 			[qw[ class_body_declaration class_body_declaration_list ]],
-		];
-	}
-
-	sub class_declaration           :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ normal_class_declaration ]],
-			[qw[         enum_declaration ]],
 		];
 	}
 
@@ -1724,27 +1756,6 @@ __END__
 		];
 	}
 
-	sub normal_class_declaration    :RULE :ACTION_DEFAULT {
-		[
-			[qw[                        CLASS type_identifier                                                  class_body ]],
-			[qw[                        CLASS type_identifier                                 superinterfaces  class_body ]],
-			[qw[                        CLASS type_identifier                    superclass                    class_body ]],
-			[qw[                        CLASS type_identifier                    superclass   superinterfaces  class_body ]],
-			[qw[                        CLASS type_identifier  type_parameters                                 class_body ]],
-			[qw[                        CLASS type_identifier  type_parameters                superinterfaces  class_body ]],
-			[qw[                        CLASS type_identifier  type_parameters   superclass                    class_body ]],
-			[qw[                        CLASS type_identifier  type_parameters   superclass   superinterfaces  class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier                                                  class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier                                 superinterfaces  class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier                    superclass                    class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier                    superclass   superinterfaces  class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier  type_parameters                                 class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier  type_parameters                superinterfaces  class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier  type_parameters   superclass                    class_body ]],
-			[qw[   class_modifier_list  CLASS type_identifier  type_parameters   superclass   superinterfaces  class_body ]],
-		]
-	}
-
 	sub normal_interface_declaration:RULE :ACTION_DEFAULT {
 		[
 			[qw[   interface_modifier_list  INTERFACE type_identifier  type_parameters   extends_interfaces  interface_body ]],
@@ -2114,21 +2125,6 @@ __END__
 			[qw[ EXTENDS type_variable                              ]],
 			[qw[ EXTENDS class_or_interface_type  additional_bound  ]],
 			[qw[ EXTENDS class_or_interface_type                    ]],
-		]
-	}
-
-	sub type_declaration            :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[     class_declaration ]],
-			[qw[ interface_declaration ]],
-			[qw[             SEMICOLON ]],
-		]
-	}
-
-	sub type_declaration_list       :RULE :ACTION_LIST {
-		[
-			[qw[ type_declaration                       ]],
-			[qw[ type_declaration type_declaration_list ]],
 		]
 	}
 

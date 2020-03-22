@@ -289,6 +289,25 @@ sub expect_type_identifier              {
 	expect_token ('::Type::Identifier' => @_)
 }
 
+sub expect_type_name                    {
+	my ($name) = @_;
+
+	expect_token ('CSI::Language::Java::Type::Name' => $name);
+}
+
+sub expect_type_reference               {
+	my (@params) = @_;
+
+	my $counter = scalar grep ! ref, @params;
+	expect_element ('CSI::Language::Java::Type::Reference' => (
+		map {
+			ref $_
+				? $_
+				: ( expect_identifier ($_), (expect_token_dot) x!! --$counter )
+		} @params
+	));
+}
+
 1;
 
 __END__
