@@ -380,6 +380,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  annotation               ]],
 		;
 
+	rule  compilation_unit                  =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-7.html#jls-CompilationUnit
+		[qw[  ordinary_compilation_unit  ]],
+		[qw[  modular_compilation_unit   ]],
+		;
+
 	rule  identifier                        => dom => 'CSI::Language::Java::Identifier',
 		[qw[  allowed_identifier  ]],
 		;
@@ -412,6 +418,35 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  marker_annotation                 =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-MarkerAnnotation
 		[qw[  ANNOTATION  type_reference  ]],
+		;
+
+	rule  ordinary_compilation_unit         =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-7.html#jls-OrdinaryCompilationUnit
+		[qw[  package_declaration  import_declarations  type_declarations  ]],
+		[qw[  package_declaration  import_declarations                     ]],
+		[qw[  package_declaration                       type_declarations  ]],
+		[qw[  package_declaration                                          ]],
+		[qw[                       import_declarations  type_declarations  ]],
+		[qw[                       import_declarations                     ]],
+		[qw[                                            type_declarations  ]],
+		;
+
+	rule  package_declaration               => dom => 'CSI::Language::Java::Package::Declaration',
+		[qw[  package_modifiers  package  package_name  SEMICOLON  ]],
+		[qw[                     package  package_name  SEMICOLON  ]],
+		;
+
+	rule  package_modifier                  =>
+		[qw[  annotation  ]],
+		;
+
+	rule  package_modifiers                 =>
+		[qw[  package_modifier  package_modifiers  ]],
+		[qw[  package_modifier                     ]],
+		;
+
+	rule  package_name                      => dom => 'CSI::Language::Java::Package::Name',
+		[qw[  qualified_identifier  ]],
 		;
 
 	rule  qualified_identifier              =>
@@ -835,13 +870,6 @@ __END__
 			[qw[ class_or_interface_type DOT annotation_list type_identifier                   ]],
 			[qw[ class_or_interface_type DOT                 type_identifier type_arguments    ]],
 			[qw[ class_or_interface_type DOT                 type_identifier                   ]],
-		];
-	}
-
-	sub compilation_unit            :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ ordinary_compilation_unit ]],
-			[qw[  modular_compilation_unit ]],
 		];
 	}
 
@@ -1758,44 +1786,6 @@ __END__
 			[qw[       integral_type ]],
 			[qw[ floating_point_type ]],
 		]
-	}
-
-	sub ordinary_compilation_unit   :RULE :ACTION_DEFAULT {
-		[
-			[qw[   package_declaration   import_declaration_list   type_declaration_list   ]],
-			[qw[                         import_declaration_list   type_declaration_list   ]],
-			[qw[   package_declaration                             type_declaration_list   ]],
-			[qw[                                                   type_declaration_list   ]],
-			[qw[   package_declaration   import_declaration_list                           ]],
-			[qw[                         import_declaration_list                           ]],
-			[qw[   package_declaration                                                     ]],
-		];
-	}
-
-	sub package_declaration         :RULE :ACTION_DEFAULT {
-		[
-			[qw[ package_modifier_list PACKAGE package_name SEMICOLON ]],
-			[qw[                       PACKAGE package_name SEMICOLON ]],
-		];
-	}
-
-	sub package_modifier            :RULE :ACTION_DEFAULT {
-		[
-			[qw[ annotation ]],
-		]
-	}
-
-	sub package_modifier_list       :RULE :ACTION_LIST {
-		[
-			[qw[ package_modifier                       ]],
-			[qw[ package_modifier package_modifier_list ]],
-		];
-	}
-
-	sub package_name                :RULE :ACTION_ALIAS {
-		[
-			[qw[ qualified_identifier ]],
-		];
 	}
 
 	sub package_or_type_name        :RULE :ACTION_ALIAS {

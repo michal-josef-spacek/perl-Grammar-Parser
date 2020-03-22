@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 6;
+plan tests => 7;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -609,6 +609,47 @@ subtest "expect_reference"  => sub {
 			{ 'CSI::Language::Java::Identifier' => 'bar' },
 			{ 'CSI::Language::Java::Token::Dot' => '.'   },
 			{ 'CSI::Language::Java::Identifier' => 'var' },
+		] },
+		;
+};
+
+subtest "expect_package_declaration"    => sub {
+	plan tests => 2;
+
+	is "expect_package_declaration / with just package name" =>
+		expect => expect_package_declaration (
+			[qw[ foo bar ]],
+		),
+		got    => { 'CSI::Language::Java::Package::Declaration' => [
+			{ 'CSI::Language::Java::Token::Word::Package' => 'package'},
+			{ 'CSI::Language::Java::Package::Name' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
+		] },
+		;
+
+	is "expect_package_declaration / with annotations" =>
+		expect => expect_package_declaration (
+			[qw[ foo bar ]],
+			expect_annotation ([qw[ foo ]]),
+		),
+		got    => { 'CSI::Language::Java::Package::Declaration' => [
+			{ 'CSI::Language::Java::Annotation' => [
+				{ 'CSI::Language::Java::Token::Annotation' => '@' },
+				{ 'CSI::Language::Java::Reference' => [
+					{ 'CSI::Language::Java::Identifier' => 'foo' },
+				] },
+			] },
+			{ 'CSI::Language::Java::Token::Word::Package' => 'package'},
+			{ 'CSI::Language::Java::Package::Name' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.' },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+			] },
+			{ 'CSI::Language::Java::Token::Semicolon' => ';' },
 		] },
 		;
 
