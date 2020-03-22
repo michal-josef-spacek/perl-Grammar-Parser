@@ -110,7 +110,12 @@ sub is {
 
 	test_frame {
 		my $got = build_got %params;
-		Test::Deep::cmp_deeply $got, $params{expect}, $title;
+		Test::Deep::cmp_deeply $got, $params{expect}, $title
+			or do {
+				use DDP;
+				diag np $got;
+				diag np $params{expect};
+			};
 	};
 }
 

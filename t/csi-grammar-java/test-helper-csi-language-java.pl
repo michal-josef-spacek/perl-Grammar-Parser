@@ -15,6 +15,7 @@ proclaim 'csi-language' => 'CSI::Language::Java::Grammar';
 
 sub expect_element;
 sub expect_token;
+sub expect_token_annotation;
 sub expect_word;
 sub expect_word_false;
 sub expect_word_null;
@@ -185,6 +186,19 @@ sub expect_word_void                    { expect_word '::Token::Word::Void'     
 sub expect_word_volatile                { expect_word '::Token::Word::Volatile'     }
 sub expect_word_while                   { expect_word '::Token::Word::While'        }
 sub expect_word_with                    { expect_word '::Token::Word::With'         }
+sub expect_annotation                   {
+	my ($name, @params) = @_;
+
+	expect_element ('::Annotation' => (
+		expect_token_annotation,
+		expect_reference ($name),
+		@params
+			? (expect_token_paren_open, (grep defined, @params), expect_token_paren_close)
+			: ()
+			,
+	));
+}
+
 sub expect_identifier                   {
 	expect_token '::Identifier' => @_
 }
@@ -208,4 +222,19 @@ sub expect_reference                    {
 }
 
 1;
+
+__END__
+sub expect_annotated_type_reference     {
+	my (@params) = @_;
+
+	my $counter = scalar grep ! ref, @params;
+	expect_element ('CSI::Language::Java::Type::Reference' => (
+		map {
+			ref $_
+				? $_
+				: ( expect_identifier ($_), (expect_token_dot ()) x!! --$counter )
+		} @params
+	));
+}
+
 

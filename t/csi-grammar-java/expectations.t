@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 5;
+plan tests => 6;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -526,6 +526,48 @@ subtest "tokens"            => sub {
 		got    => {
 			'CSI::Language::Java::Token::Type::List::Open' => '<',
 		},
+		;
+
+	done_testing;
+};
+
+subtest "expect_annotation" => sub {
+	plan tests => 3;
+
+	is "expect_annotation / referenced by identifer" =>
+		expect => expect_annotation ([qw[ foo ]]),
+		got    => { 'CSI::Language::Java::Annotation' => [
+			{ 'CSI::Language::Java::Token::Annotation' => '@' },
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+			] },
+		] },
+		;
+
+	is "expect_annotation / referenced by qualified identifier" =>
+		expect => expect_annotation ([qw[ foo bar baz ]]),
+		got    => { 'CSI::Language::Java::Annotation' => [
+			{ 'CSI::Language::Java::Token::Annotation' => '@' },
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+				{ 'CSI::Language::Java::Token::Dot' => '.'   },
+				{ 'CSI::Language::Java::Identifier' => 'bar' },
+				{ 'CSI::Language::Java::Token::Dot' => '.'   },
+				{ 'CSI::Language::Java::Identifier' => 'baz' },
+			] },
+		] },
+		;
+
+	is "expect_annotation / with empty parameters" =>
+		expect => expect_annotation ([qw[ foo ]], undef),
+		got    => { 'CSI::Language::Java::Annotation' => [
+			{ 'CSI::Language::Java::Token::Annotation' => '@' },
+			{ 'CSI::Language::Java::Reference' => [
+				{ 'CSI::Language::Java::Identifier' => 'foo' },
+			] },
+			{ 'CSI::Language::Java::Token::Paren::Open'  => '(' },
+			{ 'CSI::Language::Java::Token::Paren::Close' => ')' },
+		] },
 		;
 
 	done_testing;

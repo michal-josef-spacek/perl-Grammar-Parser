@@ -28,12 +28,6 @@
 		[qw[ AndExpression AND EqualityExpression ]],
 		;
 
-	rule Annotation                  =>
-		[qw[        NormalAnnotation ]],
-		[qw[        MarkerAnnotation ]],
-		[qw[ SingleElementAnnotation ]],
-		;
-
 	rule AnnotationTypeBody          =>
 		[qw[ BRACE_OPEN  AnnotationTypeMemberDeclaration_list_1  BRACE_CLOSE ]],
 		[qw[ BRACE_OPEN                                          BRACE_CLOSE ]],
@@ -77,96 +71,6 @@
 	rule AnnotationTypeMemberDeclaration_list_1=>
 		[qw[ AnnotationTypeMemberDeclaration                                        ]],
 		[qw[ AnnotationTypeMemberDeclaration AnnotationTypeMemberDeclaration_list_1 ]],
-		;
-
-	rule Annotation_list_1           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_1 ]],
-		;
-
-	rule Annotation_list_10          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_10 ]],
-		;
-
-	rule Annotation_list_11          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_11 ]],
-		;
-
-	rule Annotation_list_12          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_12 ]],
-		;
-
-	rule Annotation_list_13          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_13 ]],
-		;
-
-	rule Annotation_list_14          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_14 ]],
-		;
-
-	rule Annotation_list_15          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_15 ]],
-		;
-
-	rule Annotation_list_16          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_16 ]],
-		;
-
-	rule Annotation_list_17          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_17 ]],
-		;
-
-	rule Annotation_list_18          =>
-		[qw[ Annotation                    ]],
-		[qw[ Annotation Annotation_list_18 ]],
-		;
-
-	rule Annotation_list_2           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_2 ]],
-		;
-
-	rule Annotation_list_3           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_3 ]],
-		;
-
-	rule Annotation_list_4           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_4 ]],
-		;
-
-	rule Annotation_list_5           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_5 ]],
-		;
-
-	rule Annotation_list_6           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_6 ]],
-		;
-
-	rule Annotation_list_7           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_7 ]],
-		;
-
-	rule Annotation_list_8           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_8 ]],
-		;
-
-	rule Annotation_list_9           =>
-		[qw[ Annotation                   ]],
-		[qw[ Annotation Annotation_list_9 ]],
 		;
 
 	rule ArgumentList                =>
@@ -930,10 +834,6 @@
 	rule LocalVariableType           =>
 		[qw[ UnannType ]],
 		[qw[       VAR ]],
-		;
-
-	rule MarkerAnnotation            =>
-		[qw[ AT TypeName ]],
 		;
 
 	rule MethodBody                  =>
