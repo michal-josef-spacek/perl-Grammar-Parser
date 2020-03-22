@@ -375,6 +375,35 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  single_element_annotation  ]],
 		;
 
+	rule  annotation_body                   => dom => 'CSI::Language::Java::Structure::Body::Annotation',
+		[qw[  BRACE_OPEN  annotation_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                BRACE_CLOSE  ]],
+		;
+
+	rule  annotation_body_declaration       =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-AnnotationTypeMemberDeclaration
+		[qw[  annotation_declaration          ]],
+		[qw[  annotation_element_declaration  ]],
+		[qw[  class_declaration               ]],
+		[qw[  constant_declaration            ]],
+		[qw[  empty_declaration               ]],
+		[qw[  interface_declaration           ]],
+		;
+
+	rule  annotation_body_declarations      =>
+		[qw[  annotation_body_declaration  annotation_body_declarations  ]],
+		[qw[  annotation_body_declaration                                ]],
+		;
+
+	rule  annotation_declaration            => dom => 'CSI::Language::Java::Declaration::Annotation',
+		[qw[  interface_modifiers  ANNOTATION  interface  type_name  annotation_body  ]],
+		[qw[                       ANNOTATION  interface  type_name  annotation_body  ]],
+		;
+
+	rule  annotation_reference              => dom => 'CSI::Language::Java::Annotation::Reference',
+		[qw[  qualified_identifier  ]],
+		;
+
 	rule  annotations                       =>
 		[qw[  annotation  annotations  ]],
 		[qw[  annotation               ]],
@@ -716,20 +745,6 @@ __END__
 		[
 			[qw[  equality_expression                    ]],
 			[qw[  equality_expression AND and_expression ]],
-		];
-	}
-
-	sub annotation_type_body        :RULE :ACTION_ALIAS {
-		[
-			[qw[  BRACE_OPEN  annotation_type_member_declaration_list  BRACE_CLOSE  ]],
-			[qw[  BRACE_OPEN                                           BRACE_CLOSE  ]],
-		];
-	}
-
-	sub annotation_type_declaration :RULE :ACTION_DEFAULT {
-		[
-			[qw[  interface_modifier_list  AT  INTERFACE  type_identifier  annotation_type_body  ]],
-			[qw[                           AT  INTERFACE  type_identifier  annotation_type_body  ]],
 		];
 	}
 
