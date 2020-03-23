@@ -595,6 +595,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                   enum  type_name                    enum_body  ]],
 		;
 
+	rule  expression                        =>
+		[qw[  primary                 ]],
+		[qw[  ternary_expression      ]],
+		[qw[  lambda_expression       ]],
+		;
+
 	rule  field_modifier                    => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  private     ]],
@@ -760,6 +766,22 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  package_name                      => dom => 'CSI::Language::Java::Package::Name',
 		[qw[  qualified_identifier  ]],
+		;
+
+	rule  primary                           =>
+		[qw[  array_creation_expression  ]],
+		[qw[  primary_no_new_array       ]],
+		;
+
+	rule  primary_no_new_array              =>
+		[qw[  literal                       ]],
+		[qw[  class_literal                 ]],
+		[qw[  expression_group              ]],
+		[qw[  instance_creation_expression  ]],
+		[qw[  left_hand_side                ]],
+		[qw[  method_invocation             ]],
+		[qw[  method_reference              ]],
+		[qw[  qualified_this                ]],
 		;
 
 	rule  primitive_type                    => dom => 'CSI::Language::Java::Type::Primitive',
@@ -1912,28 +1934,6 @@ __END__
 	sub pre_increment_expression    :RULE :ACTION_DEFAULT {
 		[
 			[qw[ INCREMENT unary_expression ]],
-		]
-	}
-
-	sub primary                     :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[      primary_no_new_array ]],
-			[qw[ array_creation_expression ]],
-		]
-	}
-
-	sub primary_no_new_array        :RULE :ACTION_DEFAULT {
-		[
-			[qw[                            literal ]],
-			[qw[                      class_literal ]],
-			[qw[                               THIS ]],
-			[qw[                 type_name DOT THIS ]],
-			[qw[  PAREN_OPEN expression PAREN_CLOSE ]],
-			[qw[ class_instance_creation_expression ]],
-			[qw[                       field_access ]],
-			[qw[                       array_access ]],
-			[qw[                  method_invocation ]],
-			[qw[                   method_reference ]],
 		]
 	}
 
