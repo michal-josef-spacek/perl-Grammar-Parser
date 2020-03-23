@@ -805,6 +805,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  identifier                             ]],
 		;
 
+	rule  qualified_this                    => dom => 'CSI::Language::Java::Expression::This',
+		[qw[  qualified_identifier  DOT  this  ]],
+		[qw[                             this  ]],
+		;
+
 	rule  qualified_type_identifier         =>
 		[qw[  qualified_identifier  DOT  type_identifier  ]],
 		[qw[                             type_identifier  ]],

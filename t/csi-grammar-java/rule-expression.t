@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 6;
+plan tests => 8;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -45,6 +45,28 @@ test_rule "primary expression / double-group expression" => (
 		expect_literal_null,
 		expect_token_paren_close,
 		expect_token_paren_close,
+	],
+);
+
+test_rule "primary expression / this" => (
+	data => 'this',
+	expect => [
+		expect_element ('CSI::Language::Java::Expression::This' => (
+			expect_word_this,
+		)),
+	],
+);
+
+test_rule "primary expression / qualified this" => (
+	data => 'Foo.Bar.this',
+	expect => [
+		expect_element ('CSI::Language::Java::Expression::This' => (
+			expect_identifier ('Foo'),
+			expect_token_dot,
+			expect_identifier ('Bar'),
+			expect_token_dot,
+			expect_word_this,
+		)),
 	],
 );
 
