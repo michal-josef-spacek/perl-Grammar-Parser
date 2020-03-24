@@ -435,6 +435,32 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  data_type  dim  ]],
 		;
 
+	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
+		[qw[  cast_reference_operators  lambda_expression                ]],
+		[qw[  cast_reference_operators  prefix_element                   ]],
+		[qw[  cast_reference_operators  unary_expression_not_plus_minus  ]],
+		[qw[  cast_primary_operators    unary_element                    ]],
+		;
+
+	rule  cast_primary_operator             => dom => 'CSI::Language::Java::Operator::Cast',
+		[qw[  PAREN_OPEN  primitive_type                    PAREN_CLOSE  ]],
+		;
+
+	rule  cast_primary_operators            =>
+		[qw[  cast_primary_operator  cast_primary_operators  ]],
+		[qw[  cast_primary_operator                          ]],
+		;
+
+	rule  cast_reference_operator           => dom => 'CSI::Language::Java::Operator::Cast',
+		[qw[  PAREN_OPEN  reference_type                    PAREN_CLOSE  ]],
+		[qw[  PAREN_OPEN  reference_type  additional_bound  PAREN_CLOSE  ]],
+		;
+
+	rule  cast_reference_operators          =>
+		[qw[  cast_reference_operator  cast_reference_operators  ]],
+		[qw[  cast_reference_operator                            ]],
+		;
+
 	rule  class_body                        => dom => 'CSI::Language::Java::Class::Body',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-ClassBody
 		[qw[  BRACE_OPEN  class_body_declarations  BRACE_CLOSE  ]],
@@ -600,8 +626,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  postfix_expression  ]],
-		[qw[  postfix_element     ]],
+		[qw[  prefix_expression   ]],
+		[qw[  prefix_element      ]],
 		[qw[  ternary_expression  ]],
 		[qw[  lambda_expression   ]],
 		;
@@ -826,6 +852,30 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  postfix_operator                     ]],
 		;
 
+	rule  prefix_element                    =>
+		[qw[  cast_expression            ]],
+		[qw[  postfix_element            ]],
+		[qw[  postfix_expression         ]],
+		;
+
+	rule  prefix_expression                 => dom => 'CSI::Language::Java::Expression::Prefix',
+		[qw[  prefix_operators  prefix_element  ]],
+		;
+
+	rule  prefix_operator                   =>
+		[qw[  BINARY_COMPLEMENT   ]],
+		[qw[  INCREMENT           ]],
+		[qw[  DECREMENT           ]],
+		[qw[  LOGICAL_COMPLEMENT  ]],
+		[qw[  UNARY_MINUS         ]],
+		[qw[  UNARY_PLUS          ]],
+		;
+
+	rule  prefix_operators                  =>
+		[qw[  prefix_operator  prefix_operators  ]],
+		[qw[  prefix_operator                    ]],
+		;
+
 	rule  primary                           =>
 		[qw[  array_creation_expression  ]],
 		[qw[  primary_no_new_array       ]],
@@ -983,6 +1033,25 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  type_wildcard_bounds              =>
 		[qw[  extends  reference_type  ]],
 		[qw[  super    reference_type  ]],
+		;
+
+	rule  unary_element                     =>
+		[qw[  prefix_element    ]],
+		[qw[  unary_expression  ]],
+		[qw[  cast_expression   ]],
+		;
+
+	rule  unary_expression                  =>
+		[qw[  INCREMENT    unary_element       ]],
+		[qw[  DECREMENT    unary_element       ]],
+		[qw[  UNARY_PLUS   unary_element       ]],
+		[qw[  UNARY_MINUS  unary_element       ]],
+		[qw[  unary_expression_not_plus_minus  ]],
+		;
+
+	rule  unary_expression_not_plus_minus   =>
+		[qw[  BINARY_COMPLEMENT   unary_element  ]],
+		[qw[  LOGICAL_COMPLEMENT  unary_element  ]],
 		;
 
 	rule  variable_modifier                 => dom => 'CSI::Language::Java::Modifier',
@@ -1960,18 +2029,6 @@ __END__
 		]
 	}
 
-	sub pre_decrement_expression    :RULE :ACTION_DEFAULT {
-		[
-			[qw[ DECREMENT unary_expression ]],
-		]
-	}
-
-	sub pre_increment_expression    :RULE :ACTION_DEFAULT {
-		[
-			[qw[ INCREMENT unary_expression ]],
-		]
-	}
-
 	sub primitive_type              :RULE :ACTION_DEFAULT {
 		[
 			[qw[   annotation_list  numeric_type ]],
@@ -2271,16 +2328,6 @@ __END__
 	sub unann_type_variable         :RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[ type_identifier ]],
-		]
-	}
-
-	sub unary_expression            :RULE :ACTION_DEFAULT {
-		[
-			[qw[        pre_increment_expression ]],
-			[qw[        pre_decrement_expression ]],
-			[qw[           PLUS unary_expression ]],
-			[qw[          MINUS unary_expression ]],
-			[qw[ unary_expression_not_plus_minus ]],
 		]
 	}
 
