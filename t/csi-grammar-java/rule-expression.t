@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 13;
+plan tests => 14;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -115,6 +115,17 @@ test_rule "expression / multiplicative expression" => (
 			expect_reference ('foo'),
 			expect_operator_multiplication,
 			expect_literal_integral_decimal ('2'),
+		)),
+	],
+);
+
+test_rule "expression / additive expression" => (
+	data => 'foo + bar',
+	expect => [
+		expect_element ('CSI::Language::Java::Expression::Additive' => (
+			expect_reference ('foo'),
+			expect_operator_addition,
+			expect_reference ('bar'),
 		)),
 	],
 );

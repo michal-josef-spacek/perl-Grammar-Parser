@@ -371,6 +371,26 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  BINARY_AND  class_type  additional_bound  ]],
 		;
 
+	rule  additive_element                  =>
+		[qw[  multiplicative_element     ]],
+		[qw[  multiplicative_expression  ]],
+		;
+
+	rule  additive_elements                 =>
+		[qw[  additive_element  additive_operator  additive_elements  ]],
+		[qw[  additive_element  additive_operator  additive_element   ]],
+		;
+
+	rule  additive_expression               => dom => 'CSI::Language::Java::Expression::Additive',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-AdditiveExpression
+		[qw[  additive_elements  ]],
+		;
+
+	rule  additive_operator                 =>
+		[qw[  ADDITION     ]],
+		[qw[  SUBTRACTION  ]],
+		;
+
 	rule  allowed_identifier                =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-Identifier
 		[qw[  IDENTIFIER          ]],
@@ -626,8 +646,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  multiplicative_expression   ]],
-		[qw[  multiplicative_element      ]],
+		[qw[  additive_expression  ]],
+		[qw[  additive_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -819,6 +839,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  multiplicative_expression         => dom => 'CSI::Language::Java::Expression::Multiplicative',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-MultiplicativeExpression
+		# TODO [  'multiplicative_element',  list( multiplicative_operand ) ]
 		[qw[  multiplicative_elements  ]],
 		;
 
@@ -1095,14 +1116,6 @@ package CSI::Language::Java::Grammar v1.0.0 {
 };
 
 __END__
-
-	sub additive_expression         :RULE :ACTION_LIST {
-		[
-			[qw[  multiplicative_expression                           ]],
-			[qw[  multiplicative_expression PLUS  additive_expression ]],
-			[qw[  multiplicative_expression MINUS additive_expression ]],
-		];
-	}
 
 	sub and_expression              :RULE :ACTION_LIST {
 		[
