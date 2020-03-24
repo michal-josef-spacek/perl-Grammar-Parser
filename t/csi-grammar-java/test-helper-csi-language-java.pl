@@ -299,6 +299,12 @@ sub expect_interface_extends            {
 	));
 }
 
+sub expect_method_name                  {
+	expect_element ('CSI::Language::Java::Method::Name' => (
+		expect_identifier (@_),
+	));
+}
+
 sub expect_modifiers                    {
 	map {
 		exists $_->{'CSI::Language::Java::Annotation'}

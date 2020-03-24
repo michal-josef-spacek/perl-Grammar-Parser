@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 8;
+plan tests => 10;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -67,6 +67,24 @@ test_rule "primary expression / qualified this" => (
 			expect_token_dot,
 			expect_word_this,
 		)),
+	],
+);
+
+test_rule "primary expression / method reference" => (
+	data => 'Foo.Bar::method',
+	expect => [
+		expect_element ('CSI::Language::Java::Method::Reference' => (
+			expect_type_class ([qw[ Foo Bar ]]),
+			expect_token ('CSI::Language::Java::Token::Double::Colon' => '::'),
+			expect_method_name ('method'),
+		)),
+	],
+);
+
+test_rule "primary expression / field access / field of 'var' variable" => (
+	data => 'var.field',
+	expect => [
+		expect_reference (qw[ var field ]),
 	],
 );
 
