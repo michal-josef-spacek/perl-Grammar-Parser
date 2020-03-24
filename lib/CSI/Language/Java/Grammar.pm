@@ -626,10 +626,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  prefix_expression   ]],
-		[qw[  prefix_element      ]],
-		[qw[  ternary_expression  ]],
-		[qw[  lambda_expression   ]],
+		[qw[  multiplicative_expression   ]],
+		[qw[  multiplicative_element      ]],
+		[qw[  ternary_expression     ]],
+		[qw[  lambda_expression      ]],
 		;
 
 	rule  expression_group                  =>
@@ -803,6 +803,29 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  class_type              DOUBLE_COLON  type_arguments  new          ]],
 		[qw[  class_type              DOUBLE_COLON                  new          ]],
 		[qw[  array_type              DOUBLE_COLON                  new          ]],
+		;
+
+	rule  multiplicative_element            =>
+		[qw[  prefix_element     ]],
+		[qw[  prefix_expression  ]],
+		;
+
+	rule  multiplicative_elements           =>
+		# TODO: list of rules in form "DIVISION element", "MODULUS element", "MULTIPLICATION element"
+		# TODO: so it can be addressed by behaviour
+		[qw[  multiplicative_element  multiplicative_operator  multiplicative_elements  ]],
+		[qw[  multiplicative_element  multiplicative_operator  multiplicative_element   ]],
+		;
+
+	rule  multiplicative_expression         => dom => 'CSI::Language::Java::Expression::Multiplicative',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-MultiplicativeExpression
+		[qw[  multiplicative_elements  ]],
+		;
+
+	rule  multiplicative_operator           =>
+		[qw[  DIVISION        ]],
+		[qw[  MODULUS         ]],
+		[qw[  MULTIPLICATION  ]],
 		;
 
 	rule  ordinary_compilation_unit         =>
@@ -2011,15 +2034,6 @@ __END__
 		[
 			[qw[ module_name                        ]],
 			[qw[ module_name COMMA module_name_list ]],
-		];
-	}
-
-	sub multiplicative_expression   :RULE :ACTION_LIST {
-		[
-			[qw[ unary_expression                                    ]],
-			[qw[ unary_expression MULTIPLY multiplicative_expression ]],
-			[qw[ unary_expression DIVIDE   multiplicative_expression ]],
-			[qw[ unary_expression MODULO   multiplicative_expression ]],
 		];
 	}
 
