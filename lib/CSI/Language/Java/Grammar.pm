@@ -600,13 +600,19 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  primary                 ]],
-		[qw[  ternary_expression      ]],
-		[qw[  lambda_expression       ]],
+		[qw[  postfix_expression  ]],
+		[qw[  postfix_element     ]],
+		[qw[  ternary_expression  ]],
+		[qw[  lambda_expression   ]],
 		;
 
 	rule  expression_group                  =>
 		[qw[  PAREN_OPEN  statement_expression  PAREN_CLOSE  ]],
+		;
+
+	rule  expressions                       =>
+		[qw[  expression  COMMA  expressions  ]],
+		[qw[  expression                      ]],
 		;
 
 	rule  field_modifier                    => dom => 'CSI::Language::Java::Modifier',
@@ -800,6 +806,24 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  package_name                      => dom => 'CSI::Language::Java::Package::Name',
 		[qw[  qualified_identifier  ]],
+		;
+
+	rule  postfix_element                   =>
+		[qw[  primary  ]],
+		;
+
+	rule  postfix_expression                => dom => 'CSI::Language::Java::Expression::Postfix',
+		[qw[  postfix_element     postfix_operators  ]],
+		;
+
+	rule  postfix_operator                  =>
+		[qw[  DECREMENT  ]],
+		[qw[  INCREMENT  ]],
+		;
+
+	rule  postfix_operators                 =>
+		[qw[  postfix_operator  postfix_operators  ]],
+		[qw[  postfix_operator                     ]],
 		;
 
 	rule  primary                           =>
@@ -1933,27 +1957,6 @@ __END__
 	sub package_or_type_name        :RULE :ACTION_ALIAS {
 		[
 			[qw[ qualified_identifier ]],
-		]
-	}
-
-	sub post_decrement_expression   :RULE :ACTION_DEFAULT {
-		[
-			[qw[ postfix_expression DECREMENT ]],
-		]
-	}
-
-	sub post_increment_expression   :RULE :ACTION_DEFAULT {
-		[
-			[qw[ postfix_expression INCREMENT ]],
-		]
-	}
-
-	sub postfix_expression          :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[                   primary ]],
-			[qw[           expression_name ]],
-			[qw[ post_increment_expression ]],
-			[qw[ post_decrement_expression ]],
 		]
 	}
 

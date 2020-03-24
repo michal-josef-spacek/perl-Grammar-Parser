@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 10;
+plan tests => 11;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -85,6 +85,16 @@ test_rule "primary expression / field access / field of 'var' variable" => (
 	data => 'var.field',
 	expect => [
 		expect_reference (qw[ var field ]),
+	],
+);
+
+test_rule "postfix expression / decrement" => (
+	data => 'foo--',
+	expect => [
+		expect_element ('CSI::Language::Java::Expression::Postfix' => (
+			expect_reference ('foo'),
+			expect_operator_decrement,
+		)),
 	],
 );
 
