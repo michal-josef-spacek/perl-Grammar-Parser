@@ -16,6 +16,9 @@ proclaim 'csi-language' => 'CSI::Language::Java::Grammar';
 sub expect_element;
 sub expect_token;
 sub expect_word;
+sub expect_word_false;
+sub expect_word_null;
+sub expect_word_true;
 
 ######################################################################
 
@@ -53,6 +56,16 @@ sub expect_token                        {
 	+{ $token => $value // ignore };
 }
 
+sub expect_literal_false                { expect_element '::Literal::Boolean::False', expect_word_false  }
+sub expect_literal_null                 { expect_element '::Literal::Null',           expect_word_null   }
+sub expect_literal_true                 { expect_element '::Literal::Boolean::True',  expect_word_true   }
+sub expect_literal_character            { expect_token LITERAL_CHARACTER        => @_ }
+sub expect_literal_string               { expect_token LITERAL_STRING           => @_ }
+sub expect_literal_floating_decimal     { expect_token LITERAL_FLOAT_DECIMAL    => @_ }
+sub expect_literal_integral_binary      { expect_token LITERAL_INTEGRAL_BINARY  => @_ }
+sub expect_literal_integral_decimal     { expect_token LITERAL_INTEGRAL_DECIMAL => @_ }
+sub expect_literal_integral_hex         { expect_token LITERAL_INTEGRAL_HEX     => @_ }
+sub expect_literal_integral_octal       { expect_token LITERAL_INTEGRAL_OCTAL   => @_ }
 sub expect_word                         {
 	my ($dom) = @_;
 

@@ -74,6 +74,54 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[],
 		;
 
+	regex Binary_Numeral                    => qr/(?>
+		0 [bB]
+		[_01]+
+		(?<= [01])
+	)/sx;
+
+	regex Decimal_Numeral                   => qr/(?>
+		(?! 0 [_[:digit:]] )
+		(?= [[:digit:]])
+		[_[:digit:]]+
+		(?<= [[:digit:]])
+	)/sx;
+
+	regex Escape_Sequence                   => qr/(?>
+		\\
+		(?:
+			  (?<char_escape> (?: [btnrf\'\"\\] ))
+			| (?<octal_escape> (?: (?= [0-7]) [0-3]? [0-7]{1,2} ))
+			| (?: u+ (?<hex_escape> [[:xdigit:]]{4} ))
+		)
+	)/sx;
+
+	regex Exponent_Part                     => qr/(?>
+		[eE]
+		[+-]?
+		(??{ 'Decimal_Numeral' })
+	)/sx;
+
+	regex Floating_Type_Suffix              => qr/(?>
+		[fFdD]
+	)/sx;
+
+	regex Hex_Numeral                       => qr/(?>
+		0 [xX]
+		[_[:xdigit:]]+
+		(?<= [[:xdigit:]])
+	)/sx;
+
+	regex Integral_Type_Suffix              => qr/(?>
+		[lL]
+	)/sx;
+
+	regex Octal_Numeral                     => qr/(?>
+		0
+		[_0-7]+
+		(?<= [0-7])
+	)/sx;
+
 	insignificant token whitespaces         => dom => 'CSI::Language::Java::Token::Whitespace',
 		qr/(?>
 			\s+
@@ -101,6 +149,77 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			\*\/
 		)/sx;
 
+	token LITERAL_CHARACTER                 => action => 'literal_unescape',
+		qr/(?>
+			\'
+			(?<value> [^\'\\] | (??{ 'Escape_Sequence' }) )
+			\'
+		)/sx;
+
+	token LITERAL_FLOAT_DECIMAL             => action => 'float_value',
+		qr/(?>
+			(?:
+				(?<value>
+					(?= \.? [[:digit:]] )
+					(??{ 'Decimal_Numeral' })?
+					\.
+					0* (??{ 'Decimal_Numeral' }) ?
+					(??{ 'Exponent_Part'   }) ?
+					(?<type_suffix> (??{ 'Floating_Type_Suffix' }) ) ?
+				)
+			)
+			|
+			(?:
+				(?<value>
+					(??{ 'Decimal_Numeral' })
+					(??{ 'Exponent_Part'   })
+					(?<type_suffix> (??{ 'Floating_Type_Suffix' }) ) ?
+				)
+			)
+			|
+			(?:
+				(?<value>
+					(??{ 'Decimal_Numeral' })
+					(??{ 'Exponent_Part'   }) ?
+					(?<type_suffix> (??{ 'Floating_Type_Suffix' }) )
+				)
+			)
+		)/sx;
+
+	token LITERAL_INTEGRAL_BINARY           => action => 'integral_value',
+		qr/(?>
+			(?<binary_value>  (??{ 'Binary_Numeral'  }) )
+			(?<type_suffix>   (??{ 'Integral_Type_Suffix' }) )?
+			\b
+		)/sx;
+
+	token LITERAL_INTEGRAL_DECIMAL          => action => 'integral_value',
+		qr/(?>
+			(?<decimal_value> (??{ 'Decimal_Numeral' }) )
+			(?<type_suffix>   (??{ 'Integral_Type_Suffix' }) )?
+			\b
+		)/sx;
+
+	token LITERAL_INTEGRAL_HEX              => action => 'integral_value',
+		qr/(?>
+			(?<hex_value>     (??{ 'Hex_Numeral'     }) )
+			(?<type_suffix>   (??{ 'Integral_Type_Suffix' }) )?
+			\b
+		)/sx;
+
+	token LITERAL_INTEGRAL_OCTAL            => action => 'integral_value',
+		qr/(?>
+			(?<octal_value>   (??{ 'Octal_Numeral'   }) )
+			(?<type_suffix>   (??{ 'Integral_Type_Suffix' }) )?
+			\b
+		)/sx;
+
+	token LITERAL_STRING                    => action => 'literal_unescape',
+		qr/(?>
+			\"
+			(?<value> (?: [^\"\\] | (??{ 'Escape_Sequence' }) )* )
+			\"
+		)/sx;
 
 	word  ABSTRACT                          => ;
 	word  ASSERT                            => ;
@@ -167,91 +286,38 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	word  WITH                              => group => 'keyword_identifier', group => 'keyword_type_identifier';
 	word  _                                 => ;
 
+	ensure_rule_name_order;
+	rule  literal                           =>
+		[qw[ LITERAL_CHARACTER        ]],
+		[qw[ LITERAL_FLOAT_DECIMAL    ]],
+		[qw[ LITERAL_INTEGRAL_BINARY  ]],
+		[qw[ LITERAL_INTEGRAL_DECIMAL ]],
+		[qw[ LITERAL_INTEGRAL_HEX     ]],
+		[qw[ LITERAL_INTEGRAL_OCTAL   ]],
+		[qw[ LITERAL_STRING           ]],
+		[qw[ literal_boolean_false    ]],
+		[qw[ literal_boolean_true     ]],
+		[qw[ literal_null             ]],
+		;
+
+	rule  literal_boolean_false             => dom => 'CSI::Language::Java::Literal::Boolean::False',
+		[qw[  false  ]],
+		;
+
+	rule  literal_boolean_true              => dom => 'CSI::Language::Java::Literal::Boolean::True',
+		[qw[  true  ]],
+		;
+
+	rule  literal_null                      => dom => 'CSI::Language::Java::Literal::Null',
+		[qw[  null  ]],
+		;
+
 	1;
 };
 
 __END__
-	sub Decimal_Numeral             :REGEX {
-		qr/(?>
-			(?! 0 [_[:digit:]] )
-			(?= [[:digit:]])
-			[_[:digit:]]+
-			(?<= [[:digit:]])
-		)/sx;
-	}
-
-	sub Hex_Numeral                 :REGEX {
-		qr/(?>
-			0 [xX]
-			[_[:xdigit:]]+
-			(?<= [[:xdigit:]])
-		)/sx;
-	}
-
-	sub Octal_Numeral               :REGEX {
-		qr/(?>
-			0
-			[_0-7]+
-			(?<= [0-7])
-		)/sx;
-	}
-
-	sub Binary_Numeral              :REGEX {
-		qr/(?>
-			0 [bB]
-			[_01]+
-			(?<= [01])
-		)/sx;
-	}
-
-	sub Integer_Type_Suffix         :REGEX {
-		qr/
-			[lL]
-		/sx;
-	}
-
 	sub Identifier_Character        :REGEX {
 		qr/[_\p{Letter}\p{Letter_Number}\p{Digit}\p{Currency_Symbol}]/sx;
-	}
-
-	sub Escape_Sequence             :REGEX {
-		qr/(?>
-			\\
-			(?:
-				  (?<char_escape> (?: [btnrf\'\"\\] ))
-				| (?<octal_escape> (?: (?= [0-7]) [0-3]? [0-7]{1,2} ))
-				| (?: u+ (?<hex_escape> [[:xdigit:]]{4} ))
-			)
-		)/sx;
-	}
-
-	sub LITERAL_INTEGER             :TOKEN :TRANSFORM(integer_value) :ACTION_LITERAL_VALUE {
-		qr/(?>
-			(?:
-				  (?<decimal_value> (??{ 'Decimal_Numeral' }) )
-				| (?<hex_value>     (??{ 'Hex_Numeral'     }) )
-				| (?<octal_value>   (??{ 'Octal_Numeral'   }) )
-				| (?<binary_value>  (??{ 'Binary_Numeral'  }) )
-			)
-			(?<type_suffix> (??{ 'Integer_Type_Suffix' }) )?
-			\b
-		)/sx;
-	}
-
-	sub LITERAL_CHARACTER           :TOKEN :ACTION_LITERAL_VALUE {
-		qr/(?>
-			\'
-			(?<value> [^\'\\] | (??{ 'Escape_Sequence' }) )
-			\'
-		)/sx;
-	}
-
-	sub LITERAL_STRING              :TOKEN :ACTION_LITERAL_VALUE {
-		qr/(?>
-			\"
-			(?<value> (?: [^\"\\] | (??{ 'Escape_Sequence' }) )* )
-			\"
-		)/sx;
 	}
 
 	sub IDENTIFIER                  :TOKEN :ACTION_LITERAL_VALUE {
@@ -1581,50 +1647,6 @@ __END__
 			[qw[ expression_name ]],
 			[qw[    field_access ]],
 			[qw[    array_access ]],
-		];
-	}
-
-	sub literal                     :RULE :ACTION_DEFAULT {
-		[
-			[qw[ literal_integer ]],
-			#TODO [qw[ literal_floating_point ]],
-			[qw[ literal_boolean ]],
-			[qw[ literal_character ]],
-			[qw[ literal_string ]],
-			[qw[ literal_null ]],
-		];
-	}
-
-
-
-	sub literal_boolean             :RULE :ACTION_ALIAS {
-		[
-			[qw[ FALSE ]],
-			[qw[ TRUE  ]],
-		];
-	}
-
-	sub literal_character           :RULE :ACTION_ALIAS {
-		[
-			[qw[ LITERAL_CHARACTER ]],
-		];
-	}
-
-	sub literal_integer             :RULE :ACTION_ALIAS {
-		[
-			[qw[ LITERAL_INTEGER ]],
-		];
-	}
-
-	sub literal_null                :RULE :ACTION_ALIAS {
-		[
-			[qw[ NULL ]],
-		];
-	}
-
-	sub literal_string              :RULE :ACTION_ALIAS {
-		[
-			[qw[ LITERAL_STRING ]],
 		];
 	}
 
