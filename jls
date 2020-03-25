@@ -23,11 +23,6 @@
 		[qw[ AdditiveExpression MINUS MultiplicativeExpression ]],
 		;
 
-	rule AmbiguousName               =>
-		[qw[                   Identifier ]],
-		[qw[ AmbiguousName DOT Identifier ]],
-		;
-
 	rule AndExpression               =>
 		[qw[                   EqualityExpression ]],
 		[qw[ AndExpression AND EqualityExpression ]],
@@ -179,7 +174,7 @@
 		;
 
 	rule ArrayAccess                 =>
-		[qw[    ExpressionName BRACKET_OPEN Expression BRACKET_CLOSE ]],
+		[qw[    reference BRACKET_OPEN Expression BRACKET_CLOSE ]],
 		[qw[ PrimaryNoNewArray BRACKET_OPEN Expression BRACKET_CLOSE ]],
 		;
 
@@ -330,7 +325,7 @@
 
 	rule ClassInstanceCreationExpression=>
 		[qw[                    UnqualifiedClassInstanceCreationExpression ]],
-		[qw[ ExpressionName DOT UnqualifiedClassInstanceCreationExpression ]],
+		[qw[ reference DOT UnqualifiedClassInstanceCreationExpression ]],
 		[qw[        Primary DOT UnqualifiedClassInstanceCreationExpression ]],
 		;
 
@@ -386,10 +381,10 @@
 		[qw[                                               TypeIdentifier  TypeArguments   ]],
 		[qw[                           Annotation_list_11  TypeIdentifier                  ]],
 		[qw[                                               TypeIdentifier                  ]],
-		[qw[          PackageName DOT  Annotation_list_12  TypeIdentifier  TypeArguments   ]],
-		[qw[          PackageName DOT                      TypeIdentifier  TypeArguments   ]],
-		[qw[          PackageName DOT  Annotation_list_12  TypeIdentifier                  ]],
-		[qw[          PackageName DOT                      TypeIdentifier                  ]],
+		[qw[          reference DOT  Annotation_list_12  TypeIdentifier  TypeArguments   ]],
+		[qw[          reference DOT                      TypeIdentifier  TypeArguments   ]],
+		[qw[          reference DOT  Annotation_list_12  TypeIdentifier                  ]],
+		[qw[          reference DOT                      TypeIdentifier                  ]],
 		[qw[ ClassOrInterfaceType DOT  Annotation_list_13  TypeIdentifier  TypeArguments   ]],
 		[qw[ ClassOrInterfaceType DOT                      TypeIdentifier  TypeArguments   ]],
 		[qw[ ClassOrInterfaceType DOT  Annotation_list_13  TypeIdentifier                  ]],
@@ -645,10 +640,10 @@
 		[qw[                                    SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
 		[qw[                     TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
 		[qw[                                    SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
-		[qw[ ExpressionName DOT  TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
-		[qw[ ExpressionName DOT                 SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
-		[qw[ ExpressionName DOT  TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
-		[qw[ ExpressionName DOT                 SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[ reference DOT  TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[ reference DOT                 SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
+		[qw[ reference DOT  TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
+		[qw[ reference DOT                 SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
 		[qw[        Primary DOT  TypeArguments  SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
 		[qw[        Primary DOT                 SUPER PAREN_OPEN  ArgumentList  PAREN_CLOSE SEMICOLON ]],
 		[qw[        Primary DOT  TypeArguments  SUPER PAREN_OPEN                PAREN_CLOSE SEMICOLON ]],
@@ -658,11 +653,6 @@
 	rule Expression                  =>
 		[qw[     LambdaExpression ]],
 		[qw[ AssignmentExpression ]],
-		;
-
-	rule ExpressionName              =>
-		[qw[                   Identifier ]],
-		[qw[ AmbiguousName DOT Identifier ]],
 		;
 
 	rule ExpressionStatement         =>
@@ -914,7 +904,7 @@
 		;
 
 	rule LeftHandSide                =>
-		[qw[ ExpressionName ]],
+		[qw[ reference ]],
 		[qw[    FieldAccess ]],
 		[qw[    ArrayAccess ]],
 		;
@@ -983,10 +973,10 @@
 		[qw[           TypeName DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
 		[qw[           TypeName DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
 		[qw[           TypeName DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
-		[qw[     ExpressionName DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
-		[qw[     ExpressionName DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
-		[qw[     ExpressionName DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
-		[qw[     ExpressionName DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[     reference DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[     reference DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
+		[qw[     reference DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
+		[qw[     reference DOT                 Identifier PAREN_OPEN                PAREN_CLOSE ]],
 		[qw[            Primary DOT  TypeArguments  Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
 		[qw[            Primary DOT                 Identifier PAREN_OPEN  ArgumentList  PAREN_CLOSE ]],
 		[qw[            Primary DOT  TypeArguments  Identifier PAREN_OPEN                PAREN_CLOSE ]],
@@ -1017,8 +1007,8 @@
 		;
 
 	rule MethodReference             =>
-		[qw[     ExpressionName DOUBLE_COLON  TypeArguments  Identifier ]],
-		[qw[     ExpressionName DOUBLE_COLON                 Identifier ]],
+		[qw[     reference DOUBLE_COLON  TypeArguments  Identifier ]],
+		[qw[     reference DOUBLE_COLON                 Identifier ]],
 		[qw[            Primary DOUBLE_COLON  TypeArguments  Identifier ]],
 		[qw[            Primary DOUBLE_COLON                 Identifier ]],
 		[qw[      ReferenceType DOUBLE_COLON  TypeArguments  Identifier ]],
@@ -1049,12 +1039,12 @@
 		;
 
 	rule ModuleDirective             =>
-		[qw[ REQUIRES  RequiresModifier_list_1  ModuleName SEMICOLON ]],
-		[qw[ REQUIRES                           ModuleName SEMICOLON ]],
-		[qw[    EXPORTS PackageName  TO ModuleName_list_1  SEMICOLON ]],
-		[qw[    EXPORTS PackageName                        SEMICOLON ]],
-		[qw[      OPENS PackageName  TO ModuleName_list_2  SEMICOLON ]],
-		[qw[      OPENS PackageName                        SEMICOLON ]],
+		[qw[ REQUIRES  RequiresModifier_list_1  reference SEMICOLON ]],
+		[qw[ REQUIRES                           reference SEMICOLON ]],
+		[qw[    EXPORTS reference  TO ModuleName_list_1  SEMICOLON ]],
+		[qw[    EXPORTS reference                        SEMICOLON ]],
+		[qw[      OPENS reference  TO ModuleName_list_2  SEMICOLON ]],
+		[qw[      OPENS reference                        SEMICOLON ]],
 		[qw[                                 USES TypeName SEMICOLON ]],
 		[qw[        PROVIDES TypeName WITH TypeName_list_1 SEMICOLON ]],
 		;
@@ -1064,19 +1054,14 @@
 		[qw[ ModuleDirective ModuleDirective_list_1 ]],
 		;
 
-	rule ModuleName                  =>
-		[qw[                Identifier ]],
-		[qw[ ModuleName DOT Identifier ]],
-		;
-
 	rule ModuleName_list_1           =>
-		[qw[ ModuleName                          ]],
-		[qw[ ModuleName COMMA  ModuleName_list_1 ]],
+		[qw[ reference                          ]],
+		[qw[ reference COMMA  ModuleName_list_1 ]],
 		;
 
 	rule ModuleName_list_2           =>
-		[qw[ ModuleName                          ]],
-		[qw[ ModuleName COMMA  ModuleName_list_2 ]],
+		[qw[ reference                          ]],
+		[qw[ reference COMMA  ModuleName_list_2 ]],
 		;
 
 	rule MultiplicativeExpression    =>
@@ -1151,16 +1136,6 @@
 		[qw[ PackageModifier PackageModifier_list_1 ]],
 		;
 
-	rule PackageName                 =>
-		[qw[                 Identifier ]],
-		[qw[ PackageName DOT Identifier ]],
-		;
-
-	rule PackageOrTypeName           =>
-		[qw[                       Identifier ]],
-		[qw[ PackageOrTypeName DOT Identifier ]],
-		;
-
 	rule PostDecrementExpression     =>
 		[qw[ PostfixExpression DECREMENT ]],
 		;
@@ -1171,7 +1146,7 @@
 
 	rule PostfixExpression           =>
 		[qw[                 Primary ]],
-		[qw[          ExpressionName ]],
+		[qw[          reference ]],
 		[qw[ PostIncrementExpression ]],
 		[qw[ PostDecrementExpression ]],
 		;
@@ -1473,12 +1448,12 @@
 		;
 
 	rule TypeImportOnDemandDeclaration=>
-		[qw[ IMPORT PackageOrTypeName DOT MULTIPLY SEMICOLON ]],
+		[qw[ IMPORT reference DOT MULTIPLY SEMICOLON ]],
 		;
 
 	rule TypeName                    =>
 		[qw[                       TypeIdentifier ]],
-		[qw[ PackageOrTypeName DOT TypeIdentifier ]],
+		[qw[ reference DOT TypeIdentifier ]],
 		;
 
 	rule TypeName_list_1             =>
@@ -1534,10 +1509,10 @@
 	rule UnannClassType              =>
 		[qw[                                                   TypeIdentifier  TypeArguments   ]],
 		[qw[                                                   TypeIdentifier                  ]],
-		[qw[               PackageName DOT  Annotation_list_2  TypeIdentifier  TypeArguments   ]],
-		[qw[               PackageName DOT                     TypeIdentifier  TypeArguments   ]],
-		[qw[               PackageName DOT  Annotation_list_2  TypeIdentifier                  ]],
-		[qw[               PackageName DOT                     TypeIdentifier                  ]],
+		[qw[               reference DOT  Annotation_list_2  TypeIdentifier  TypeArguments   ]],
+		[qw[               reference DOT                     TypeIdentifier  TypeArguments   ]],
+		[qw[               reference DOT  Annotation_list_2  TypeIdentifier                  ]],
+		[qw[               reference DOT                     TypeIdentifier                  ]],
 		[qw[ UnannClassOrInterfaceType DOT  Annotation_list_3  TypeIdentifier  TypeArguments   ]],
 		[qw[ UnannClassOrInterfaceType DOT                     TypeIdentifier  TypeArguments   ]],
 		[qw[ UnannClassOrInterfaceType DOT  Annotation_list_3  TypeIdentifier                  ]],
@@ -1595,7 +1570,7 @@
 		;
 
 	rule VariableAccess              =>
-		[qw[ ExpressionName ]],
+		[qw[ reference ]],
 		[qw[    FieldAccess ]],
 		;
 

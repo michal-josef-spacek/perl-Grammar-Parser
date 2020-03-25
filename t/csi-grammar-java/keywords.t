@@ -15,7 +15,7 @@ sub test_keyword {
 	$params{allowed_type_name}  //= 0;
 
 	subtest "word $keyword" => sub {
-		plan tests => 3;
+		plan tests => 5;
 
 		test_rule "word $keyword is a keyword" => (
 			rule => 'keyword',
@@ -34,6 +34,24 @@ sub test_keyword {
 
 		test_rule "word $keyword is${\ ($params{allowed_type_name} ? '' : ' not') } allowed type identifier" => (
 			rule => "keyword_type_identifier",
+			data => $keyword,
+			$params{allowed_type_name}
+				? (expect => ignore)
+				: (throws => 1)
+				,
+		);
+
+		test_rule "word $keyword is${\ ($params{allowed_identifier} ? '' : ' not') } identifier" => (
+			rule => "identifier",
+			data => $keyword,
+			$params{allowed_identifier}
+				? (expect => ignore)
+				: (throws => 1)
+				,
+		);
+
+		test_rule "word $keyword is${\ ($params{allowed_type_name} ? '' : ' not') } type identifier" => (
+			rule => "type_identifier",
 			data => $keyword,
 			$params{allowed_type_name}
 				? (expect => ignore)

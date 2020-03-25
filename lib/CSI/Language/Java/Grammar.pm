@@ -111,6 +111,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		(?<= [[:xdigit:]])
 	)/sx;
 
+	regex Identifier_Character              => qr/(?>
+		[_\p{Letter}\p{Letter_Number}\p{Digit}\p{Currency_Symbol}]
+	)/sx;
+
 	regex Integral_Type_Suffix              => qr/(?>
 		[lL]
 	)/sx;
@@ -219,6 +223,13 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			(?<value> (?: [^\"\\] | (??{ 'Escape_Sequence' }) )* )
 			\"
 		)/sx;
+
+	token IDENTIFIER                        =>
+        qr/(?>
+			(?! \p{Digit} )
+			(?! (??{ 'Prohibited_Identifier' }) (?! (??{ 'Identifier_Character' }) ) )
+			(?<value> (??{ 'Identifier_Character' })+ )
+		) /sx;
 
 	token ANNOTATION                        => dom => 'CSI::Language::Java::Token::Annotation'      => '@';
 	token BRACE_CLOSE                       => dom => 'CSI::Language::Java::Token::Brace::Close'    => '}';
@@ -344,6 +355,23 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	word  _                                 => ;
 
 	ensure_rule_name_order;
+
+	rule  allowed_identifier                =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-Identifier
+		[qw[  IDENTIFIER          ]],
+		[qw[  keyword_identifier  ]],
+		;
+
+	rule  allowed_type_identifier           =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-TypeIdentifier
+		[qw[  IDENTIFIER               ]],
+		[qw[  keyword_type_identifier  ]],
+		;
+
+	rule  identifier                        => dom => 'CSI::Language::Java::Identifier',
+		[qw[  allowed_identifier  ]],
+		;
+
 	rule  literal                           =>
 		[qw[ LITERAL_CHARACTER        ]],
 		[qw[ LITERAL_FLOAT_DECIMAL    ]],
@@ -369,35 +397,38 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  null  ]],
 		;
 
+	rule  qualified_identifier              =>
+		[qw[  identifier  DOT  qualified_identifier  ]],
+		[qw[  identifier                             ]],
+		;
+
+	rule  qualified_type_identifier         =>
+		[qw[  qualified_identifier  DOT  type_identifier  ]],
+		[qw[                             type_identifier  ]],
+		;
+
+	rule  reference                         => dom => 'CSI::Language::Java::Reference',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-AmbiguousName
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-ExpressionName
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-ModuleName
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageName
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageOrTypeName
+		[qw[  qualified_identifier  ]],
+		;
+
+	rule  type_identifier                   => dom => 'CSI::Language::Java::Identifier',
+		[qw[  allowed_type_identifier  ]],
+		;
+
+	rule  type_reference                    => dom => 'CSI::Language::Java::Reference',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-TypeName
+		[qw[  qualified_type_identifier  ]],
+		;
+
 	1;
 };
 
 __END__
-	sub Identifier_Character        :REGEX {
-		qr/[_\p{Letter}\p{Letter_Number}\p{Digit}\p{Currency_Symbol}]/sx;
-	}
-
-	sub IDENTIFIER                  :TOKEN :ACTION_LITERAL_VALUE {
-        qr/(?>
-			(?!  \p{Digit} )
-			(?!  (??{ 'Keyword' }) )
-			(?!  (??{ 'Literal_Boolean' }) )
-			(?!  (??{ 'Literal_Null' }) )
-			(?<value> (??{ 'Identifier_Character' })+ )
-		) /sx;
-	}
-
-	sub type_identifier             :TOKEN :ACTION_LITERAL_VALUE {
-        qr/(?>
-			(?!  \p{Digit} )
-			(?!  (??{ 'Keyword' }) )
-			(?!  (??{ 'Literal_Boolean' }) )
-			(?!  (??{ 'Literal_Null' }) )
-			(?!  (??{ 'VAR' }) )
-			(?<value> (??{ 'Identifier_Character' })+ )
-		) /sx;
-	}
-
 
 	sub additional_bound            :RULE :ACTION_LIST {
 		[
@@ -1846,13 +1877,6 @@ __END__
 			[qw[        annotation_list  BOOLEAN ]],
 			[qw[                         BOOLEAN ]],
 		]
-	}
-
-	sub qualified_identifier        :RULE :ACTION_LIST {
-		[
-			[qw[ identifier                          ]],
-			[qw[ identifier DOT qualified_identifier ]],
-		];
 	}
 
 	sub receiver_parameter          :RULE :ACTION_DEFAULT {

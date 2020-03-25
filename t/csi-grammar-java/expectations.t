@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 4;
+plan tests => 5;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -526,6 +526,48 @@ subtest "tokens"            => sub {
 		got    => {
 			'CSI::Language::Java::Token::Type::List::Open' => '<',
 		},
+		;
+
+	done_testing;
+};
+
+subtest "expect_reference"  => sub {
+	plan tests => 4;
+
+	is "expect_reference / single element" =>
+		expect => expect_reference (qw[ foo ]),
+		got    => { 'CSI::Language::Java::Reference' => [
+			{ 'CSI::Language::Java::Identifier' => 'foo' },
+		] },
+		;
+
+	is "expect_reference / multiple elements" =>
+		expect => expect_reference (qw[ foo bar var ]),
+		got    => { 'CSI::Language::Java::Reference' => [
+			{ 'CSI::Language::Java::Identifier' => 'foo' },
+			{ 'CSI::Language::Java::Token::Dot' => '.'   },
+			{ 'CSI::Language::Java::Identifier' => 'bar' },
+			{ 'CSI::Language::Java::Token::Dot' => '.'   },
+			{ 'CSI::Language::Java::Identifier' => 'var' },
+		] },
+		;
+
+	is "expect_reference / arrayref / single element" =>
+		expect => expect_reference ([qw[ foo ]]),
+		got    => { 'CSI::Language::Java::Reference' => [
+			{ 'CSI::Language::Java::Identifier' => 'foo' },
+		] },
+		;
+
+	is "expect_reference / arrayref / multiple elements" =>
+		expect => expect_reference ([qw[ foo bar var ]]),
+		got    => { 'CSI::Language::Java::Reference' => [
+			{ 'CSI::Language::Java::Identifier' => 'foo' },
+			{ 'CSI::Language::Java::Token::Dot' => '.'   },
+			{ 'CSI::Language::Java::Identifier' => 'bar' },
+			{ 'CSI::Language::Java::Token::Dot' => '.'   },
+			{ 'CSI::Language::Java::Identifier' => 'var' },
+		] },
 		;
 
 	done_testing;
