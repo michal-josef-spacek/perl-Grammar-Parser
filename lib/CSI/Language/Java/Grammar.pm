@@ -733,8 +733,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  logical_and_expression  ]],
-		[qw[  logical_and_element     ]],
+		[qw[  logical_or_expression  ]],
+		[qw[  logical_or_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -883,6 +883,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  logical_and_expression            => dom => 'CSI::Language::Java::Expression::Logical::And',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ConditionalAndExpression
 		[qw[  logical_and_elements  ]],
+		;
+
+	rule  logical_or_element                =>
+		[qw[  logical_and_expression  ]],
+		[qw[  logical_and_element     ]],
+		;
+
+	rule  logical_or_elements               =>
+		[qw[  logical_or_element  LOGICAL_OR  logical_or_elements  ]],
+		[qw[  logical_or_element  LOGICAL_OR  logical_or_element   ]],
+		;
+
+	rule  logical_or_expression             => dom => 'CSI::Language::Java::Expression::Logical::Or',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ConditionalOrExpression
+		[qw[  logical_or_elements  ]],
 		;
 
 	rule  marker_annotation                 =>
@@ -1557,13 +1572,6 @@ __END__
 			[qw[ conditional_or_expression                                                       ]],
 			[qw[ conditional_or_expression QUESTION_MARK expression COLON conditional_expression ]],
 			[qw[ conditional_or_expression QUESTION_MARK expression COLON lambda_expression      ]],
-		];
-	}
-
-	sub conditional_or_expression   :RULE :ACTION_LIST {
-		[
-			[qw[ conditional_and_expression                                      ]],
-			[qw[ conditional_and_expression LOGICAL_OR conditional_or_expression ]],
 		];
 	}
 
