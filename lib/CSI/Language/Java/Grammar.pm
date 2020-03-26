@@ -667,9 +667,29 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                   enum  type_name                    enum_body  ]],
 		;
 
-	rule  expression                        =>
-		[qw[  relational_expression  ]],
+	rule  equality_element                  =>
 		[qw[  relational_element     ]],
+		[qw[  relational_expression  ]],
+		;
+
+	rule  equality_elements                 =>
+		[qw[  equality_element  equality_operator  equality_elements  ]],
+		[qw[  equality_element  equality_operator  equality_element   ]],
+		;
+
+	rule  equality_expression               => dom => 'CSI::Language::Java::Expression::Equality',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-EqualityExpression
+		[qw[  equality_elements  ]],
+		;
+
+	rule  equality_operator                 =>
+		[qw[  CMP_EQUALITY    ]],
+		[qw[  CMP_INEQUALITY  ]],
+		;
+
+	rule  expression                        =>
+		[qw[  equality_expression  ]],
+		[qw[  equality_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1682,14 +1702,6 @@ __END__
 	sub enum_constant_name          :RULE :ACTION_ALIAS {
 		[
 			[qw[ identifier ]],
-		];
-	}
-
-	sub equality_expression         :RULE :ACTION_DEFAULT {
-		[
-			[qw[ relational_expression                                ]],
-			[qw[ relational_expression     EQUALS equality_expression ]],
-			[qw[ relational_expression NOT_EQUALS equality_expression ]],
 		];
 	}
 
