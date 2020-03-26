@@ -471,6 +471,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  binary_and_elements  ]],
 		;
 
+	rule  binary_or_element                 =>
+		[qw[  binary_xor_element     ]],
+		[qw[  binary_xor_expression  ]],
+		;
+
+	rule  binary_or_elements                =>
+		[qw[  binary_or_element  BINARY_OR  binary_or_elements  ]],
+		[qw[  binary_or_element  BINARY_OR  binary_or_element   ]],
+		;
+
+	rule  binary_or_expression              => dom => 'CSI::Language::Java::Expression::Binary::Or',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-InclusiveOrExpression
+		[qw[  binary_or_elements  ]],
+		;
+
 	rule  binary_shift_element              =>
 		[qw[  additive_element     ]],
 		[qw[  additive_expression  ]],
@@ -718,8 +733,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  binary_xor_expression  ]],
-		[qw[  binary_xor_element     ]],
+		[qw[  binary_or_expression  ]],
+		[qw[  binary_or_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1880,13 +1895,6 @@ __END__
 	sub if_then_statement           :RULE :ACTION_DEFAULT {
 		[
 			[qw[ IF PAREN_OPEN expression PAREN_CLOSE statement ]],
-		];
-	}
-
-	sub inclusive_or_expression     :RULE :ACTION_LIST {
-		[
-			[qw[ exclusive_or_expression                            ]],
-			[qw[ exclusive_or_expression OR inclusive_or_expression ]],
 		];
 	}
 
