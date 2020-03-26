@@ -456,6 +456,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  data_type  dim  ]],
 		;
 
+	rule  binary_and_element                =>
+		[qw[  equality_element     ]],
+		[qw[  equality_expression  ]],
+		;
+
+	rule  binary_and_elements               =>
+		[qw[  binary_and_element  BINARY_AND  binary_and_elements  ]],
+		[qw[  binary_and_element  BINARY_AND  binary_and_element   ]],
+		;
+
+	rule  binary_and_expression             => dom => 'CSI::Language::Java::Expression::Binary::And',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-AndExpression
+		[qw[  binary_and_elements  ]],
+		;
+
 	rule  binary_shift_element              =>
 		[qw[  additive_element     ]],
 		[qw[  additive_expression  ]],
@@ -688,8 +703,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  equality_expression  ]],
-		[qw[  equality_element     ]],
+		[qw[  binary_and_expression  ]],
+		[qw[  binary_and_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1182,13 +1197,6 @@ package CSI::Language::Java::Grammar v1.0.0 {
 };
 
 __END__
-
-	sub and_expression              :RULE :ACTION_LIST {
-		[
-			[qw[  equality_expression                    ]],
-			[qw[  equality_expression AND and_expression ]],
-		];
-	}
 
 	sub annotation_type_element_declaration:RULE :ACTION_DEFAULT {
 		[
