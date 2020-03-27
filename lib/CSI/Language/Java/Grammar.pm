@@ -451,6 +451,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  annotation               ]],
 		;
 
+	rule  arguments                         => dom => 'CSI::Language::Java::Arguments',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ArgumentList
+		[qw[  PAREN_OPEN  expressions  PAREN_CLOSE  ]],
+		[qw[  PAREN_OPEN               PAREN_CLOSE  ]],
+		;
+
 	rule  array_type                        => dom => 'CSI::Language::Java::Type::Array',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannArrayType
 		[qw[  data_type  dim  ]],
@@ -838,6 +844,15 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  interface_modifier                       ]],
 		;
 
+	rule  invocant                          => dom => 'CSI::Language::Java::Method::Invocant',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-MethodInvocation
+		#[qw[  expression_name        ]],
+		[qw[  primary                ]],
+		#[qw[  type_name              ]],
+		[qw[  type_name  DOT  super  ]],
+		[qw[  super                  ]],
+		;
+
 	rule  left_hand_side                    =>
 		[qw[  array_access     ]],
 		#[qw[  field_access     ]],
@@ -903,6 +918,13 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  marker_annotation                 =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-MarkerAnnotation
 		[qw[  ANNOTATION  type_reference  ]],
+		;
+
+	rule  method_invocation                 => dom => 'CSI::Language::Java::Method::Invocation',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-MethodInvocation
+		[qw[  invocant  DOT  type_arguments  method_name  arguments  ]],
+		[qw[  invocant  DOT                  method_name  arguments  ]],
+		[qw[                                 method_name  arguments  ]],
 		;
 
 	rule  method_modifier                   => dom => 'CSI::Language::Java::Modifier',
@@ -1300,13 +1322,6 @@ __END__
 		[
 			[qw[ annotation_type_member_declaration                                         ]],
 			[qw[ annotation_type_member_declaration annotation_type_member_declaration_list ]],
-		];
-	}
-
-	sub argument_list               :RULE :ACTION_LIST {
-		[
-			[qw[ expression                      ]],
-			[qw[ expression COMMA  argument_list ]],
 		];
 	}
 
@@ -2063,33 +2078,6 @@ __END__
 			[qw[ type_parameters  annotation_list  result method_declarator           ]],
 			[qw[ type_parameters                   result method_declarator  throws   ]],
 			[qw[ type_parameters                   result method_declarator           ]],
-		];
-	}
-
-	sub method_invocation           :RULE :ACTION_DEFAULT {
-		[
-			[qw[                                          method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[                                          method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[           type_name DOT  type_arguments  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[           type_name DOT                  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[           type_name DOT  type_arguments  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[           type_name DOT                  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[     expression_name DOT  type_arguments  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[     expression_name DOT                  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[     expression_name DOT  type_arguments  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[     expression_name DOT                  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[             primary DOT  type_arguments  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[             primary DOT                  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[             primary DOT  type_arguments  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[             primary DOT                  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[               SUPER DOT  type_arguments  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[               SUPER DOT                  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[               SUPER DOT  type_arguments  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[               SUPER DOT                  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[ type_name DOT SUPER DOT  type_arguments  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[ type_name DOT SUPER DOT                  method_name PAREN_OPEN  argument_list  PAREN_CLOSE ]],
-			[qw[ type_name DOT SUPER DOT  type_arguments  method_name PAREN_OPEN                 PAREN_CLOSE ]],
-			[qw[ type_name DOT SUPER DOT                  method_name PAREN_OPEN                 PAREN_CLOSE ]],
 		];
 	}
 

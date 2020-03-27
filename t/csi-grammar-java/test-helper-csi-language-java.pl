@@ -225,6 +225,14 @@ sub expect_annotation                   {
 	));
 }
 
+sub expect_arguments                    {
+	expect_element ('::Arguments' => (
+		expect_token_paren_open,
+		_list_with_separator ([ expect_token_comma ], @_),
+		expect_token_paren_close,
+	)),
+}
+
 sub expect_array_type                   {
 	my ($array) = @_;
 
@@ -238,10 +246,6 @@ sub expect_array_type                   {
 			expect_token_bracket_close,
 		)),
 	));
-}
-
-sub expect_identifier                   {
-	expect_token '::Identifier' => @_
 }
 
 sub expect_class_extends                {
@@ -290,6 +294,10 @@ sub expect_import_declaration           {
 		@import_type,
 		expect_token_semicolon,
 	));
+}
+
+sub expect_identifier                   {
+	expect_token '::Identifier' => @_
 }
 
 sub expect_interface_extends            {
@@ -353,9 +361,9 @@ sub expect_type                         {
 sub expect_type_arguments               {
 	expect_element ('::Type::Arguments' => (
 		expect_token_type_list_open,
-		@_,
+		_list_with_separator ([ expect_token_comma ], @_),
 		expect_token_type_list_close,
-	));
+	)),
 }
 
 sub expect_type_array                   {
