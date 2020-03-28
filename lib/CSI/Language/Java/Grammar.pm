@@ -791,6 +791,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  TOKEN_ASTERISK  ]],
 		;
 
+	rule  instance_creation                 => dom => 'CSI::Language::Java::Instance::Creation',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ClassInstanceCreationExpression
+		[qw[  primary  DOT  new  instance_reference  arguments  class_body  ]],
+		[qw[  primary  DOT  new  instance_reference  arguments              ]],
+		[qw[                new  instance_reference  arguments  class_body  ]],
+		[qw[                new  instance_reference  arguments              ]],
+		;
+
+	rule  instance_reference                =>
+		# TODO annotated reference
+		[qw[  type_arguments  reference  type_arguments  ]],
+		[qw[                  reference  type_arguments  ]],
+		[qw[                  reference                  ]],
+		;
+
 	rule  interface_body                    => dom => 'CSI::Language::Java::Interface::Body',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-InterfaceBody
 		[qw[  BRACE_OPEN  interface_body_declarations  BRACE_CLOSE  ]],
@@ -1074,14 +1089,14 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  primary_no_reference              =>
-		[qw[  literal                       ]],
-		[qw[  class_literal                 ]],
-		[qw[  expression_group              ]],
-		[qw[  instance_creation_expression  ]],
-		[qw[  array_access                  ]],
-		[qw[  method_invocation             ]],
-		[qw[  method_reference              ]],
-		[qw[  qualified_this                ]],
+		[qw[  literal            ]],
+		[qw[  class_literal      ]],
+		[qw[  expression_group   ]],
+		[qw[  instance_creation  ]],
+		[qw[  array_access       ]],
+		[qw[  method_invocation  ]],
+		[qw[  method_reference   ]],
+		[qw[  qualified_this     ]],
 		;
 
 	rule  primitive_type                    => dom => 'CSI::Language::Java::Type::Primitive',
@@ -1555,13 +1570,6 @@ __END__
 		[
 			[qw[ annotated_identifier                          ]],
 			[qw[ annotated_identifier DOT annotated_identifier ]],
-		];
-	}
-
-	sub class_or_interface_type_to_instantiate:RULE :ACTION_DEFAULT {
-		[
-			[qw[ annotated_qualified_identifier  type_arguments_or_diamond   ]],
-			[qw[ annotated_qualified_identifier                              ]],
 		];
 	}
 
@@ -2434,19 +2442,6 @@ __END__
 			[qw[ BIT_NEGATE unary_expression ]],
 			[qw[        NOT unary_expression ]],
 			[qw[             cast_expression ]],
-		]
-	}
-
-	sub unqualified_class_instance_creation_expression:RULE :ACTION_DEFAULT {
-		[
-			[qw[ NEW  type_arguments  class_or_interface_type_to_instantiate PAREN_OPEN  argument_list  PAREN_CLOSE  class_body   ]],
-			[qw[ NEW                  class_or_interface_type_to_instantiate PAREN_OPEN  argument_list  PAREN_CLOSE  class_body   ]],
-			[qw[ NEW  type_arguments  class_or_interface_type_to_instantiate PAREN_OPEN                 PAREN_CLOSE  class_body   ]],
-			[qw[ NEW                  class_or_interface_type_to_instantiate PAREN_OPEN                 PAREN_CLOSE  class_body   ]],
-			[qw[ NEW  type_arguments  class_or_interface_type_to_instantiate PAREN_OPEN  argument_list  PAREN_CLOSE               ]],
-			[qw[ NEW                  class_or_interface_type_to_instantiate PAREN_OPEN  argument_list  PAREN_CLOSE               ]],
-			[qw[ NEW  type_arguments  class_or_interface_type_to_instantiate PAREN_OPEN                 PAREN_CLOSE               ]],
-			[qw[ NEW                  class_or_interface_type_to_instantiate PAREN_OPEN                 PAREN_CLOSE               ]],
 		]
 	}
 

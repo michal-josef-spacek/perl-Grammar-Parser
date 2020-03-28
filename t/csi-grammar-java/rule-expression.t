@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 23;
+plan tests => 24;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -97,6 +97,17 @@ test_rule "primary expression / method invocation" => (
 			)),
 			expect_token_dot,
 			expect_method_name ('method'),
+			expect_arguments,
+		)),
+	],
+);
+
+test_rule "primary expression / instance creation" => (
+	data => 'new Foo ()',
+	expect => [
+		expect_element ('CSI::Language::Java::Instance::Creation' => (
+			expect_word_new,
+			expect_reference (qw[ Foo ]),
 			expect_arguments,
 		)),
 	],
