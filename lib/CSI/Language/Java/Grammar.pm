@@ -457,6 +457,25 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  PAREN_OPEN               PAREN_CLOSE  ]],
 		;
 
+	rule  array_creation_dims               =>
+		[qw[  dim_expressions  dims                     ]],
+		[qw[  dim_expressions                           ]],
+		[qw[                   dims  array_initializer  ]],
+		;
+
+	rule  array_creation_expression         => dom => 'CSI::Language::Java::Array::Creation',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ArrayCreationExpression
+		[qw[  new  primitive_type  array_creation_dims  ]],
+		[qw[  new  class_type      array_creation_dims  ]],
+		;
+
+	rule  array_initializer                 => dom => 'CSI::Language::Java::Array::Initializer',
+		[qw[  BRACE_OPEN  variable_initializers  COMMA  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  variable_initializers         BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                         COMMA  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                BRACE_CLOSE  ]],
+		;
+
 	rule  array_type                        => dom => 'CSI::Language::Java::Type::Array',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannArrayType
 		[qw[  data_type  dim  ]],
@@ -696,6 +715,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  dim                               => dom => 'CSI::Language::Java::Array::Dimension',
 		[qw[  annotations  BRACKET_OPEN  BRACKET_CLOSE  ]],
 		[qw[               BRACKET_OPEN  BRACKET_CLOSE  ]],
+		;
+
+	rule  dim_expression                    => dom => 'CSI::Language::Java::Array::Dimension::Expression',
+		[qw[  annotations  BRACKET_OPEN  expression  BRACKET_CLOSE  ]],
+		[qw[               BRACKET_OPEN  expression  BRACKET_CLOSE  ]],
+		;
+
+	rule  dim_expressions                   =>
+		[qw[  dim_expression  dim_expressions  ]],
+		[qw[  dim_expression                   ]],
+		;
+
+	rule  dims                              =>
+		[qw[  dim  dims  ]],
+		[qw[  dim        ]],
 		;
 
 	rule  enum_body                         => dom => 'CSI::Language::Java::Enum::Body',
@@ -1280,6 +1314,16 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  LOGICAL_COMPLEMENT  unary_element  ]],
 		;
 
+	rule  variable_initializer              =>
+		[qw[  array_initializer  ]],
+		[qw[  expression         ]],
+		;
+
+	rule  variable_initializers             =>
+		[qw[  variable_initializer  COMMA  variable_initializers  ]],
+		[qw[  variable_initializer                                ]],
+		;
+
 	rule  variable_modifier                 => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  final       ]],
@@ -1344,26 +1388,6 @@ __END__
 		[
 			[qw[      expression_name BRACKET_OPEN expression BRACKET_CLOSE ]],
 			[qw[ primary_no_new_array BRACKET_OPEN expression BRACKET_CLOSE ]],
-		];
-	}
-
-	sub array_creation_expression   :RULE :ACTION_DEFAULT {
-		[
-			[qw[ NEW          primitive_type dim_exprs                         ]],
-			[qw[ NEW          primitive_type dim_exprs  dims                   ]],
-			[qw[ NEW class_or_interface_type dim_exprs                         ]],
-			[qw[ NEW class_or_interface_type dim_exprs  dims                   ]],
-			[qw[ NEW          primitive_type            dims array_initializer ]],
-			[qw[ NEW class_or_interface_type            dims array_initializer ]],
-		];
-	}
-
-	sub array_initializer           :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  variable_initializer_list   COMMA  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                              COMMA  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  variable_initializer_list          BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                     BRACE_CLOSE ]],
 		];
 	}
 
@@ -2479,20 +2503,6 @@ __END__
 		[
 			[qw[ variable_declarator                                ]],
 			[qw[ variable_declarator COMMA variable_declarator_list ]],
-		]
-	}
-
-	sub variable_initializer        :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[        expression ]],
-			[qw[ array_initializer ]],
-		]
-	}
-
-	sub variable_initializer_list   :RULE :ACTION_LIST {
-		[
-			[qw[ variable_initializer                                 ]],
-			[qw[ variable_initializer COMMA variable_initializer_list ]],
 		]
 	}
 
