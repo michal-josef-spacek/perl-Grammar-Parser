@@ -964,8 +964,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  interface_body                    => dom => 'CSI::Language::Java::Interface::Body',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-InterfaceBody
-		[qw[  BRACE_OPEN  interface_body_declarations  BRACE_CLOSE  ]],
-		[qw[  BRACE_OPEN                               BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  interface_member_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                 BRACE_CLOSE  ]],
 		;
 
 	rule  interface_declaration             => dom => 'CSI::Language::Java::Interface::Declaration',
@@ -983,6 +983,23 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  interface_extends                 => dom => 'CSI::Language::Java::Interface::Extends',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-ExtendsInterfaces
 		[qw[  extends  class_types  ]],
+		;
+
+	rule  interface_member_declaration      =>
+		[qw[  constant_declaration          ]],
+		[qw[  empty_declaration             ]],
+		[qw[  interface_method_declaration  ]],
+		[qw[  type_declaration              ]],
+		;
+
+	rule  interface_member_declarations     =>
+		[qw[  interface_member_declaration  interface_member_declarations  ]],
+		[qw[  interface_member_declaration                                 ]],
+		;
+
+	rule  interface_method_declaration      => dom => 'CSI::Language::Java::Method::Declaration',
+		[qw[  interface_method_modifiers  method_declaration  ]],
+		[qw[                              method_declaration  ]],
 		;
 
 	rule  interface_method_modifier         => dom => 'CSI::Language::Java::Modifier',
@@ -2112,30 +2129,6 @@ __END__
 	sub instance_initializer        :RULE :ACTION_DEFAULT {
 		[
 			[qw[ block ]],
-		];
-	}
-
-	sub interface_member_declaration:RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[         constant_declaration ]],
-			[qw[ interface_method_declaration ]],
-			[qw[            class_declaration ]],
-			[qw[        interface_declaration ]],
-			[qw[                    SEMICOLON ]],
-		];
-	}
-
-	sub interface_member_declaration_list:RULE :ACTION_LIST {
-		[
-			[qw[ interface_member_declaration                                   ]],
-			[qw[ interface_member_declaration interface_member_declaration_list ]],
-		];
-	}
-
-	sub interface_method_declaration:RULE :ACTION_DEFAULT {
-		[
-			[qw[   interface_method_modifier_list  method_header method_body ]],
-			[qw[                                   method_header method_body ]],
 		];
 	}
 
