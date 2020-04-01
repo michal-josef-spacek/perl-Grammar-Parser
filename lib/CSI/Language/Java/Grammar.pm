@@ -1378,6 +1378,13 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                             type_identifier  ]],
 		;
 
+	rule  receiver_parameter                => dom => 'CSI::Language::Java::Parameter::Receiver',
+		[qw[   annotations  type_name  class_reference  DOT  this  ]],
+		[qw[                type_name  class_reference  DOT  this  ]],
+		[qw[   annotations  type_name                        this  ]],
+		[qw[                type_name                        this  ]],
+		;
+
 	rule  reference                         => dom => 'CSI::Language::Java::Reference',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-AmbiguousName
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-ExpressionName
@@ -2060,34 +2067,6 @@ __END__
 		];
 	}
 
-	sub formal_parameter            :RULE :ACTION_DEFAULT {
-		[
-			[qw[   variable_modifier_list  unann_type variable_declarator_id ]],
-			[qw[                           unann_type variable_declarator_id ]],
-			[qw[                                    variable_arity_parameter ]],
-		];
-	}
-
-	sub formal_parameter_list       :RULE :ACTION_LIST {
-		[
-			[qw[ formal_parameter                             ]],
-			[qw[ formal_parameter COMMA formal_parameter_list ]],
-		];
-	}
-
-	sub identifier                  :RULE :ACTION_ALIAS {
-		[
-			[qw[ IDENTIFIER ]],
-		];
-	}
-
-	sub identifier_list             :RULE :ACTION_LIST {
-		[
-			[qw[ identifier                        ]],
-			[qw[ identifier COMMA  identifier_list ]],
-		];
-	}
-
 	sub if_then_else_statement      :RULE :ACTION_DEFAULT {
 		[
 			[qw[ IF PAREN_OPEN expression PAREN_CLOSE statement_no_short_if ELSE statement ]],
@@ -2234,15 +2213,6 @@ __END__
 			[qw[                    numeric_type ]],
 			[qw[        annotation_list  BOOLEAN ]],
 			[qw[                         BOOLEAN ]],
-		]
-	}
-
-	sub receiver_parameter          :RULE :ACTION_DEFAULT {
-		[
-			[qw[   annotation_list  unann_type  identifier DOT  THIS ]],
-			[qw[                    unann_type  identifier DOT  THIS ]],
-			[qw[   annotation_list  unann_type                  THIS ]],
-			[qw[                    unann_type                  THIS ]],
 		]
 	}
 
