@@ -848,6 +848,36 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  BRACE_OPEN                                                 BRACE_CLOSE  ]],
 		;
 
+	rule  enum_constant                     => dom => 'CSI::Language::Java::Enum::Constant',
+		[qw[  enum_constant_modifiers  enum_constant_name  arguments    class_body   ]],
+		[qw[  enum_constant_modifiers  enum_constant_name  arguments                 ]],
+		[qw[  enum_constant_modifiers  enum_constant_name               class_body   ]],
+		[qw[  enum_constant_modifiers  enum_constant_name                            ]],
+		[qw[                           enum_constant_name  arguments    class_body   ]],
+		[qw[                           enum_constant_name  arguments                 ]],
+		[qw[                           enum_constant_name               class_body   ]],
+		[qw[                           enum_constant_name                            ]],
+		;
+
+	rule  enum_constant_modifier            =>
+		[qw[  annotation  ]],
+		;
+
+	rule  enum_constant_modifiers           =>
+		[qw[  enum_constant_modifier  enum_constant_modifiers  ]],
+		[qw[  enum_constant_modifier                           ]],
+		;
+
+	rule  enum_constant_name                => dom => 'CSI::Language::Java::Enum::Constant::Name',
+		[qw[  IDENTIFIER          ]],
+		[qw[  keyword_identifier  ]],
+		;
+
+	rule  enum_constants                    =>
+		[qw[  enum_constant  COMMA  enum_constants  ]],
+		[qw[  enum_constant                         ]],
+		;
+
 	rule  enum_declaration                  => dom => 'CSI::Language::Java::Enum::Declaration',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-EnumDeclaration
 		[qw[  class_modifiers  enum  type_name  class_implements  enum_body  ]],
@@ -1927,49 +1957,6 @@ __END__
 		[
 			[qw[ SEMICOLON  class_body_declaration_list   ]],
 			[qw[ SEMICOLON                                ]],
-		];
-	}
-
-	sub enum_constant               :RULE :ACTION_DEFAULT {
-		[
-			[qw[   enum_constant_modifier_list  enum_constant_name  PAREN_OPEN argument_list  PAREN_CLOSE  class_body   ]],
-			[qw[   enum_constant_modifier_list  enum_constant_name  PAREN_OPEN argument_list  PAREN_CLOSE               ]],
-			[qw[   enum_constant_modifier_list  enum_constant_name  PAREN_OPEN                PAREN_CLOSE  class_body   ]],
-			[qw[   enum_constant_modifier_list  enum_constant_name  PAREN_OPEN                PAREN_CLOSE               ]],
-			[qw[   enum_constant_modifier_list  enum_constant_name                                         class_body   ]],
-			[qw[   enum_constant_modifier_list  enum_constant_name                                                      ]],
-			[qw[                                enum_constant_name  PAREN_OPEN argument_list  PAREN_CLOSE  class_body   ]],
-			[qw[                                enum_constant_name  PAREN_OPEN argument_list  PAREN_CLOSE               ]],
-			[qw[                                enum_constant_name  PAREN_OPEN                PAREN_CLOSE  class_body   ]],
-			[qw[                                enum_constant_name  PAREN_OPEN                PAREN_CLOSE               ]],
-			[qw[                                enum_constant_name                                         class_body   ]],
-			[qw[                                enum_constant_name                                                      ]],
-		];
-	}
-
-	sub enum_constant_list          :RULE :ACTION_LIST {
-		[
-			[qw[ enum_constant                          ]],
-			[qw[ enum_constant COMMA enum_constant_list ]],
-		];
-	}
-
-	sub enum_constant_modifier      :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ annotation ]],
-		];
-	}
-
-	sub enum_constant_modifier_list :RULE :ACTION_LIST {
-		[
-			[qw[ enum_constant_modifier                             ]],
-			[qw[ enum_constant_modifier enum_constant_modifier_list ]],
-		];
-	}
-
-	sub enum_constant_name          :RULE :ACTION_ALIAS {
-		[
-			[qw[ identifier ]],
 		];
 	}
 
