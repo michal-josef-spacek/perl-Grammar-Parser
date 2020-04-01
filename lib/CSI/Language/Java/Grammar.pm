@@ -775,6 +775,25 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  constant_modifier                      ]],
 		;
 
+	rule  constructor_body                  => dom => 'CSI::Language::Java::Constructor::Body',
+		[qw[  BRACE_OPEN  explicit_constructor_invocation   block_statements  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  explicit_constructor_invocation                     BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                    block_statements  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                                      BRACE_CLOSE  ]],
+		;
+
+	rule  constructor_declaration           => dom => 'CSI::Language::Java::Constructor::Declaration',
+		[qw[   constructor_modifiers  constructor_declarator  throws_clause  constructor_body  ]],
+		[qw[   constructor_modifiers  constructor_declarator                 constructor_body  ]],
+		[qw[                          constructor_declarator  throws_clause  constructor_body  ]],
+		[qw[                          constructor_declarator                 constructor_body  ]],
+		;
+
+	rule  constructor_declarator            =>
+		[qw[  type_parameters  type_name  parameters  ]],
+		[qw[                   type_name  parameters  ]],
+		;
+
 	rule  constructor_modifier              => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  private     ]],
@@ -1812,37 +1831,6 @@ __END__
 	sub constant_expression         :RULE :ACTION_ALIAS {
 		[
 			[qw[ expression ]],
-		];
-	}
-
-	sub constructor_body            :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  explicit_constructor_invocation   block_statements  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                    block_statements  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  explicit_constructor_invocation                     BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                                      BRACE_CLOSE ]],
-		];
-	}
-
-	sub constructor_declaration     :RULE :ACTION_DEFAULT {
-		[
-			[qw[   constructor_modifier_list  constructor_declarator  throws  constructor_body ]],
-			[qw[                              constructor_declarator  throws  constructor_body ]],
-			[qw[   constructor_modifier_list  constructor_declarator          constructor_body ]],
-			[qw[                              constructor_declarator          constructor_body ]],
-		];
-	}
-
-	sub constructor_declarator      :RULE :ACTION_DEFAULT {
-		[
-			[qw[   type_parameters  simple_type_name PAREN_OPEN  receiver_parameter COMMA   formal_parameter_list  PAREN_CLOSE ]],
-			[qw[                    simple_type_name PAREN_OPEN  receiver_parameter COMMA   formal_parameter_list  PAREN_CLOSE ]],
-			[qw[   type_parameters  simple_type_name PAREN_OPEN                             formal_parameter_list  PAREN_CLOSE ]],
-			[qw[                    simple_type_name PAREN_OPEN                             formal_parameter_list  PAREN_CLOSE ]],
-			[qw[   type_parameters  simple_type_name PAREN_OPEN  receiver_parameter COMMA                          PAREN_CLOSE ]],
-			[qw[                    simple_type_name PAREN_OPEN  receiver_parameter COMMA                          PAREN_CLOSE ]],
-			[qw[   type_parameters  simple_type_name PAREN_OPEN                                                    PAREN_CLOSE ]],
-			[qw[                    simple_type_name PAREN_OPEN                                                    PAREN_CLOSE ]],
 		];
 	}
 
