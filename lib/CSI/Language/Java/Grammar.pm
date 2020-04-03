@@ -487,6 +487,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  data_type  dim  ]],
 		;
 
+	rule  assert_statement                  => dom => 'CSI::Language::Java::Statement::Assert',
+		[qw[  assert  expression  COLON  expression  SEMICOLON  ]],
+		[qw[  assert  expression                     SEMICOLON  ]],
+		;
+
 	rule  assignment                        => dom => 'CSI::Language::Java::Expression::Assignment',
 		# TODO: assignment chain as a list
 		[qw[  left_hand_side  assignment_operands  ]],
@@ -602,6 +607,16 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  enum_declaration                ]],
 		[qw[  statement                       ]],
 		[qw[  variable_declaration_statement  ]],
+		;
+
+	rule  block_statements                  =>
+		[qw[  block_statement  block_statements  ]],
+		[qw[  block_statement                    ]],
+		;
+
+	rule  break_statement                   => dom => 'CSI::Language::Java::Statement::Break',
+		[qw[  break  label  SEMICOLON  ]],
+		[qw[  break         SEMICOLON  ]],
 		;
 
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
@@ -768,6 +783,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  modular_compilation_unit   ]],
 		;
 
+	rule  constant_expression               => dom => 'CSI::Language::Java::Expression::Constant',
+		[qw[  expression  ]],
+		;
+
 	rule  constant_modifier                 => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  public      ]],
@@ -811,6 +830,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  constructor_modifier                         ]],
 		;
 
+	rule  continue_statement                => dom => 'CSI::Language::Java::Statement::Continue',
+		[qw[  continue  label  SEMICOLON  ]],
+		[qw[  continue         SEMICOLON  ]],
+		;
+
 	rule  data_type                         =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannType
 		[qw[  primitive_type  ]],
@@ -837,6 +861,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  dim        ]],
 		;
 
+	rule  do_statement                      => dom => 'CSI::Language::Java::Statement::Do',
+		[qw[  do  statement  while  PAREN_OPEN  expression  PAREN_CLOSE  SEMICOLON  ]],
+		;
+
 	rule  element_value                     =>
 		[qw[  annotation                       ]],
 		[qw[  element_value_array_initializer  ]],
@@ -846,6 +874,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  empty_declaration                 => dom => 'CSI::Language::Java::Empty::Declaration',
 		[qw[ SEMICOLON ]],
+		;
+
+	rule  empty_statement                   => dom => 'CSI::Language::Java::Statement::Empty',
+		[qw[  SEMICOLON  ]],
 		;
 
 	rule  enum_body                         => dom => 'CSI::Language::Java::Enum::Body',
@@ -888,6 +920,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  enum_constant_name                => dom => 'CSI::Language::Java::Enum::Constant::Name',
 		[qw[  IDENTIFIER          ]],
 		[qw[  keyword_identifier  ]],
+		;
+
+	rule  enum_constants                    =>
+		[qw[  enum_constant  COMMA  enum_constants  ]],
+		[qw[  enum_constant                         ]],
 		;
 
 	rule  enum_constants                    =>
@@ -939,6 +976,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  expression_group                  =>
 		[qw[  PAREN_OPEN  statement_expression  PAREN_CLOSE  ]],
+		;
+
+	rule  expression_statement              => dom => 'CSI::Language::Java::Statement::Expression',
+		[qw[  statement_expression  SEMICOLON  ]],
 		;
 
 	rule  expressions                       =>
@@ -1107,6 +1148,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		#[qw[  type_name              ]],
 		[qw[  type_name  DOT  super  ]],
 		[qw[  super                  ]],
+		;
+
+	rule  label                             => dom => 'CSI::Language::Java::Label',
+		[qw[  IDENTIFIER  ]],
 		;
 
 	rule  lambda_body                       =>
@@ -1468,8 +1513,41 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  CMP_GREATER_THAN_OR_EQUAL  ]],
 		;
 
+	rule  resource                          => dom => 'CSI::Language::Java::Resource',
+		[qw[  single_variable_declaration  ASSIGN expression  ]],
+		[qw[  variable_access                                 ]],
+		;
+
+	rule  resource_specification            => dom => 'CSI::Language::Java::List::Resources',
+		[qw[  PAREN_OPEN  resources  SEMICOLON  PAREN_CLOSE  ]],
+		[qw[  PAREN_OPEN  resources             PAREN_CLOSE  ]],
+		;
+
+	rule  resources                         =>
+		[qw[  resource  SEMICOLON  resources  ]],
+		[qw[  resource                        ]],
+		;
+
+	rule  return_statement                  => dom => 'CSI::Language::Java::Statement::Return',
+		[qw[  return  expression  SEMICOLON  ]],
+		[qw[  return              SEMICOLON  ]],
+		;
+
 	rule  single_element_annotation         =>
 		[qw[  ANNOTATION  reference  PAREN_OPEN  element_value  PAREN_CLOSE  ]],
+		;
+
+	rule  single_variable_declaration       =>
+		[qw[  variable_modifiers  variable_type  variable_declarator_id  ]],
+		[qw[                      variable_type  variable_declarator_id  ]],
+		;
+
+	rule  statement                         =>
+		[qw[  for_statement                   ]],
+		[qw[  if_statement                    ]],
+		[qw[  labeled_statement               ]],
+		[qw[  statement_without_substatement  ]],
+		[qw[  while_statement                 ]],
 		;
 
 	rule  statement_expression              =>
@@ -1477,8 +1555,57 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  expression                          ]],
 		;
 
+	rule  statement_without_substatement    =>
+		[qw[  assert_statement        ]],
+		[qw[  block                   ]],
+		[qw[  break_statement         ]],
+		[qw[  continue_statement      ]],
+		[qw[  do_statement            ]],
+		[qw[  empty_statement         ]],
+		[qw[  expression_statement    ]],
+		[qw[  return_statement        ]],
+		[qw[  switch_statement        ]],
+		[qw[  synchronized_statement  ]],
+		[qw[  throw_statement         ]],
+		[qw[  try_statement           ]],
+		;
+
 	rule  static_initializer                => dom => 'CSI::Language::Java::Instance::Initializer::Static',
 		[qw[  STATIC  block  ]],
+		;
+
+	rule  switch_block                      =>
+		[qw[  BRACE_OPEN   switch_block_statement_groups  switch_labels  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                  switch_labels  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN   switch_block_statement_groups                 BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                                                 BRACE_CLOSE  ]],
+		;
+
+	rule  switch_block_statement_group      => dom => 'CSI::Language::Java::Statement::Switch::Group',
+		[qw[  switch_labels  block_statements  ]],
+		;
+
+	rule  switch_block_statement_groups     =>
+		[qw[  switch_block_statement_group  switch_block_statement_groups  ]],
+		[qw[  switch_block_statement_group                                 ]],
+		;
+
+	rule  switch_label                      => dom => 'CSI::Language::Java::Statement::Switch::Label',
+		[qw[  case  constant_expression  COLON  ]],
+		[qw[                    default  COLON  ]],
+		;
+
+	rule  switch_labels                     =>
+		[qw[  switch_label  switch_labels ]],
+		[qw[  switch_label                ]],
+		;
+
+	rule  switch_statement                  => dom => 'CSI::Language::Java::Statement::Switch',
+		[qw[  switch  PAREN_OPEN  expression  PAREN_CLOSE  switch_block  ]],
+		;
+
+	rule  synchronized_statement            => dom => 'CSI::Language::Java::Statement::Synchronized',
+		[qw[  synchronized  PAREN_OPEN  expression  PAREN_CLOSE  block  ]],
 		;
 
 	rule  ternary_element                   =>
@@ -1490,8 +1617,51 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  ternary_element  QUESTION_MARK  expression  COLON  expression  ]],
 		;
 
+	rule  throw_statement                   => dom => 'CSI::Language::Java::Statement::Throw',
+		[qw[  throw  expression  SEMICOLON  ]]
+		;
+
 	rule  throws_clause                     => dom => 'CSI::Language::Java::Method::Throws',
 		[qw[  throws  exception_types  ]],
+		;
+
+	rule  try_body                          =>
+		[qw[  block  try_catches  try_finally  ]],
+		[qw[  block  try_catches               ]],
+		[qw[  block               try_finally  ]],
+		;
+
+	rule  try_catch                         => dom => 'CSI::Language::Java::Structure::Try::Catch',
+		[qw[  catch  try_catch_formal_parameter  block  ]],
+		;
+
+	rule  try_catch_formal_parameter        => dom => 'CSI::Language::Java::Structure::Try::Catch::Parameter',
+		[qw[   PAREN_OPEN  variable_modifiers  try_catch_type  variable_name  PAREN_CLOSE  ]],
+		[qw[   PAREN_OPEN                      try_catch_type  variable_name  PAREN_CLOSE  ]],
+		;
+
+	rule  try_catch_type                    => dom => 'CSI::Language::Java::Structure::Try::Catch::Type',
+		[qw[  try_catch_types  ]],
+		;
+
+	rule  try_catch_types                   =>
+		[qw[  reference  BINARY_OR  try_catch_types  ]],
+		[qw[  reference                              ]],
+		;
+
+	rule  try_catches                       =>
+		[qw[  try_catch  try_catches  ]],
+		[qw[  try_catch               ]],
+		;
+
+	rule  try_finally                       => dom => 'CSI::Language::Java::Structure::Try::Finally',
+		[qw[  finally  block  ]],
+		;
+
+	rule  try_statement                     => dom => 'CSI::Language::Java::Statement::Try',
+		[qw[  try  resource_specification  try_body  ]],
+		[qw[  try  resource_specification  block     ]],
+		[qw[  try                          try_body  ]],
 		;
 
 	rule  type_argument                     =>
@@ -1730,19 +1900,6 @@ __END__
 		];
 	}
 
-	sub assert_argument             :RULE :ACTION_ALIAS {
-		[
-			[qw[ expression ]],
-		];
-	}
-
-	sub assert_statement            :RULE :ACTION_DEFAULT {
-		[
-			[qw[ ASSERT expression                       SEMICOLON ]],
-			[qw[ ASSERT expression COLON assert_argument SEMICOLON ]],
-		];
-	}
-
 	sub assignment_expression       :RULE :ACTION_DEFAULT {
 		[
 			[qw[ conditional_expression ]],
@@ -1791,13 +1948,6 @@ __END__
 		];
 	}
 
-	sub break_statement             :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BREAK  identifier  SEMICOLON ]],
-			[qw[ BREAK              SEMICOLON ]],
-		];
-	}
-
 	sub cast_expression             :RULE :ACTION_DEFAULT {
 		[
 			[qw[ PAREN_OPEN primitive_type                    PAREN_CLOSE unary_expression ]],
@@ -1805,40 +1955,6 @@ __END__
 			[qw[ PAREN_OPEN reference_type                    PAREN_CLOSE unary_expression_not_plus_minus ]],
 			[qw[ PAREN_OPEN reference_type  additional_bound  PAREN_CLOSE lambda_expression ]],
 			[qw[ PAREN_OPEN reference_type                    PAREN_CLOSE lambda_expression ]],
-		];
-	}
-
-	sub catch_clause                :RULE :ACTION_DEFAULT {
-		[
-			[qw[ CATCH PAREN_OPEN catch_formal_parameter PAREN_CLOSE block ]],
-		];
-	}
-
-	sub catch_formal_parameter      :RULE :ACTION_DEFAULT {
-		[
-			[qw[   variable_modifier_list  catch_type variable_declarator_id ]],
-			[qw[                           catch_type variable_declarator_id ]],
-		];
-	}
-
-	sub catch_type                  :RULE :ACTION_DEFAULT {
-		[
-			[qw[ unann_class_type                            ]],
-			[qw[ unann_class_type catch_type_class_type_list ]],
-		];
-	}
-
-	sub catch_type_class_type_list  :RULE :ACTION_LIST {
-		[
-			[qw[ OR class_type ]],
-			[qw[ OR class_type catch_type_class_type_list ]],
-		]
-	}
-
-	sub catches                     :RULE :ACTION_LIST {
-		[
-			[qw[ catch_clause          ]],
-			[qw[ catch_clause  catches ]],
 		];
 	}
 
@@ -1901,13 +2017,6 @@ __END__
 		];
 	}
 
-	sub continue_statement          :RULE :ACTION_DEFAULT {
-		[
-			[qw[ CONTINUE  identifier  SEMICOLON ]],
-			[qw[ CONTINUE              SEMICOLON ]],
-		];
-	}
-
 	sub default_value               :RULE :ACTION_DEFAULT {
 		[
 			[qw[ DEFAULT element_value ]],
@@ -1925,12 +2034,6 @@ __END__
 		[
 			[qw[ dim_expr            ]],
 			[qw[ dim_expr  dim_exprs ]],
-		];
-	}
-
-	sub do_statement                :RULE :ACTION_DEFAULT {
-		[
-			[qw[ DO statement WHILE PAREN_OPEN expression PAREN_CLOSE SEMICOLON ]],
 		];
 	}
 
@@ -2050,18 +2153,6 @@ __END__
 	sub expression_name             :RULE :ACTION_DEFAULT {
 		[
 			[qw[ qualified_identifier ]],
-		];
-	}
-
-	sub expression_statement        :RULE :ACTION_DEFAULT {
-		[
-			[qw[ statement_expression SEMICOLON ]],
-		];
-	}
-
-	sub finally                     :RULE :ACTION_DEFAULT {
-		[
-			[qw[ FINALLY block ]],
 		];
 	}
 
@@ -2292,13 +2383,6 @@ __END__
 		]
 	}
 
-	sub return_statement            :RULE :ACTION_DEFAULT {
-		[
-			[qw[ RETURN  expression  SEMICOLON ]],
-			[qw[ RETURN              SEMICOLON ]],
-		]
-	}
-
 	sub simple_type_name            :RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[ type_identifier ]],
@@ -2330,96 +2414,6 @@ __END__
 			[qw[      if_then_else_statement_no_short_if ]],
 			[qw[             while_statement_no_short_if ]],
 			[qw[               for_statement_no_short_if ]],
-		]
-	}
-
-	sub statement_without_trailing_substatement:RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[                  block ]],
-			[qw[        empty_statement ]],
-			[qw[   expression_statement ]],
-			[qw[       assert_statement ]],
-			[qw[       switch_statement ]],
-			[qw[           do_statement ]],
-			[qw[        break_statement ]],
-			[qw[     continue_statement ]],
-			[qw[       return_statement ]],
-			[qw[ synchronized_statement ]],
-			[qw[        throw_statement ]],
-			[qw[          try_statement ]],
-		]
-	}
-
-	sub switch_block                :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  switch_block_statement_group_list   switch_labels  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                      switch_labels  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  switch_block_statement_group_list                  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                                     BRACE_CLOSE ]],
-		]
-	}
-
-	sub switch_block_statement_group:RULE :ACTION_DEFAULT {
-		[
-			[qw[ switch_labels block_statements ]],
-		]
-	}
-
-	sub switch_block_statement_group_list:RULE :ACTION_LIST {
-		[
-			[qw[ switch_block_statement_group                                   ]],
-			[qw[ switch_block_statement_group switch_block_statement_group_list ]],
-		]
-	}
-
-	sub switch_label                :RULE :ACTION_DEFAULT {
-		[
-			[qw[ CASE constant_expression COLON ]],
-			[qw[ CASE  enum_constant_name COLON ]],
-			[qw[                  DEFAULT COLON ]],
-		]
-	}
-
-	sub switch_labels               :RULE :ACTION_LIST {
-		[
-			[qw[ switch_label               ]],
-			[qw[ switch_label switch_labels ]],
-		]
-	}
-
-	sub switch_statement            :RULE :ACTION_DEFAULT {
-		[
-			[qw[ SWITCH PAREN_OPEN expression PAREN_CLOSE switch_block ]],
-		]
-	}
-
-	sub synchronized_statement      :RULE :ACTION_DEFAULT {
-		[
-			[qw[ SYNCHRONIZED PAREN_OPEN expression PAREN_CLOSE block ]],
-		]
-	}
-
-	sub throw_statement             :RULE :ACTION_DEFAULT {
-		[
-			[qw[ THROW expression SEMICOLON ]],
-		]
-	}
-
-	sub try_statement               :RULE :ACTION_DEFAULT {
-		[
-			[qw[ TRY block catches          ]],
-			[qw[ TRY block catches  finally ]],
-			[qw[ TRY block          finally ]],
-			[qw[ try_with_resources_statement ]],
-		]
-	}
-
-	sub try_with_resources_statement:RULE :ACTION_DEFAULT {
-		[
-			[qw[ TRY resource_specification block  catches   finally   ]],
-			[qw[ TRY resource_specification block            finally   ]],
-			[qw[ TRY resource_specification block  catches             ]],
-			[qw[ TRY resource_specification block                      ]],
 		]
 	}
 
