@@ -1023,6 +1023,33 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  identifier  ]],
 		;
 
+	rule  for_statement                     =>
+		[qw[  loop_statement  ]],
+		[qw[  foreach_statement  ]],
+		;
+
+	rule  for_statement_no_short_if         =>
+		[qw[  loop_statement_no_short_if  ]],
+		[qw[  foreach_statement_no_short_if  ]],
+		;
+
+	rule  foreach_header                    =>
+		[qw[  for  PAREN_OPEN  foreach_iterator  PAREN_CLOSE  ]],
+		;
+
+	rule  foreach_iterator                  =>
+		[qw[  variable_modifiers  variable_type  variable_declarator_id  COLON  expression  ]],
+		[qw[                      variable_type  variable_declarator_id  COLON  expression  ]],
+		;
+
+	rule  foreach_statement                 => dom => 'CSI::Language::Java::Statement::Foreach',
+		[qw[  foreach_header  statement  ]],
+		;
+
+	rule  foreach_statement_no_short_if     => dom => 'CSI::Language::Java::Statement::Foreach',
+		[qw[  foreach_header  statement_no_short_if  ]],
+		;
+
 	rule  formal_parameter                  => dom => 'CSI::Language::Java::Parameter',
 		[qw[   variable_modifiers  data_type  ELIPSIS  variable_name  ]],
 		[qw[   variable_modifiers  data_type           variable_name  ]],
@@ -1266,6 +1293,42 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  logical_or_expression             => dom => 'CSI::Language::Java::Expression::Logical::Or',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ConditionalOrExpression
 		[qw[  logical_or_elements  ]],
+		;
+
+	rule  loop_condition                    => dom => 'CSI::Language::Java::Loop::Condition',
+		[qw[  expression  ]],
+		;
+
+	rule  loop_header                       =>
+		[qw[  for  PAREN_OPEN  loop_iterator  PAREN_CLOSE  ]],
+		;
+
+	rule  loop_init                         => dom => 'CSI::Language::Java::Loop::Init',
+		[qw[  variable_declaration   ]],
+		[qw[  statement_expressions  ]],
+		;
+
+	rule  loop_iterator                     =>
+		[qw[  loop_init  SEMICOLON  loop_condition  SEMICOLON  loop_update  ]],
+		[qw[  loop_init  SEMICOLON  loop_condition  SEMICOLON               ]],
+		[qw[  loop_init  SEMICOLON                  SEMICOLON  loop_update  ]],
+		[qw[  loop_init  SEMICOLON                  SEMICOLON               ]],
+		[qw[             SEMICOLON  loop_condition  SEMICOLON  loop_update  ]],
+		[qw[             SEMICOLON  loop_condition  SEMICOLON               ]],
+		[qw[             SEMICOLON                  SEMICOLON  loop_update  ]],
+		[qw[             SEMICOLON                  SEMICOLON               ]],
+		;
+
+	rule  loop_statement                    => dom => 'CSI::Language::Java::Statement::Loop',
+		[qw[  loop_header  statement  ]],
+		;
+
+	rule  loop_statement_no_short_if        => dom => 'CSI::Language::Java::Statement::Loop',
+		[qw[  loop_header  statement_no_short_if  ]],
+		;
+
+	rule  loop_update                       => dom => 'CSI::Language::Java::Loop::Update',
+		[qw[  statement_expressions  ]],
 		;
 
 	rule  marker_annotation                 =>
@@ -1578,6 +1641,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  statement_expression              =>
 		[qw[  instance_creation_expression        ]],
 		[qw[  expression                          ]],
+		;
+
+	rule  statement_expressions             =>
+		[qw[  statement_expression  COMMA  statement_expressions  ]],
+		[qw[  statement_expression                                ]],
 		;
 
 	rule  statement_no_short_if             =>
@@ -1948,32 +2016,6 @@ __END__
 		];
 	}
 
-	sub basic_for_statement         :RULE :ACTION_DEFAULT {
-		[
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON  expression  SEMICOLON  for_update  PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON  expression  SEMICOLON  for_update  PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON              SEMICOLON  for_update  PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON              SEMICOLON  for_update  PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON  expression  SEMICOLON              PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON  expression  SEMICOLON              PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON              SEMICOLON              PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON              SEMICOLON              PAREN_CLOSE statement ]],
-		];
-	}
-
-	sub basic_for_statement_no_short_if:RULE :ACTION_DEFAULT {
-		[
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON  expression  SEMICOLON  for_update  PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON  expression  SEMICOLON  for_update  PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON              SEMICOLON  for_update  PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON              SEMICOLON  for_update  PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON  expression  SEMICOLON              PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON  expression  SEMICOLON              PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN  for_init  SEMICOLON              SEMICOLON              PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN            SEMICOLON              SEMICOLON              PAREN_CLOSE statement_no_short_if ]],
-		];
-	}
-
 	sub block_statement             :RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[ local_variable_declaration_statement ]],
@@ -2121,20 +2163,6 @@ __END__
 		];
 	}
 
-	sub enhanced_for_statement      :RULE :ACTION_DEFAULT {
-		[
-			[qw[ FOR PAREN_OPEN  variable_modifier_list  local_variable_type variable_declarator_id COLON expression PAREN_CLOSE statement ]],
-			[qw[ FOR PAREN_OPEN                          local_variable_type variable_declarator_id COLON expression PAREN_CLOSE statement ]],
-		];
-	}
-
-	sub enhanced_for_statement_no_short_if:RULE :ACTION_DEFAULT {
-		[
-			[qw[ FOR PAREN_OPEN  variable_modifier_list  local_variable_type variable_declarator_id COLON expression PAREN_CLOSE statement_no_short_if ]],
-			[qw[ FOR PAREN_OPEN                          local_variable_type variable_declarator_id COLON expression PAREN_CLOSE statement_no_short_if ]],
-		];
-	}
-
 	sub enum_body_declarations      :RULE :ACTION_DEFAULT {
 		[
 			[qw[ SEMICOLON  class_body_declaration_list   ]],
@@ -2194,33 +2222,6 @@ __END__
 	sub expression_name             :RULE :ACTION_DEFAULT {
 		[
 			[qw[ qualified_identifier ]],
-		];
-	}
-
-	sub for_init                    :RULE :ACTION_DEFAULT {
-		[
-			[qw[  statement_expression_list ]],
-			[qw[ local_variable_declaration ]],
-		];
-	}
-
-	sub for_statement               :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[    basic_for_statement ]],
-			[qw[ enhanced_for_statement ]],
-		];
-	}
-
-	sub for_statement_no_short_if   :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[    basic_for_statement_no_short_if ]],
-			[qw[ enhanced_for_statement_no_short_if ]],
-		];
-	}
-
-	sub for_update                  :RULE :ACTION_ALIAS {
-		[
-			[qw[ statement_expression_list ]],
 		];
 	}
 
