@@ -881,6 +881,27 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  ternary_expression               ]],
 		;
 
+	rule  element_value_array_initializer   => dom => 'CSI::Language::Java::Element::Value::Array',
+		[qw[  BRACE_OPEN  element_values  COMMA  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                  COMMA  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN  element_values         BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                         BRACE_CLOSE  ]],
+		;
+
+	rule  element_value_pair                => dom => 'CSI::Language::Java::Element::Value::Pair',
+		[qw[  identifier  ASSIGN  element_value  ]],
+		;
+
+	rule  element_value_pairs               =>
+		[qw[  element_value_pair  COMMA  element_value_pairs  ]],
+		[qw[  element_value_pair                              ]],
+		;
+
+	rule  element_values                    =>
+		[qw[  element_value  COMMA  element_values  ]],
+		[qw[  element_value                         ]],
+		;
+
 	rule  empty_declaration                 => dom => 'CSI::Language::Java::Empty::Declaration',
 		[qw[ SEMICOLON ]],
 		;
@@ -1428,6 +1449,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  DIVISION        ]],
 		[qw[  MODULUS         ]],
 		[qw[  MULTIPLICATION  ]],
+		;
+
+	rule  normal_annotation                 =>
+		[qw[  ANNOTATION  reference  PAREN_OPEN  element_value_pairs  PAREN_CLOSE  ]],
+		[qw[  ANNOTATION  reference  PAREN_OPEN                       PAREN_CLOSE  ]],
 		;
 
 	rule  ordinary_compilation_unit         =>
@@ -2115,30 +2141,6 @@ __END__
 		[
 			[qw[ dim_expr            ]],
 			[qw[ dim_expr  dim_exprs ]],
-		];
-	}
-
-	sub element_value               :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ conditional_expression          ]],
-			[qw[ element_value_array_initializer ]],
-			[qw[ annotation                      ]],
-		];
-	}
-
-	sub element_value_array_initializer:RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  element_value_list   COMMA  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                       COMMA  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN  element_value_list          BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                              BRACE_CLOSE ]],
-		];
-	}
-
-	sub element_value_list          :RULE :ACTION_LIST {
-		[
-			[qw[ element_value                           ]],
-			[qw[ element_value COMMA element_value_list  ]],
 		];
 	}
 
