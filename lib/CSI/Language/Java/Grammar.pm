@@ -999,6 +999,17 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  exception_type                          ]],
 		;
 
+	rule  explicit_constructor_invocation   => dom => 'CSI::Language::Java::Constructor::Invocation',
+		[qw[  primary          DOT  type_arguments  super  arguments  SEMICOLON  ]],
+		[qw[  primary          DOT                  super  arguments  SEMICOLON  ]],
+		#[qw[  expression_name  DOT  type_arguments  super  invocation_arguments  SEMICOLON  ]],
+		#[qw[  expression_name  DOT                  super  invocation_arguments  SEMICOLON  ]],
+		[qw[                        type_arguments  super  arguments  SEMICOLON  ]],
+		[qw[                                        super  arguments  SEMICOLON  ]],
+		[qw[                        type_arguments  this   arguments  SEMICOLON  ]],
+		[qw[                                        this   arguments  SEMICOLON  ]],
+		;
+
 	rule  expression                        =>
 		[qw[  assignment_element     ]],
 		[qw[  assignment_expression  ]],
@@ -2181,27 +2192,6 @@ __END__
 		[
 			[qw[ exception_type                           ]],
 			[qw[ exception_type COMMA exception_type_list ]],
-		];
-	}
-
-	sub explicit_constructor_invocation:RULE :ACTION_DEFAULT {
-		[
-			[qw[                      type_arguments   THIS PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[                                       THIS PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[                      type_arguments   THIS PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[                                       THIS PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[                      type_arguments  SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[                                      SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[                      type_arguments  SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[                                      SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[ expression_name DOT  type_arguments  SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[ expression_name DOT                  SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[ expression_name DOT  type_arguments  SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[ expression_name DOT                  SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[         primary DOT  type_arguments  SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[         primary DOT                  SUPER PAREN_OPEN  argument_list  PAREN_CLOSE SEMICOLON ]],
-			[qw[         primary DOT  type_arguments  SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
-			[qw[         primary DOT                  SUPER PAREN_OPEN                 PAREN_CLOSE SEMICOLON ]],
 		];
 	}
 
