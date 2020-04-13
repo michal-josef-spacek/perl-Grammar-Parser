@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'class_type';
 
-plan tests => 14;
+plan tests => 15;
 
 note "https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannClassType";
 
@@ -128,6 +128,19 @@ test_rule "UnannClassType / 'var' is not allowed after first annotation" => (
 test_rule "UnannClassType / 'var' is not allowed after first type arguments" => (
 	data   => 'foo.bar<>.var.boo',
 	throws => ignore,
+);
+
+test_rule "UnannClassType / with type parameters / inner class" => (
+	data   => 'simple<>.inner',
+	expect => expect_element ('::Type::Class' => (
+		expect_identifier ('simple'),
+		expect_element ('::Type::Arguments' => (
+			expect_token_type_list_open,
+			expect_token_type_list_close,
+		)),
+		expect_token_dot,
+		expect_identifier ('inner'),
+	)),
 );
 
 had_no_warnings;

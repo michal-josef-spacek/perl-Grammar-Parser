@@ -78,6 +78,7 @@ sub expect_literal_integral_binary      { expect_token LITERAL_INTEGRAL_BINARY  
 sub expect_literal_integral_decimal     { expect_token LITERAL_INTEGRAL_DECIMAL => @_ }
 sub expect_literal_integral_hex         { expect_token LITERAL_INTEGRAL_HEX     => @_ }
 sub expect_literal_integral_octal       { expect_token LITERAL_INTEGRAL_OCTAL   => @_ }
+sub expect_operator_assign              { expect_token '::Operator::Assign'                 => '=' }
 sub expect_operator_binary_and          { expect_token '::Operator::Binary::And'            => '&' }
 sub expect_operator_binary_complement   { expect_token '::Operator::Binary::Complement'     => '~' }
 sub expect_operator_binary_or           { expect_token '::Operator::Binary::Or'             => '|' }

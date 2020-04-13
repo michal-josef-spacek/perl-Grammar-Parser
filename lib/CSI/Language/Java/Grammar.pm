@@ -597,6 +597,13 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  BRACE_OPEN                    BRACE_CLOSE  ]],
 		;
 
+	rule  block_statement                   =>
+		[qw[  class_declaration               ]],
+		[qw[  enum_declaration                ]],
+		[qw[  statement                       ]],
+		[qw[  variable_declaration_statement  ]],
+		;
+
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
 		[qw[  cast_reference_operators  lambda_expression                 ]],
 		[qw[  cast_reference_operators  prefix_element                    ]],
@@ -722,8 +729,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  class_reference                   =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannClassType
-		[qw[                       type_identifier  type_arguments  ]],
-		[qw[                       type_identifier                  ]],
+		[qw[  type_identifier  type_arguments  ]],
+		[qw[  type_identifier  type_arguments  DOT  class_type_identifiers  ]],
+		[qw[  type_identifier  type_arguments  DOT  type_identifier  ]],
+		[qw[  type_identifier                  ]],
 		[qw[  qualified_identifier DOT  type_identifier             ]],
 		[qw[  qualified_identifier DOT  class_type_identifiers      ]],
 		;
@@ -945,10 +954,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  field_declaration                 => dom => 'CSI::Language::Java::Field::Declaration',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-FieldDeclaration
-		[qw[   field_modifiers  data_type  field_name  ASSIGN  variable_initializer  SEMICOLON  ]],
-		[qw[   field_modifiers  data_type  field_name                                SEMICOLON  ]],
-		[qw[                    data_type  field_name  ASSIGN  variable_initializer  SEMICOLON  ]],
-		[qw[                    data_type  field_name                                SEMICOLON  ]],
+		[qw[  field_modifiers  variable_type  variable_declarators  SEMICOLON  ]],
+		[qw[                   variable_type  variable_declarators  SEMICOLON  ]],
 		;
 
 	rule  field_modifier                    => dom => 'CSI::Language::Java::Modifier',
@@ -1604,9 +1611,28 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                       data_type               ELIPSIS  variable_name  ]],
 		;
 
+	rule  variable_declaration              => dom => 'CSI::Language::Java::Variable',
+		[qw[  variable_modifiers  variable_type  variable_declarators  ]],
+		[qw[                      variable_type  variable_declarators  ]],
+		;
+
+	rule  variable_declaration_statement    => dom => 'CSI::Language::Java::Statement::Variable',
+		[qw[  variable_declaration  SEMICOLON  ]],
+		;
+
+	rule  variable_declarator               => dom => 'CSI::Language::Java::Variable::Declarator',
+		[qw[  variable_declarator_id  ASSIGN  variable_initializer  ]],
+		[qw[  variable_declarator_id                                ]],
+		;
+
 	rule  variable_declarator_id            => dom => 'CSI::Language::Java::Variable::ID',
 		[qw[  variable_name  dims  ]],
 		[qw[  variable_name        ]],
+		;
+
+	rule  variable_declarators              =>
+		[qw[  variable_declarator                               ]],
+		[qw[  variable_declarator  COMMA  variable_declarators  ]],
 		;
 
 	rule  variable_initializer              =>
@@ -2527,4 +2553,24 @@ __END__
 
 	1
 };
+
+__END__
+	rule  method_reference                  => action => 'default',
+		# class reference is treated as field access (or vice versea)
+		# TODO:
+		# - token "symbol_reference" describing both
+		# - type expression for use here
+		[qw[             primary DOUBLE_COLON  type_arguments  method_name                  ]],
+		[qw[             primary DOUBLE_COLON                  method_name                  ]],
+		[qw[      reference_type DOUBLE_COLON  type_arguments  method_name  PRIORITY_TOKEN  ]],
+		[qw[      reference_type DOUBLE_COLON                  method_name  PRIORITY_TOKEN  ]],
+		[qw[               SUPER DOUBLE_COLON  type_arguments  method_name  PRIORITY_TOKEN  ]],
+		[qw[               SUPER DOUBLE_COLON                  method_name  PRIORITY_TOKEN  ]],
+		[qw[ type_name DOT SUPER DOUBLE_COLON  type_arguments  method_name  PRIORITY_TOKEN  ]],
+		[qw[ type_name DOT SUPER DOUBLE_COLON                  method_name  PRIORITY_TOKEN  ]],
+		[qw[          class_type DOUBLE_COLON  type_arguments  NEW                          ]],
+		[qw[          class_type DOUBLE_COLON                  NEW                          ]],
+		[qw[          array_type DOUBLE_COLON                  NEW                          ]],
+		;
+
 

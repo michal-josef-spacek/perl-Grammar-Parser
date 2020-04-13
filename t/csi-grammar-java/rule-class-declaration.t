@@ -37,7 +37,7 @@ test_rule "class with fields" => (
 	data => <<'EODATA',
 public class Foo {
 	public String foo;
-	public String bar;
+	public String bar, baz;
 }
 EODATA
 	expect => expect_element ('CSI::Language::Java::Class::Declaration' => (
@@ -49,16 +49,26 @@ EODATA
 			expect_element ('CSI::Language::Java::Field::Declaration' => (
 				expect_modifier_public,
 				expect_type_string,
-				expect_element ('CSI::Language::Java::Field::Name' => (
-					expect_identifier ('foo'),
+				expect_element ('CSI::Language::Java::Variable::Declarator' => (
+					expect_element ('CSI::Language::Java::Variable::ID' => (
+						expect_variable_name ('foo'),
+					)),
 				)),
 				expect_token_semicolon,
 			)),
 			expect_element ('CSI::Language::Java::Field::Declaration' => (
 				expect_modifier_public,
 				expect_type_string,
-				expect_element ('CSI::Language::Java::Field::Name' => (
-					expect_identifier ('bar'),
+				expect_element ('CSI::Language::Java::Variable::Declarator' => (
+					expect_element ('CSI::Language::Java::Variable::ID' => (
+						expect_variable_name ('bar'),
+					)),
+				)),
+				expect_token_comma,
+				expect_element ('CSI::Language::Java::Variable::Declarator' => (
+					expect_element ('CSI::Language::Java::Variable::ID' => (
+						expect_variable_name ('baz'),
+					)),
 				)),
 				expect_token_semicolon,
 			)),
