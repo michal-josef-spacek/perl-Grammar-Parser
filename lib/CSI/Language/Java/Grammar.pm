@@ -668,8 +668,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  binary_shift_expression  ]],
-		[qw[  binary_shift_element     ]],
+		[qw[  relational_expression  ]],
+		[qw[  relational_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1006,6 +1006,30 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  reference_type                    =>
 		[qw[  array_type       ]],
 		[qw[  class_type       ]],
+		;
+
+	rule  relational_element                =>
+		[qw[  binary_shift_element     ]],
+		[qw[  binary_shift_expression  ]],
+		;
+
+	rule  relational_elements               =>
+		# Associativity always produces compile time error
+		# [qw[  relational_element  relational_operator  relational_elements  ]],
+		[qw[  relational_element  relational_operator  relational_element   ]],
+		[qw[  relational_element  instanceof           reference_type       ]],
+		;
+
+	rule  relational_expression             => dom => 'CSI::Language::Java::Expression::Relational',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-RelationalExpression
+		[qw[  relational_elements  ]],
+		;
+
+	rule  relational_operator               =>
+		[qw[  CMP_LESS_THAN              ]],
+		[qw[  CMP_LESS_THAN_OR_EQUAL     ]],
+		[qw[  CMP_GREATER_THAN           ]],
+		[qw[  CMP_GREATER_THAN_OR_EQUAL  ]],
 		;
 
 	rule  statement_expression              =>
@@ -2105,17 +2129,6 @@ __END__
 			[qw[ class_or_interface_type ]],
 			[qw[           type_variable ]],
 			[qw[              array_type ]],
-		]
-	}
-
-	sub relational_expression       :RULE :ACTION_DEFAULT {
-		[
-			[qw[ shift_expression                                              ]],
-			[qw[ shift_expression LESS_THAN              relational_expression ]],
-			[qw[ shift_expression LESS_THAN_OR_EQUALS    relational_expression ]],
-			[qw[ shift_expression GREATER_THAN           relational_expression ]],
-			[qw[ shift_expression GREATER_THAN_OR_EQUALS relational_expression ]],
-			[qw[ relational_expression INSTANCEOF reference_type ]],
 		]
 	}
 
