@@ -778,8 +778,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  logical_or_expression  ]],
-		[qw[  logical_or_element     ]],
+		[qw[  ternary_element        ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1237,6 +1236,15 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  expression                          ]],
 		;
 
+	rule  ternary_element                   =>
+		[qw[  logical_or_expression  ]],
+		[qw[  logical_or_element     ]],
+		;
+
+	rule  ternary_expression                => dom => 'CSI::Language::Java::Expression::Ternary',
+		[qw[  ternary_element  QUESTION_MARK  expression  COLON  expression  ]],
+		;
+
 	rule  type_argument                     =>
 		[qw[  reference_type  ]],
 		[qw[  type_wildcard   ]],
@@ -1659,14 +1667,6 @@ __END__
 			[qw[ class_or_interface_type DOT annotation_list type_identifier                   ]],
 			[qw[ class_or_interface_type DOT                 type_identifier type_arguments    ]],
 			[qw[ class_or_interface_type DOT                 type_identifier                   ]],
-		];
-	}
-
-	sub conditional_expression      :RULE :ACTION_DEFAULT {
-		[
-			[qw[ conditional_or_expression                                                       ]],
-			[qw[ conditional_or_expression QUESTION_MARK expression COLON conditional_expression ]],
-			[qw[ conditional_or_expression QUESTION_MARK expression COLON lambda_expression      ]],
 		];
 	}
 
