@@ -456,6 +456,12 @@ sub expect_type_string                  {
 	expect_type_class [qw[ String ]]
 }
 
+sub expect_variable_name                {
+	my ($name) = @_;
+
+	expect_token ('CSI::Language::Java::Variable::Name' => $name);
+}
+
 1;
 
 __END__

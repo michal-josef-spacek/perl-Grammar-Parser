@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'expression';
 
-plan tests => 24;
+plan tests => 25;
 
 test_rule "primary expression / literal / null" => (
 	data => 'null',
@@ -239,6 +239,20 @@ test_rule "expression / logical or expression" => (
 			expect_reference ('foo'),
 			expect_operator_logical_or,
 			expect_reference ('bar'),
+		)),
+	],
+);
+
+test_rule "lambda expression" => (
+	data => '() -> {}',
+	expect => [
+		expect_element ('CSI::Language::Java::Expression::Lambda' => (
+			expect_element ('CSI::Language::Java::Expression::Lambda::Parameters' => (
+				expect_token_paren_open,
+				expect_token_paren_close,
+			)),
+			expect_token ('CSI::Language::Java::Token::Lambda' => '->'),
+			expect_element ('CSI::Language::Java::Structure::Block'),
 		)),
 	],
 );
