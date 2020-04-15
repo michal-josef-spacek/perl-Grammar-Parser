@@ -492,6 +492,21 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  BINARY_USHIFT_RIGHT  ]],
 		;
 
+	rule  binary_xor_element                =>
+		[qw[  binary_and_element     ]],
+		[qw[  binary_and_expression  ]],
+		;
+
+	rule  binary_xor_elements               =>
+		[qw[  binary_xor_element  BINARY_XOR  binary_xor_elements  ]],
+		[qw[  binary_xor_element  BINARY_XOR  binary_xor_element   ]],
+		;
+
+	rule  binary_xor_expression             => dom => 'CSI::Language::Java::Expression::Binary::Xor',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ExclusiveOrExpression
+		[qw[  binary_xor_elements  ]],
+		;
+
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
 		[qw[  cast_reference_operators  lambda_expression                 ]],
 		[qw[  cast_reference_operators  prefix_element                    ]],
@@ -703,8 +718,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  binary_and_expression  ]],
-		[qw[  binary_and_element     ]],
+		[qw[  binary_xor_expression  ]],
+		[qw[  binary_xor_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -1724,13 +1739,6 @@ __END__
 		[
 			[qw[ exception_type                           ]],
 			[qw[ exception_type COMMA exception_type_list ]],
-		];
-	}
-
-	sub exclusive_or_expression     :RULE :ACTION_LIST {
-		[
-			[qw[ and_expression                             ]],
-			[qw[ and_expression XOR exclusive_or_expression ]],
 		];
 	}
 
