@@ -8,6 +8,8 @@ use warnings;
 package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 	use Moo;
 
+	our $DIE_ON_MULTIPLE = 1;
+
 	extends 'Grammar::Parser::Driver::Instance';
 
 	our $SHOW_PROGRESS_ON_ERROR = 1;
@@ -63,6 +65,10 @@ package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 		while (my $value = $self->marpa->value) {
 			$ref //= $value;
 			$counter++;
+			use DDP;
+			p $ref if $counter == 2;
+			p $value if $counter > 1;
+			die "Too many results received" if $DIE_ON_MULTIPLE && $counter > 1;
 		}
 
 		die "Not parsed" unless $ref;
