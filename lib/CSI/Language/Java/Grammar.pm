@@ -7,6 +7,7 @@ use warnings;
 
 package CSI::Language::Java::Grammar v1.0.0 {
 	use CSI::Grammar;
+	use Ref::Util;
 	require CSI::Language::Java::Actions;
 
 	default_rule_action 'pass_through';
@@ -455,6 +456,27 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  data_type  dim  ]],
 		;
 
+	rule  binary_shift_element              =>
+		[qw[  additive_element     ]],
+		[qw[  additive_expression  ]],
+		;
+
+	rule  binary_shift_elements             =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ShiftExpression
+		[qw[  binary_shift_element  binary_shift_operator  binary_shift_elements  ]],
+		[qw[  binary_shift_element  binary_shift_operator  binary_shift_element   ]],
+		;
+
+	rule  binary_shift_expression           => dom => 'CSI::Language::Java::Expression::Binary::Shift',
+		[qw[  binary_shift_elements ]],
+		;
+
+	rule  binary_shift_operator             =>
+		[qw[  BINARY_SHIFT_LEFT    ]],
+		[qw[  BINARY_SHIFT_RIGHT   ]],
+		[qw[  BINARY_USHIFT_RIGHT  ]],
+		;
+
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
 		[qw[  cast_reference_operators  lambda_expression                 ]],
 		[qw[  cast_reference_operators  prefix_element                    ]],
@@ -646,8 +668,8 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  expression                        =>
-		[qw[  additive_expression  ]],
-		[qw[  additive_element     ]],
+		[qw[  binary_shift_expression  ]],
+		[qw[  binary_shift_element     ]],
 		[qw[  ternary_expression     ]],
 		[qw[  lambda_expression      ]],
 		;
@@ -2144,15 +2166,6 @@ __END__
 		[
 			[qw[ RETURN  expression  SEMICOLON ]],
 			[qw[ RETURN              SEMICOLON ]],
-		]
-	}
-
-	sub shift_expression            :RULE :ACTION_LIST {
-		[
-			[qw[ additive_expression                                       ]],
-			[qw[ additive_expression LEFT_SHIFT           shift_expression ]],
-			[qw[ additive_expression RIGHT_SHIFT          shift_expression ]],
-			[qw[ additive_expression UNSIGNED_RIGHT_SHIFT shift_expression ]],
 		]
 	}
 
