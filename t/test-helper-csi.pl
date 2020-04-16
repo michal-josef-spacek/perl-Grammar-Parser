@@ -84,8 +84,20 @@ sub test_rule {
 		$title = $params{title}
 			if exists $params{title};
 
+		act_arguments $params{data};
+
+		if (exists $params{throws}) {
+			local $Grammar::Parser::Driver::Marpa::R2::Instance::SHOW_PROGRESS_ON_ERROR = 0;
+
+			act_throws $title => throws => ignore
+				#ok $title, got => ! scalar deduce 'act-lives'
+				#and diag ("died with ${\ deduce 'act-error' }")
+				;
+
+			return;
+		}
+
 		it $title => (
-			args => [ $params{data} ],
 			expect => $params{expect},
 		) or do {
 			use DDP;

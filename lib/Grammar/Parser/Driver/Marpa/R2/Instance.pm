@@ -10,6 +10,8 @@ package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 
 	extends 'Grammar::Parser::Driver::Instance';
 
+	our $SHOW_PROGRESS_ON_ERROR = 1;
+
 	has lexer => (
 		is => 'ro',
 	);
@@ -45,7 +47,7 @@ package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 		};
 
 		if (my $eval_error = $@) {
-			say $marpa->show_progress( 0, -1 );
+			say $marpa->show_progress( 0, -1 ) if $SHOW_PROGRESS_ON_ERROR;
 			die $eval_error if $eval_error;
 		}
 

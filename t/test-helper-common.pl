@@ -62,9 +62,9 @@ sub build_got {
 
 	return $params{got} if exists $params{got};
 
-	die "Provide 'got' or 'args'" unless exists $params{args};
+	proclaim 'act-arguments' => $params{args} if exists $params{args};
+	die "Provide 'got' or 'args'" unless try_deduce 'act-arguments';
 
-	proclaim 'act-arguments' => $params{args};
 	my $value = scalar deduce 'act-value';
 
 	die "Act failed: ${\ deduce 'act-error' }"
@@ -146,6 +146,10 @@ sub act (&) {
 
 	#proclaim 'act-lives' => $lives_ok;
 	#proclaim 'act-error' => $error;
+}
+
+sub act_arguments {
+	proclaim 'act-arguments' => [ @_ ];
 }
 
 sub act_throws {
