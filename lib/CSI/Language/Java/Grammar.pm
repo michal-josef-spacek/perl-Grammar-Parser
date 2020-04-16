@@ -14,14 +14,44 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	register_action_lookup 'CSI::Language::Java::Actions';
 
+	# groups
+	rule keyword                            => ;
+	rule keyword_identifier                 => ;
+	rule keyword_type_identifier            => ;
+
 	sub word {
 		my ($keyword, @opts) = @_;
-		my $lc = lc $keyword;
-		my $uc = uc $keyword;
-		my $word = ucfirst $lc;
-		my $re = qr/ (?> \b $lc \b ) /sx;
+		$keyword = ucfirst lc $keyword;
+		my $re = qr/ (?> \b ${\ lc $keyword } \b ) /sx;
 
-		token $uc => dom => "CSI::Language::Java::Token::Word::$word" => @opts, $re;
+		my @dom   = (dom => "::Token::Word::$keyword");
+		my @proto = (proto => 'Prohibited_Identifier');
+		my @group = (group => 'keyword');
+
+		while (@opts) {
+			my $key   = shift @opts;
+			my $value = shift @opts;
+
+			goto $key;
+
+			dom:
+			$dom[1] = $value;
+			next;
+
+			group:
+			push @group, group => $value unless $value eq $group[1];
+			next;
+
+			proto:
+			push @proto, proto => $value unless $value eq $proto[1];
+			next;
+		}
+
+		$dom[1] =~ s/^::/CSI::Language::Java::/;
+
+		token uc $keyword => @proto, @group, $re;
+		rule  lc $keyword => @dom, [ uc $keyword ]
+			unless $keyword eq '_';
 	}
 
 	sub operator {
@@ -70,6 +100,72 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			.*?
 			\*\/
 		)/sx;
+
+
+	word  ABSTRACT                          => ;
+	word  ASSERT                            => ;
+	word  BOOLEAN                           => ;
+	word  BREAK                             => ;
+	word  BYTE                              => ;
+	word  CASE                              => ;
+	word  CATCH                             => ;
+	word  CHAR                              => ;
+	word  CLASS                             => ;
+	word  CONST                             => ;
+	word  CONTINUE                          => ;
+	word  DEFAULT                           => ;
+	word  DO                                => ;
+	word  DOUBLE                            => ;
+	word  ELSE                              => ;
+	word  ENUM                              => ;
+	word  EXPORTS                           => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  EXTENDS                           => ;
+	word  FALSE                             => ;
+	word  FINAL                             => ;
+	word  FINALLY                           => ;
+	word  FLOAT                             => ;
+	word  FOR                               => ;
+	word  GOTO                              => ;
+	word  IF                                => ;
+	word  IMPLEMENTS                        => ;
+	word  IMPORT                            => ;
+	word  INSTANCEOF                        => ;
+	word  INT                               => ;
+	word  INTERFACE                         => ;
+	word  LONG                              => ;
+	word  MODULE                            => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  NATIVE                            => ;
+	word  NEW                               => ;
+	word  NULL                              => ;
+	word  OPEN                              => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  OPENS                             => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  PACKAGE                           => ;
+	word  PRIVATE                           => ;
+	word  PROTECTED                         => ;
+	word  PROVIDES                          => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  PUBLIC                            => ;
+	word  REQUIRES                          => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  RETURN                            => ;
+	word  SHORT                             => ;
+	word  STATIC                            => ;
+	word  STRICTFP                          => ;
+	word  SUPER                             => ;
+	word  SWITCH                            => ;
+	word  SYNCHRONIZED                      => ;
+	word  THIS                              => ;
+	word  THROW                             => ;
+	word  THROWS                            => ;
+	word  TO                                => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  TRANSIENT                         => ;
+	word  TRUE                              => ;
+	word  TRY                               => ;
+	word  USES                              => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  VAR                               => group => 'keyword_identifier';
+	word  VOID                              => ;
+	word  VOLATILE                          => ;
+	word  WHILE                             => ;
+	word  WITH                              => group => 'keyword_identifier', group => 'keyword_type_identifier';
+	word  _                                 => ;
 
 	1;
 };
@@ -179,265 +275,6 @@ __END__
 		) /sx;
 	}
 
-	sub ABSTRACT                    :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b abstract       \b ) /sx;
-	}
-
-	sub ASSERT                      :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b assert         \b ) /sx;
-	}
-
-	sub BOOLEAN                     :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b boolean        \b ) /sx;
-	}
-
-	sub CONTINUE                    :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b continue       \b ) /sx;
-	}
-
-	sub DEFAULT                     :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b default        \b ) /sx;
-	}
-
-	sub DO                          :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b do             \b ) /sx;
-	}
-
-	sub FOR                         :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b for            \b ) /sx;
-	}
-
-	sub GOTO                        :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b goto           \b ) /sx;
-	}
-
-	sub IF                          :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b if             \b ) /sx;
-	}
-
-	sub NEW                         :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b new            \b ) /sx;
-	}
-
-	sub PACKAGE                     :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b package        \b ) /sx;
-	}
-
-	sub SWITCH                      :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b switch         \b ) /sx;
-	}
-
-	sub SYNCHRONIZED                :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b synchronized   \b ) /sx;
-	}
-
-	sub PRIVATE                     :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b private        \b ) /sx;
-	}
-
-	sub THIS                        :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b this           \b ) /sx;
-	}
-
-	sub BREAK                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b break          \b ) /sx;
-	}
-
-	sub DOUBLE                      :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b double         \b ) /sx;
-	}
-
-	sub IMPLEMENTS                  :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b implements     \b ) /sx;
-	}
-
-	sub PROTECTED                   :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b protected      \b ) /sx;
-	}
-
-	sub THROW                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b throw          \b ) /sx;
-	}
-
-	sub BYTE                        :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b byte           \b ) /sx;
-	}
-
-	sub ELSE                        :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b else           \b ) /sx;
-	}
-
-	sub IMPORT                      :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b import         \b ) /sx;
-	}
-
-	sub PUBLIC                      :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b public         \b ) /sx;
-	}
-
-	sub THROWS                      :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b throws         \b ) /sx;
-	}
-
-	sub CASE                        :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b case           \b ) /sx;
-	}
-
-	sub ENUM                        :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b enum           \b ) /sx;
-	}
-
-	sub INSTANCEOF                  :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b instanceof     \b ) /sx;
-	}
-
-	sub RETURN                      :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b return         \b ) /sx;
-	}
-
-	sub TRANSIENT                   :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b transient      \b ) /sx;
-	}
-
-	sub TRANSITIVE                  :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b transient      \b ) /sx;
-	}
-
-	sub CATCH                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b catch          \b ) /sx;
-	}
-
-	sub EXTENDS                     :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b extends        \b ) /sx;
-	}
-
-	sub INT                         :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b int            \b ) /sx;
-	}
-
-	sub SHORT                       :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b short          \b ) /sx;
-	}
-
-	sub TRY                         :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b try            \b ) /sx;
-	}
-
-	sub CHAR                        :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b char           \b ) /sx;
-	}
-
-	sub FINAL                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b final          \b ) /sx;
-	}
-
-	sub INTERFACE                   :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b interface      \b ) /sx;
-	}
-
-	sub STATIC                      :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b static         \b ) /sx;
-	}
-
-	sub VOID                        :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b void           \b ) /sx;
-	}
-
-	sub CLASS                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b class          \b ) /sx;
-	}
-
-	sub FINALLY                     :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b finally        \b ) /sx;
-	}
-
-	sub LONG                        :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b long           \b ) /sx;
-	}
-
-	sub STRICTFP                    :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b strictfp       \b ) /sx;
-	}
-
-	sub VOLATILE                    :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b volatile       \b ) /sx;
-	}
-
-	sub CONST                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b const          \b ) /sx;
-	}
-
-	sub FLOAT                       :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b float          \b ) /sx;
-	}
-
-	sub NATIVE                      :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b native         \b ) /sx;
-	}
-
-	sub SUPER                       :TOKEN :PROTO(Keyword) :ACTION_SYMBOL {
-		qr/ (?> \b super          \b ) /sx;
-	}
-
-	sub WHILE                       :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b while          \b ) /sx;
-	}
-
-	sub EXPORTS                     :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b exports \b ) /sx;
-	}
-
-	sub REQUIRES                    :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b requires \b ) /sx;
-	}
-
-	sub PROVIDES                    :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b provides \b ) /sx;
-	}
-
-	sub USES                        :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b uses \b ) /sx;
-	}
-
-	sub WITH                        :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b with \b ) /sx;
-	}
-
-	sub TO                          :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b to \b ) /sx;
-	}
-
-	sub MODULE                      :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b module \b ) /sx;
-	}
-
-	sub OPENS                       :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b opens \b ) /sx;
-	}
-
-	sub OPEN                        :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b open \b ) /sx;
-	}
-
-	sub VAR                         :TOKEN :ACTION_SYMBOL {
-		qr/ (?> \b var            \b ) /sx;
-	}
-
-	sub underline                   :TOKEN :PROTO(Keyword) {
-		qr/ (?> \b _              \b ) /sx;
-	}
-
-	sub TRUE                        :TOKEN :PROTO(Literal_Boolean) :ACTION_SYMBOL {
-		qr/ (?> \b true           \b ) /sx;
-	}
-
-	sub FALSE                       :TOKEN :PROTO(Literal_Boolean) :ACTION_SYMBOL {
-		qr/ (?> \b false          \b ) /sx;
-	}
-
-	sub NULL                        :TOKEN :PROTO(Literal_Null) :ACTION_SYMBOL {
-		qr/ (?> \b null           \b ) /sx;
-	}
 
 	sub SEMICOLON                   :TOKEN {
 		';'
