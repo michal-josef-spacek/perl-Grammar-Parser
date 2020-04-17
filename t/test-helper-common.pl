@@ -110,7 +110,7 @@ sub is {
 
 	test_frame {
 		my $got = build_got %params;
-		Test::More::is $got, $params{expect}, $title;
+		Test::Deep::cmp_deeply $got, $params{expect}, $title;
 	};
 }
 
