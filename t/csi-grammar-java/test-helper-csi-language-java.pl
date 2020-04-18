@@ -229,6 +229,19 @@ sub expect_identifier                   {
 	expect_token '::Identifier' => @_
 }
 
+sub expect_class_extends                {
+	expect_element ('CSI::Language::Java::Class::Extends' => (
+		expect_token ('CSI::Language::Java::Token::Word::Extends' => 'extends'),
+		expect_class_type (@_),
+	));
+}
+
+sub expect_class_type                   {
+	my ($class) = @_;
+
+	expect_qualified_identifier ('::Type::Class' => @$class);
+}
+
 sub expect_import_declaration           {
 	my @static = $_[0] eq 'static'
 		? (expect_word_static)

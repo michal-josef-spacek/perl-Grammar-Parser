@@ -455,6 +455,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[                   class  type_name                                                    class_body  ]],
 		;
 
+	rule  class_extends                     => dom => 'CSI::Language::Java::Class::Extends',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-Superclass
+		[qw[  extends  class_type  ]],
+		;
+
 	rule  class_literal                     => dom => 'CSI::Language::Java::Literal::Class',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-15.html#jls-ClassLiteral
 		[qw[  type_reference  class_literal_dims  DOT  class  ]],
@@ -2048,12 +2053,6 @@ __END__
 	sub static_initializer          :RULE :ACTION_DEFAULT {
 		[
 			[qw[ STATIC block ]],
-		]
-	}
-
-	sub superclass                  :RULE :ACTION_DEFAULT {
-		[
-			[qw[ EXTENDS class_type ]],
 		]
 	}
 
