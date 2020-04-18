@@ -62,12 +62,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			: \& token
 			;
 
-		$code->(
-			$name,
-			dom => "CSI::Language::Java::Operator::$dom",
-			@params,
-		);
+		$dom =~ s/^::/CSI::Language::Java::/;
+
+		$code->($name, dom => $dom, @params);
 	}
+
 
 	start rule TOP                          => dom => 'CSI::Document',
 		[qw[  compilation_unit  ]],
@@ -221,6 +220,48 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			\"
 		)/sx;
 
+	token TOKEN_GT_AMBIGUOUS                => qr/ > (?= > ) /sx;
+	token TOKEN_GT_FINAL                    => qr/ > (?! > ) /sx;
+	token TOKEN_LT                          => '<';
+	token TOKEN_PLUS                        => qr/ \+ (?! [=] ) (?= (?: \+ \+ )* (?! \+ ) )/sx;
+	token TOKEN_MINUS                       => qr/  - (?! [=] ) (?= (?:  -  - )* (?!  - ) )/sx;
+	operator ADDITION                       => '::Operator::Addition'                       => [qw[  TOKEN_PLUS  ]];
+	operator ASSIGN                         => '::Operator::Assign'                         => qr/ = (?! [=] )/sx;
+	operator ASSIGN_ADDITION                => '::Operator::Assign::Addition'               => '+=';
+	operator ASSIGN_BINARY_AND              => '::Operator::Assign::Binary::And'            => '&=';
+	operator ASSIGN_BINARY_OR               => '::Operator::Assign::Binary::Or'             => '|=';
+	operator ASSIGN_BINARY_SHIFT_LEFT       => '::Operator::Assign::Binary::Shift::Left'    => '<<=';
+	operator ASSIGN_BINARY_SHIFT_RIGHT      => '::Operator::Assign::Binary::Shift::Right'   => '>>=';
+	operator ASSIGN_BINARY_USHIFT_RIGHT     => '::Operator::Assign::Binary::UShift::Right'  => '>>>=';
+	operator ASSIGN_BINARY_XOR              => '::Operator::Assign::Binary::Xor'            => '^=';
+	operator ASSIGN_DIVISION                => '::Operator::Assign::Division'               => '/=';
+	operator ASSIGN_MODULUS                 => '::Operator::Assign::Modulus'                => '%=';
+	operator ASSIGN_MULTIPLICATION          => '::Operator::Assign::Multiplication'         => '*=';
+	operator ASSIGN_SUBTRACTION             => '::Operator::Assign::Subtraction'            => '-=';
+	operator BINARY_AND                     => '::Operator::Binary::And'                    => qr/ & (?! [&=] )/sx;
+	operator BINARY_COMPLEMENT              => '::Operator::Binary::Complement'             => '~';
+	operator BINARY_OR                      => '::Operator::Binary::Or'                     => qr/ \| (?! [|=] )/sx;
+	operator BINARY_SHIFT_LEFT              => '::Operator::Binary::Shift::Left'            => '<<';
+	operator BINARY_SHIFT_RIGHT             => '::Operator::Binary::Shift::Right'           => [qw[  TOKEN_GT_AMBIGUOUS  TOKEN_GT_FINAL  ]];
+	operator BINARY_USHIFT_RIGHT            => '::Operator::Binary::UShift::Right'          => [qw[  TOKEN_GT_AMBIGUOUS  TOKEN_GT_AMBIGUOUS  TOKEN_GT_FINAL  ]];
+	operator BINARY_XOR                     => '::Operator::Binary::Xor'                    => qr/ \^ (?! [=] )/sx;
+	operator CMP_EQUALITY                   => '::Operator::Equality'                       => '==';
+	operator CMP_GREATER_THAN               => '::Operator::Greater'                        => [qw[  TOKEN_GT_FINAL ]];
+	operator CMP_GREATER_THAN_OR_EQUAL      => '::Operator::Greater::Equal'                 => '>=';
+	operator CMP_INEQUALITY                 => '::Operator::Inequality'                     => '!=';
+	operator CMP_LESS_THAN                  => '::Operator::Less'                           => [qw[  TOKEN_LT  ]];
+	operator CMP_LESS_THAN_OR_EQUAL         => '::Operator::Less::Equal'                    => '<=';
+	operator DECREMENT                      => '::Operator::Decrement'                      => qr/  -  - (?= (?:  -  - )* (?!  - ) )/sx;
+	operator DIVISION                       => '::Operator::Division'                       => qr/ \/ (?! [=] )/sx,
+	operator INCREMENT                      => '::Operator::Increment'                      => qr/ \+ \+ (?= (?: \+ \+ )* (?! \+ ) )/sx;
+	operator LOGICAL_AND                    => '::Operator::Logical::And'                   => '&&';
+	operator LOGICAL_COMPLEMENT             => '::Operator::Logical::Complement'            => qr/ ! (?! [=]) /sx;
+	operator LOGICAL_OR                     => '::Operator::Logical::Or'                    => '||';
+	operator MODULUS                        => '::Operator::Modulus'                        => qr/  % (?! [=] )/sx;
+	operator MULTIPLICATION                 => '::Operator::Multiplication'                 => qr/ \* (?! [=] )/sx;
+	operator SUBTRACTION                    => '::Operator::Subtraction'                    => [qw[  TOKEN_MINUS  ]];
+	operator UNARY_MINUS                    => '::Operator::Unary::Minus'                   => [qw[  TOKEN_MINUS  ]];
+	operator UNARY_PLUS                     => '::Operator::Unary::Plus'                    => [qw[  TOKEN_PLUS  ]];
 	word  ABSTRACT                          => ;
 	word  ASSERT                            => ;
 	word  BOOLEAN                           => ;
@@ -408,146 +449,6 @@ __END__
 
 	sub QUESTION_MARK               :TOKEN {
 		'?'
-	}
-
-	sub AND                         :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'&';
-	}
-
-	sub ASSIGN                      :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'=';
-	}
-
-	sub ASSIGN_ADD                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'+=';
-	}
-
-	sub ASSIGN_AND                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'&=';
-	}
-
-	sub ASSIGN_DIVIDE               :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'/=';
-	}
-
-	sub ASSIGN_LEFT_SHIFT           :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'<<=';
-	}
-
-	sub ASSIGN_MULTIPLY             :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'*=';
-	}
-
-	sub ASSIGN_MODULO               :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'%=';
-	}
-
-	sub ASSIGN_OR                   :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'|=';
-	}
-
-	sub ASSIGN_RIGHT_SHIFT          :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>>=';
-	}
-
-	sub ASSIGN_SUB                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'-=';
-	}
-
-	sub ASSIGN_UNSIGNED_RIGHT_SHIFT :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>>>=';
-	}
-
-	sub ASSIGN_XOR                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'^=';
-	}
-
-	sub DECREMENT                   :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'--';
-	}
-
-	sub DIVIDE                      :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'/';
-	}
-
-	sub EQUALS                      :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'==';
-	}
-
-	sub GREATER_THAN                :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>';
-	}
-
-	sub GREATER_THAN_OR_EQUALS      :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>=';
-	}
-
-	sub INCREMENT                   :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'++';
-	}
-
-	sub LESS_THAN                   :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'<';
-	}
-
-	sub LESS_THAN_OR_EQUALS         :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'<=';
-	}
-
-	sub LOGICAL_OR                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'||';
-	}
-
-	sub LOGICAL_AND                 :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'&&';
-	}
-
-	sub MINUS                       :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'-';
-	}
-
-	sub NOT                         :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'!';
-	}
-
-	sub NOT_EQUALS                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'!=';
-	}
-
-	sub OR                          :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'|';
-	}
-
-	sub PLUS                        :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'+';
-	}
-
-	sub RIGHT_SHIFT                 :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>>';
-	}
-
-	sub MULTIPLY                    :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'*'
-	}
-
-	sub MODULO                      :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'%'
-	}
-
-	sub LEFT_SHIFT                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'<<'
-	}
-
-	sub UNSIGNED_RIGHT_SHIFT        :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'>>>'
-	}
-
-	sub XOR                         :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'^'
-	}
-
-	sub BIT_NEGATE                  :TOKEN :PROTO(Operator) :ACTION_SYMBOL {
-		'~'
 	}
 
 	1;

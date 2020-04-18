@@ -66,6 +66,31 @@ sub expect_literal_integral_binary      { expect_token LITERAL_INTEGRAL_BINARY  
 sub expect_literal_integral_decimal     { expect_token LITERAL_INTEGRAL_DECIMAL => @_ }
 sub expect_literal_integral_hex         { expect_token LITERAL_INTEGRAL_HEX     => @_ }
 sub expect_literal_integral_octal       { expect_token LITERAL_INTEGRAL_OCTAL   => @_ }
+sub expect_operator_binary_and          { expect_token '::Operator::Binary::And'            => '&' }
+sub expect_operator_binary_complement   { expect_token '::Operator::Binary::Complement'     => '~' }
+sub expect_operator_binary_or           { expect_token '::Operator::Binary::Or'             => '|' }
+sub expect_operator_binary_shift_left   { expect_token '::Operator::Binary::Shift::Left'    => '<<' }
+sub expect_operator_binary_shift_right  { expect_token '::Operator::Binary::Shift::Right'   => '>>' }
+sub expect_operator_binary_ushift_right { expect_token '::Operator::Binary::UShift::Right'  => '>>>' }
+sub expect_operator_binary_xor          { expect_token '::Operator::Binary::Xor'            => '^' }
+sub expect_operator_decrement           { expect_token '::Operator::Decrement'              => '--' }
+sub expect_operator_division            { expect_token '::Operator::Division'               => '/' }
+sub expect_operator_equality            { expect_token '::Operator::Equality'               => '==' }
+sub expect_operator_greater_equal       { expect_token '::Operator::Greater::Equal'         => '>=' }
+sub expect_operator_greater_than        { expect_token '::Operator::Greater'                => '>' }
+sub expect_operator_increment           { expect_token '::Operator::Increment'              => '++' }
+sub expect_operator_inequality          { expect_token '::Operator::Inequality'             => '!=' }
+sub expect_operator_less_equal          { expect_token '::Operator::Less::Equal'            => '<=' }
+sub expect_operator_less_than           { expect_token '::Operator::Less'                   => '<' }
+sub expect_operator_logical_and         { expect_token '::Operator::Logical::And'           => '&&' }
+sub expect_operator_logical_complement  { expect_token '::Operator::Logical::Complement'    => '!' }
+sub expect_operator_logical_or          { expect_token '::Operator::Logical::Or'            => '||' }
+sub expect_operator_unary_minus         { expect_token '::Operator::Unary::Minus'           => '-' }
+sub expect_operator_subtraction         { expect_token '::Operator::Subtraction'            => '-' }
+sub expect_operator_modulus             { expect_token '::Operator::Modulus'                => '%' }
+sub expect_operator_multiplication      { expect_token '::Operator::Multiplication'         => '*' }
+sub expect_operator_unary_plus          { expect_token '::Operator::Unary::Plus'            => '+' }
+sub expect_operator_addition            { expect_token '::Operator::Addition'               => '+' }
 sub expect_word                         {
 	my ($dom) = @_;
 
