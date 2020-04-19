@@ -220,6 +220,22 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			\"
 		)/sx;
 
+	token ANNOTATION                        => dom => 'CSI::Language::Java::Token::Annotation'      => '@';
+	token BRACE_CLOSE                       => dom => 'CSI::Language::Java::Token::Brace::Close'    => '}';
+	token BRACE_OPEN                        => dom => 'CSI::Language::Java::Token::Brace::Open'     => '{';
+	token BRACKET_CLOSE                     => dom => 'CSI::Language::Java::Token::Bracket::Close'  => ']';
+	token BRACKET_OPEN                      => dom => 'CSI::Language::Java::Token::Bracket::Open'   => '[';
+	token COLON                             => dom => 'CSI::Language::Java::Token::Colon'           => qr/ : (?! : )/sx;
+	token COMMA                             => dom => 'CSI::Language::Java::Token::Comma'           => ',';
+	token DOUBLE_COLON                      => dom => 'CSI::Language::Java::Token::Double::Colon'   => '::';
+	token DOT                               => dom => 'CSI::Language::Java::Token::Dot'             => qr/ \. (?! \. )/sx;
+	token ELIPSIS                           => dom => 'CSI::Language::Java::Token::Elipsis'         => '...';
+	token LAMBDA                            => dom => 'CSI::Language::Java::Token::Lambda'          => '->';
+	token PAREN_CLOSE                       => dom => 'CSI::Language::Java::Token::Paren::Close'    => ')';
+	token PAREN_OPEN                        => dom => 'CSI::Language::Java::Token::Paren::Open'     => '(';
+	token QUESTION_MARK                     => dom => 'CSI::Language::Java::Token::Question::Mark'  => '?';
+	token SEMICOLON                         => dom => 'CSI::Language::Java::Token::Semicolon'       => ';';
+	token TOKEN_ASTERISK                    => qr/ \* (?! [=] )/sx;
 	token TOKEN_GT_AMBIGUOUS                => qr/ > (?= > ) /sx;
 	token TOKEN_GT_FINAL                    => qr/ > (?! > ) /sx;
 	token TOKEN_LT                          => '<';
@@ -258,7 +274,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	operator LOGICAL_COMPLEMENT             => '::Operator::Logical::Complement'            => qr/ ! (?! [=]) /sx;
 	operator LOGICAL_OR                     => '::Operator::Logical::Or'                    => '||';
 	operator MODULUS                        => '::Operator::Modulus'                        => qr/  % (?! [=] )/sx;
-	operator MULTIPLICATION                 => '::Operator::Multiplication'                 => qr/ \* (?! [=] )/sx;
+	operator MULTIPLICATION                 => '::Operator::Multiplication'                 => [qw[  TOKEN_ASTERISK  ]];
 	operator SUBTRACTION                    => '::Operator::Subtraction'                    => [qw[  TOKEN_MINUS  ]];
 	operator UNARY_MINUS                    => '::Operator::Unary::Minus'                   => [qw[  TOKEN_MINUS  ]];
 	operator UNARY_PLUS                     => '::Operator::Unary::Plus'                    => [qw[  TOKEN_PLUS  ]];
@@ -383,80 +399,6 @@ __END__
 	}
 
 
-	sub SEMICOLON                   :TOKEN {
-		';'
-	}
-
-	sub DOT                         :TOKEN {
-		'.'
-	}
-
-	sub BRACE_OPEN                  :TOKEN {
-		'{'
-	}
-
-	sub BRACE_CLOSE                 :TOKEN {
-		'}'
-	}
-
-	sub PAREN_OPEN                  :TOKEN {
-		'('
-	}
-
-	sub PAREN_CLOSE                 :TOKEN {
-		')'
-	}
-
-	sub BRACKET_OPEN                :TOKEN {
-		'['
-	}
-
-	sub BRACKET_CLOSE               :TOKEN {
-		']'
-	}
-
-	sub COMMA                       :TOKEN {
-		','
-	}
-
-	sub AT                          :TOKEN {
-		'@'
-	}
-
-	sub TYPE_PARAMETER_LIST_OPEN    :TOKEN {
-		'<'
-	}
-
-	sub TYPE_PARAMETER_LIST_CLOSE   :TOKEN {
-		'>'
-	}
-
-	sub DOUBLE_COLON                :TOKEN {
-		'::'
-	}
-
-	sub LAMBDA                      :TOKEN {
-		'->'
-	}
-
-	sub ELIPSIS                     :TOKEN {
-		'...'
-	}
-
-	sub COLON                       :TOKEN {
-		':'
-	}
-
-	sub QUESTION_MARK               :TOKEN {
-		'?'
-	}
-
-	1;
-};
-
-1;
-
-__END__
 	sub additional_bound            :RULE :ACTION_LIST {
 		[
 			[qw[  AND  interface_type                    ]],

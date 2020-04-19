@@ -48,14 +48,6 @@ sub expect_element                      {
 	+{ $name => @expect_content ? \@expect_content : Test::Deep::ignore };
 }
 
-sub expect_token                        {
-	my ($token, $value) = @_;
-
-	$token =~ s/^::/CSI::Language::Java::/;
-
-	+{ $token => $value // ignore };
-}
-
 sub expect_literal_false                { expect_element '::Literal::Boolean::False', expect_word_false  }
 sub expect_literal_null                 { expect_element '::Literal::Null',           expect_word_null   }
 sub expect_literal_true                 { expect_element '::Literal::Boolean::True',  expect_word_true   }
@@ -91,6 +83,30 @@ sub expect_operator_modulus             { expect_token '::Operator::Modulus'    
 sub expect_operator_multiplication      { expect_token '::Operator::Multiplication'         => '*' }
 sub expect_operator_unary_plus          { expect_token '::Operator::Unary::Plus'            => '+' }
 sub expect_operator_addition            { expect_token '::Operator::Addition'               => '+' }
+sub expect_token                        {
+	my ($token, $value) = @_;
+
+	$token =~ s/^::/CSI::Language::Java::/;
+
+	+{ $token => $value // ignore };
+}
+
+sub expect_token_annotation             { expect_token '::Token::Annotation'            => '@' }
+sub expect_token_brace_close            { expect_token '::Token::Brace::Close'          => '}' }
+sub expect_token_brace_open             { expect_token '::Token::Brace::Open'           => '{' }
+sub expect_token_bracket_close          { expect_token '::Token::Bracket::Close'        => ']' }
+sub expect_token_bracket_open           { expect_token '::Token::Bracket::Open'         => '[' }
+sub expect_token_colon                  { expect_token '::Token::Colon'                 => ':' }
+sub expect_token_comma                  { expect_token '::Token::Comma'                 => ',' }
+sub expect_token_dot                    { expect_token '::Token::Dot'                   => '.' }
+sub expect_token_double_colon           { expect_token '::Token::Double::Colon'         => '::' }
+sub expect_token_elipsis                { expect_token '::Token::Elipsis'               => '...' }
+sub expect_token_paren_close            { expect_token '::Token::Paren::Close'          => ')' }
+sub expect_token_paren_open             { expect_token '::Token::Paren::Open'           => '(' }
+sub expect_token_question_mark          { expect_token '::Token::Question::Mark'        => '?' }
+sub expect_token_semicolon              { expect_token '::Token::Semicolon'             => ';' }
+sub expect_token_type_list_close        { expect_token '::Token::Type::List::Close'     => '>' }
+sub expect_token_type_list_open         { expect_token '::Token::Type::List::Open'      => '<' }
 sub expect_word                         {
 	my ($dom) = @_;
 

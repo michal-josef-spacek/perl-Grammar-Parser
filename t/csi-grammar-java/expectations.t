@@ -9,7 +9,7 @@ use lib $FindBin::Bin;
 
 BEGIN { require "test-helper-csi-language-java.pl" }
 
-plan tests => 3;
+plan tests => 4;
 
 subtest "word expectations" => sub {
 	# 64 ... number of java keywords
@@ -414,6 +414,117 @@ subtest "literals"          => sub {
 		expect => expect_literal_floating_decimal ('.0'),
 		got => {
 			'LITERAL_FLOAT_DECIMAL' => '.0',
+		},
+		;
+
+	done_testing;
+};
+
+subtest "tokens"            => sub {
+	plan tests => 15;
+
+	is "expect_token_annotation" =>
+		expect => expect_token_annotation,
+		got    => {
+			'CSI::Language::Java::Token::Annotation' => '@',
+		},
+		;
+
+	is "expect_token_brace_close" =>
+		expect => expect_token_brace_close,
+		got    => {
+			'CSI::Language::Java::Token::Brace::Close' => '}',
+		},
+		;
+
+	is "expect_token_brace_open" =>
+		expect => expect_token_brace_open,
+		got    => {
+			'CSI::Language::Java::Token::Brace::Open' => '{',
+		},
+		;
+
+	is "expect_token_bracket_close" =>
+		expect => expect_token_bracket_close,
+		got    => {
+			'CSI::Language::Java::Token::Bracket::Close' => ']',
+		},
+		;
+
+	is "expect_token_bracket_open" =>
+		expect => expect_token_bracket_open,
+		got    => {
+			'CSI::Language::Java::Token::Bracket::Open' => '[',
+		},
+		;
+
+	is "expect_token_colon" =>
+		expect => expect_token_colon,
+		got    => {
+			'CSI::Language::Java::Token::Colon' => ':',
+		},
+		;
+
+	is "expect_token_dot" =>
+		expect => expect_token_dot,
+		got    => {
+			'CSI::Language::Java::Token::Dot' => '.',
+		},
+		;
+
+	is "expect_token_double_colon" =>
+		expect => expect_token_double_colon,
+		got    => {
+			'CSI::Language::Java::Token::Double::Colon' => '::',
+		},
+		;
+
+	is "expect_token_elipsis" =>
+		expect => expect_token_elipsis,
+		got    => {
+			'CSI::Language::Java::Token::Elipsis' => '...',
+		},
+		;
+
+	is "expect_token_paren_close" =>
+		expect => expect_token_paren_close,
+		got    => {
+			'CSI::Language::Java::Token::Paren::Close' => ')',
+		},
+		;
+
+	is "expect_token_paren_open" =>
+		expect => expect_token_paren_open,
+		got    => {
+			'CSI::Language::Java::Token::Paren::Open' => '(',
+		},
+		;
+
+	is "expect_token_question_mark" =>
+		expect => expect_token_question_mark,
+		got    => {
+			'CSI::Language::Java::Token::Question::Mark' => '?',
+		},
+		;
+
+	is "expect_token_semicolon" =>
+		expect => expect_token_semicolon,
+		got    => {
+			'CSI::Language::Java::Token::Semicolon' => ';',
+		},
+		;
+
+	is "expect_token_type_list_close" =>
+		expect => expect_token_type_list_close,
+		got    => {
+			'CSI::Language::Java::Token::Type::List::Close' => '>',
+		},
+		;
+
+	is "expect_token_type_list_open" =>
+		expect => expect_token_type_list_open,
+		got    => {
+			'CSI::Language::Java::Token::Type::List::Open' => '<',
 		},
 		;
 
