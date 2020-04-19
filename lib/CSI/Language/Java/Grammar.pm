@@ -365,6 +365,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  TOKEN_LT  ]],
 		;
 
+	rule  additional_bound                  =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-4.html#jls-AdditionalBound
+		[qw[  BINARY_AND  class_type                    ]],
+		[qw[  BINARY_AND  class_type  additional_bound  ]],
+		;
+
 	rule  allowed_identifier                =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-Identifier
 		[qw[  IDENTIFIER          ]],
@@ -797,6 +803,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  TYPE_LIST_OPEN                      TYPE_LIST_CLOSE  ]],
 		;
 
+	rule  type_bound                        => dom => 'CSI::Language::Java::Type::Bound',
+		[qw[  extends  annotated_class_type  additional_bound  ]],
+		[qw[  extends  annotated_class_type                    ]],
+		[qw[  extends  type_variable                 ]],
+		;
+
 	rule  type_declaration                  =>
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-7.html#jls-TypeDeclaration
 		[qw[  annotation_declaration   ]],
@@ -821,9 +833,38 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  keyword_type_identifier  ]],
 		;
 
+	rule  type_parameter                    => dom => 'CSI::Language::Java::Type::Parameter',
+		[qw[  type_parameter_modifiers  type_identifier  type_bound  ]],
+		[qw[                            type_identifier  type_bound  ]],
+		[qw[  type_parameter_modifiers  type_identifier              ]],
+		[qw[                            type_identifier              ]],
+		;
+
+	rule  type_parameter_list               =>
+		[qw[  type_parameter  COMMA  type_parameter_list  ]],
+		[qw[  type_parameter                              ]],
+		;
+
+	rule  type_parameter_modifier           =>
+		[qw[  annotation  ]],
+		;
+
+	rule  type_parameter_modifiers          =>
+		[qw[  type_parameter_modifier  type_parameter_modifiers  ]],
+		[qw[  type_parameter_modifier                            ]],
+		;
+
+	rule  type_parameters                   => dom => 'CSI::Language::Java::Type::Parameters',
+		[qw[  TYPE_LIST_OPEN  type_parameter_list  TYPE_LIST_CLOSE  ]],
+		;
+
 	rule  type_reference                    => dom => 'CSI::Language::Java::Reference',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-TypeName
 		[qw[  qualified_type_identifier  ]],
+		;
+
+	rule  type_variable                     => dom => 'CSI::Language::Java::Type::Variable',
+		[qw[  class_type  type_bound  ]],
 		;
 
 	rule  variable_modifier                 => dom => 'CSI::Language::Java::Modifier',
@@ -840,13 +881,6 @@ package CSI::Language::Java::Grammar v1.0.0 {
 };
 
 __END__
-
-	sub additional_bound            :RULE :ACTION_LIST {
-		[
-			[qw[  AND  interface_type                    ]],
-			[qw[  AND  interface_type  additional_bound  ]],
-		];
-	}
 
 	sub additive_expression         :RULE :ACTION_LIST {
 		[
@@ -2158,14 +2192,6 @@ __END__
 		]
 	}
 
-	sub type_bound                  :RULE :ACTION_DEFAULT {
-		[
-			[qw[ EXTENDS type_variable                              ]],
-			[qw[ EXTENDS class_or_interface_type  additional_bound  ]],
-			[qw[ EXTENDS class_or_interface_type                    ]],
-		]
-	}
-
 	sub type_name                   :RULE :ACTION_ALIAS {
 		[
 			[qw[ qualified_identifier ]],
@@ -2176,41 +2202,6 @@ __END__
 		[
 			[qw[ type_name                       ]],
 			[qw[ type_name COMMA  type_name_list ]],
-		]
-	}
-
-	sub type_parameter              :RULE :ACTION_DEFAULT {
-		[
-			[qw[   type_parameter_modifier_list  type_identifier  type_bound   ]],
-			[qw[                                 type_identifier  type_bound   ]],
-			[qw[   type_parameter_modifier_list  type_identifier               ]],
-			[qw[                                 type_identifier               ]],
-		]
-	}
-
-	sub type_parameter_list         :RULE :ACTION_LIST {
-		[
-			[qw[ type_parameter                           ]],
-			[qw[ type_parameter COMMA type_parameter_list ]],
-		]
-	}
-
-	sub type_parameter_modifier     :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ annotation ]],
-		]
-	}
-
-	sub type_parameter_modifier_list:RULE :ACTION_LIST {
-		[
-			[qw[ type_parameter_modifier                              ]],
-			[qw[ type_parameter_modifier type_parameter_modifier_list ]],
-		]
-	}
-
-	sub type_parameters             :RULE :ACTION_DEFAULT {
-		[
-			[qw[ LESS_THAN type_parameter_list GREATER_THAN ]],
 		]
 	}
 
