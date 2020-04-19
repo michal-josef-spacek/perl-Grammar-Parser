@@ -322,7 +322,7 @@ package Grammar::Parser::Lexer v1.0.0 {
 			line        => $self->_line,
 			column      => $self->_column,
 			near_data   => $data,
-			expected    => \ @accepted,
+			expected    => [ sort @accepted ],
 		)
 	}
 
