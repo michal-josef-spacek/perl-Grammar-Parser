@@ -509,6 +509,24 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  TOKEN_ASTERISK  ]],
 		;
 
+	rule  interface_body                    => dom => 'CSI::Language::Java::Interface::Body',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-InterfaceBody
+		[qw[  BRACE_OPEN  interface_body_declarations  BRACE_CLOSE  ]],
+		[qw[  BRACE_OPEN                               BRACE_CLOSE  ]],
+		;
+
+	rule  interface_declaration             => dom => 'CSI::Language::Java::Interface::Declaration',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-NormalInterfaceDeclaration
+		[qw[  interface_modifiers  interface  type_name  type_parameters   interface_extends  interface_body  ]],
+		[qw[  interface_modifiers  interface  type_name  type_parameters                      interface_body  ]],
+		[qw[  interface_modifiers  interface  type_name                    interface_extends  interface_body  ]],
+		[qw[  interface_modifiers  interface  type_name                                       interface_body  ]],
+		[qw[                       interface  type_name  type_parameters   interface_extends  interface_body  ]],
+		[qw[                       interface  type_name  type_parameters                      interface_body  ]],
+		[qw[                       interface  type_name                    interface_extends  interface_body  ]],
+		[qw[                       interface  type_name                                       interface_body  ]],
+		;
+
 	rule  interface_method_modifier         => dom => 'CSI::Language::Java::Modifier',
 		[qw[  annotation  ]],
 		[qw[  public      ]],
@@ -1468,20 +1486,6 @@ __END__
 		];
 	}
 
-	sub interface_body              :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BRACE_OPEN  interface_member_declaration_list  BRACE_CLOSE ]],
-			[qw[ BRACE_OPEN                                     BRACE_CLOSE ]],
-		];
-	}
-
-	sub interface_declaration       :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ normal_interface_declaration ]],
-			[qw[  annotation_type_declaration ]],
-		];
-	}
-
 	sub interface_member_declaration:RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[         constant_declaration ]],
@@ -1752,19 +1756,6 @@ __END__
 			[qw[ unary_expression DIVIDE   multiplicative_expression ]],
 			[qw[ unary_expression MODULO   multiplicative_expression ]],
 		];
-	}
-
-	sub normal_interface_declaration:RULE :ACTION_DEFAULT {
-		[
-			[qw[   interface_modifier_list  INTERFACE type_identifier  type_parameters   extends_interfaces  interface_body ]],
-			[qw[                            INTERFACE type_identifier  type_parameters   extends_interfaces  interface_body ]],
-			[qw[   interface_modifier_list  INTERFACE type_identifier                    extends_interfaces  interface_body ]],
-			[qw[                            INTERFACE type_identifier                    extends_interfaces  interface_body ]],
-			[qw[   interface_modifier_list  INTERFACE type_identifier  type_parameters                       interface_body ]],
-			[qw[                            INTERFACE type_identifier  type_parameters                       interface_body ]],
-			[qw[   interface_modifier_list  INTERFACE type_identifier                                        interface_body ]],
-			[qw[                            INTERFACE type_identifier                                        interface_body ]],
-		]
 	}
 
 	sub numeric_type                :RULE :ACTION_PASS_THROUGH {
