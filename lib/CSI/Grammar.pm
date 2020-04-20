@@ -23,6 +23,7 @@ package CSI::Grammar v1.0.0 {
 			qw[ keyword register_action_lookup ],
 			qw[ insignificant start ],
 			qw[ rule regex token ],
+			qw[ default_rule_action default_token_action ],
 		);
 
 		{
@@ -78,11 +79,26 @@ package CSI::Grammar v1.0.0 {
 			if $class->__csi_grammar->rule_exists ($rule_name);
 	}
 
+	sub default_token_action {
+		my $class = scalar caller;
+
+		$class->__csi_grammar->default_token_action (@_);
+	}
+
+	sub default_rule_action {
+		my $class = scalar caller;
+
+		$class->__csi_grammar->default_rule_action (@_);
+	}
+
 	sub rule {
 		my ($rule_name, @def) = @_;
 		my $class = scalar caller;
 
-		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, action => 'default', @def ]);
+		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, @def ]);
+
+		$class->__csi_grammar->add_action ($rule_name, $class->__csi_grammar->default_rule_action)
+			unless $class->__csi_grammar->action_exists ($rule_name);
 
 		$rule_name;
 	}
@@ -102,7 +118,10 @@ package CSI::Grammar v1.0.0 {
 
 		_ensure_unique_grammar_symbol $class, $rule_name;
 
-		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, action => 'literal', @def ]);
+		$class->__csi_grammar->add_rule ($rule_name => [ _common $class, $rule_name, @def ]);
+
+		$class->__csi_grammar->add_action ($rule_name, $class->__csi_grammar->default_token_action)
+			unless $class->__csi_grammar->action_exists ($rule_name);
 
 		$rule_name;
 	}

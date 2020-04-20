@@ -42,6 +42,18 @@ package CSI::Grammar::Meta v1.0.0 {
 		default => sub { +[qw[ CSI::Grammar::Actions ]] },
 	);
 
+	has default_rule_action => (
+		is => 'rw',
+		init_arg => undef,
+		default => sub { 'default' },
+	);
+
+	has default_token_action => (
+		is => 'rw',
+		init_arg => undef,
+		default => sub { 'literal' },
+	);
+
 	has start => (
 		is => 'rw',
 	);
@@ -66,6 +78,8 @@ package CSI::Grammar::Meta v1.0.0 {
 
 	sub add_action {
 		my ($self, $rule, $action) = @_;
+
+		return unless $action;
 
 		$action = 'rule_' . $action
 			unless ref $action;
