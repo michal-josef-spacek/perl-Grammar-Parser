@@ -712,13 +712,17 @@ subtest "expect_package_declaration"    => sub {
 	is "expect_package_declaration / with annotations" =>
 		expect => expect_package_declaration (
 			[qw[ foo bar ]],
-			expect_annotation ([qw[ foo ]]),
+			expect_modifiers (
+				expect_annotation ([qw[ foo ]]),
+			),
 		),
 		got    => { 'CSI::Language::Java::Package::Declaration' => [
-			{ 'CSI::Language::Java::Annotation' => [
-				{ 'CSI::Language::Java::Token::Annotation' => '@' },
-				{ 'CSI::Language::Java::Reference' => [
-					{ 'CSI::Language::Java::Identifier' => 'foo' },
+			{ 'CSI::Language::Java::Modifier' => [
+				{ 'CSI::Language::Java::Annotation' => [
+					{ 'CSI::Language::Java::Token::Annotation' => '@' },
+					{ 'CSI::Language::Java::Reference' => [
+						{ 'CSI::Language::Java::Identifier' => 'foo' },
+					] },
 				] },
 			] },
 			{ 'CSI::Language::Java::Token::Word::Package' => 'package'},

@@ -27,7 +27,9 @@ test_rule "package declaration with annotation" => (
 	data   => '@foo package foo.bar;',
 	expect => expect_package_declaration (
 		[qw[ foo bar]],
-		expect_annotation ([qw[ foo ]]),
+		expect_modifiers (
+			expect_annotation ([qw[ foo ]]),
+		),
 	),
 );
 

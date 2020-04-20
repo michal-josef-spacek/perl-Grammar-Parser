@@ -189,6 +189,19 @@ sub expect_word_void                    { expect_word '::Token::Word::Void'     
 sub expect_word_volatile                { expect_word '::Token::Word::Volatile'     }
 sub expect_word_while                   { expect_word '::Token::Word::While'        }
 sub expect_word_with                    { expect_word '::Token::Word::With'         }
+sub expect_modifier                     { expect_element '::Modifier', @_           }
+sub expect_modifier_abstract            { expect_modifier expect_word_abstract       }
+sub expect_modifier_default             { expect_modifier expect_word_default       }
+sub expect_modifier_final               { expect_modifier expect_word_final         }
+sub expect_modifier_native              { expect_modifier expect_word_native        }
+sub expect_modifier_private             { expect_modifier expect_word_private       }
+sub expect_modifier_protected           { expect_modifier expect_word_protected     }
+sub expect_modifier_public              { expect_modifier expect_word_public        }
+sub expect_modifier_static              { expect_modifier expect_word_static        }
+sub expect_modifier_strictfp            { expect_modifier expect_word_strictfp      }
+sub expect_modifier_synchronized        { expect_modifier expect_word_synchronized  }
+sub expect_modifier_transient           { expect_modifier expect_word_transient     }
+sub expect_modifier_volatile            { expect_modifier expect_word_volatile      }
 sub expect_annotation                   {
 	my ($name, @params) = @_;
 
@@ -229,6 +242,14 @@ sub expect_import_declaration           {
 		@import_type,
 		expect_token_semicolon,
 	));
+}
+
+sub expect_modifiers                    {
+	map {
+		exists $_->{'CSI::Language::Java::Annotation'}
+			? (expect_modifier $_)
+			: $_
+		} @_;
 }
 
 sub expect_package_declaration          {
