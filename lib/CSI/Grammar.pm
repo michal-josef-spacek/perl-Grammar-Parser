@@ -13,18 +13,19 @@ package CSI::Grammar v1.0.0 {
 
 	my $anonymous_counter = "000000";
 
+	our @EXPORT = (
+		qw[ keyword register_action_lookup ],
+		qw[ insignificant start ],
+		qw[ rule regex token ],
+		qw[ default_rule_action default_token_action ],
+		qw[ ensure_rule_name_order  reset_rule_name_order ],
+	);
+
 	sub import {
 		my ($class, @params) = @_;
 
 		return unless $class eq __PACKAGE__;
 		my $caller = scalar caller;
-
-		our @EXPORT = (
-			qw[ keyword register_action_lookup ],
-			qw[ insignificant start ],
-			qw[ rule regex token ],
-			qw[ default_rule_action default_token_action ],
-		);
 
 		{
 			no strict 'refs';
@@ -79,16 +80,20 @@ package CSI::Grammar v1.0.0 {
 			if $class->__csi_grammar->rule_exists ($rule_name);
 	}
 
-	sub default_token_action {
-		my $class = scalar caller;
+	sub ensure_rule_name_order {
+		caller->__csi_grammar->ensure_rule_name_order;
+	}
 
-		$class->__csi_grammar->default_token_action (@_);
+	sub reset_rule_name_order {
+		caller->__csi_grammar->reset_rule_name_order;
+	}
+
+	sub default_token_action {
+		caller->__csi_grammar->default_token_action (@_);
 	}
 
 	sub default_rule_action {
-		my $class = scalar caller;
-
-		$class->__csi_grammar->default_rule_action (@_);
+		caller->__csi_grammar->default_rule_action (@_);
 	}
 
 	sub rule {
@@ -136,16 +141,11 @@ package CSI::Grammar v1.0.0 {
 	}
 
 	sub start {
-		my ($name, @rest) = @_;
-		my $class = scalar caller;
-
-		$class->__csi_grammar->start ($name);
-
-		($name, @rest);
+		caller->__csi_grammar->start (@_);
 	}
 
 	sub register_action_lookup {
-		(scalar caller)->__csi_grammar->prepend_action_lookup (@_);
+		caller->__csi_grammar->prepend_action_lookup (@_);
 	}
 
 	sub grammar {

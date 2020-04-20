@@ -58,8 +58,25 @@ package CSI::Grammar::Meta v1.0.0 {
 		is => 'rw',
 	);
 
+	has rule_name_order_check => (
+		is => 'rw',
+		init_arg => undef,
+		default => sub { 0 },
+	);
+
+	has last_rule => (
+		is => 'rw',
+		init_arg => undef,
+	);
+
 	sub add_rule {
 		my ($self, $rule, $def) = @_;
+
+		if ($self->rule_name_order_check) {
+			warn "Rule $rule should be defined before ${\ $self->last_rule }"
+				if $rule lt $self->last_rule;
+			$self->last_rule ($rule);
+		}
 
 		$self->grammar->{$rule} = $def;
 	}
@@ -116,6 +133,19 @@ package CSI::Grammar::Meta v1.0.0 {
 
 		$self->_dom->{$rule};
 	}
-};
 
-1;
+	sub ensure_rule_name_order {
+		my ($self) = @_;
+
+		$self->rule_name_order_check (1);
+		$self->last_rule ('');
+	}
+
+	sub reset_rule_name_order {
+		my ($self) = @_;
+
+		$self->rule_name_order_check (0);
+	}
+
+	1;
+};
