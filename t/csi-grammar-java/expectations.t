@@ -574,14 +574,12 @@ subtest "expect_annotation" => sub {
 };
 
 subtest "expect_type_class"             => sub {
-	#plan tests => 3;
+	plan tests => 1;
 
 	is "expect_type_class / short type name" =>
 		expect => expect_type_class ([qw[ Map ]]),
 		got    => { 'CSI::Language::Java::Type::Class' => [
-			{ 'CSI::Language::Java::Reference' => [
-				{ 'CSI::Language::Java::Identifier' => 'Map' },
-			] },
+			{ 'CSI::Language::Java::Identifier' => 'Map' },
 		] },
 		;
 

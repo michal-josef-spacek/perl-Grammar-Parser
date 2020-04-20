@@ -424,6 +424,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  annotation               ]],
 		;
 
+	rule  array_type                        => dom => 'CSI::Language::Java::Type::Array',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannArrayType
+		[qw[  data_type  dim  ]],
+		;
+
 	rule  class_body                        => dom => 'CSI::Language::Java::Class::Body',
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-ClassBody
 		[qw[  BRACE_OPEN  class_body_declarations  BRACE_CLOSE  ]],
@@ -518,6 +523,17 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  constructor_modifiers             =>
 		[qw[  constructor_modifier  constructor_modifiers  ]],
 		[qw[  constructor_modifier                         ]],
+		;
+
+	rule  data_type                         =>
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannType
+		[qw[  primitive_type  ]],
+		[qw[  reference_type  ]],
+		;
+
+	rule  dim                               => dom => 'CSI::Language::Java::Array::Dimension',
+		[qw[  annotations  BRACKET_OPEN  BRACKET_CLOSE  ]],
+		[qw[               BRACKET_OPEN  BRACKET_CLOSE  ]],
 		;
 
 	rule  enum_body                         => dom => 'CSI::Language::Java::Enum::Body',
@@ -702,6 +718,18 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  qualified_identifier  ]],
 		;
 
+	rule  primitive_type                    => dom => 'CSI::Language::Java::Type::Primitive',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-UnannPrimitiveType
+		[qw[  boolean       ]],
+		[qw[  byte          ]],
+		[qw[  char          ]],
+		[qw[  double        ]],
+		[qw[  float         ]],
+		[qw[  int           ]],
+		[qw[  long          ]],
+		[qw[  short         ]],
+		;
+
 	rule  qualified_identifier              =>
 		[qw[  identifier  DOT  qualified_identifier  ]],
 		[qw[  identifier                             ]],
@@ -719,6 +747,11 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageName
 		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-6.html#jls-PackageOrTypeName
 		[qw[  qualified_identifier  ]],
+		;
+
+	rule  reference_type                    =>
+		[qw[  array_type       ]],
+		[qw[  class_type       ]],
 		;
 
 	rule  type_arguments                    => dom => 'CSI::Language::Java::Type::Arguments',
@@ -1212,20 +1245,6 @@ __END__
 		];
 	}
 
-	sub dim                         :RULE :ACTION_DEFAULT {
-		[
-			[qw[                 BRACKET_OPEN BRACKET_CLOSE ]],
-			[qw[ annotation_list BRACKET_OPEN BRACKET_CLOSE ]],
-		];
-	}
-
-	sub dims                        :RULE :ACTION_LIST {
-		[
-			[qw[ dim      ]],
-			[qw[ dim dims ]],
-		];
-	}
-
 	sub do_statement                :RULE :ACTION_DEFAULT {
 		[
 			[qw[ DO statement WHILE PAREN_OPEN expression PAREN_CLOSE SEMICOLON ]],
@@ -1442,13 +1461,6 @@ __END__
 		];
 	}
 
-	sub floating_point_type         :RULE :ACTION_DEFAULT {
-		[
-			[qw[ FLOAT  ]],
-			[qw[ DOUBLE ]],
-		];
-	}
-
 	sub for_init                    :RULE :ACTION_DEFAULT {
 		[
 			[qw[  statement_expression_list ]],
@@ -1532,16 +1544,6 @@ __END__
 	sub instance_initializer        :RULE :ACTION_DEFAULT {
 		[
 			[qw[ block ]],
-		];
-	}
-
-	sub integral_type               :RULE :ACTION_DEFAULT {
-		[
-			[qw[ BYTE ]],
-			[qw[ SHORT ]],
-			[qw[ INT ]],
-			[qw[ LONG ]],
-			[qw[ CHAR ]],
 		];
 	}
 
@@ -1815,13 +1817,6 @@ __END__
 			[qw[ unary_expression DIVIDE   multiplicative_expression ]],
 			[qw[ unary_expression MODULO   multiplicative_expression ]],
 		];
-	}
-
-	sub numeric_type                :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[       integral_type ]],
-			[qw[ floating_point_type ]],
-		]
 	}
 
 	sub package_or_type_name        :RULE :ACTION_ALIAS {
@@ -2267,25 +2262,11 @@ __END__
 		]
 	}
 
-	sub unann_primitive_type        :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ numeric_type ]],
-			[qw[      BOOLEAN ]],
-		]
-	}
-
 	sub unann_reference_type        :RULE :ACTION_PASS_THROUGH {
 		[
 			[qw[ unann_class_or_interface_type ]],
 			[qw[           unann_type_variable ]],
 			[qw[              unann_array_type ]],
-		]
-	}
-
-	sub unann_type                  :RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ unann_primitive_type ]],
-			[qw[ unann_reference_type ]],
 		]
 	}
 

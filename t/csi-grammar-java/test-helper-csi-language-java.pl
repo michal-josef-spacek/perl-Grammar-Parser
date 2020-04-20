@@ -285,12 +285,43 @@ sub expect_reference                    {
 	expect_qualified_identifier '::Reference' => @list_spec;
 }
 
+sub expect_type                         {
+	expect_element ('::Type::Primitive' => @_);
+}
+
 sub expect_type_arguments               {
 	expect_element ('::Type::Arguments' => (
 		expect_token_type_list_open,
 		@_,
 		expect_token_type_list_close,
 	));
+}
+
+sub expect_type_array                   {
+	my ($array) = @_;
+
+	return $array
+		unless Ref::Util::is_plain_arrayref ($array);
+
+	expect_element ('::Type::Array' => (
+		expect_type_array ($array->[0]),
+		expect_element ('::Array::Dimension' => (
+			expect_token_bracket_open,
+			expect_token_bracket_close,
+		)),
+	));
+}
+
+sub expect_type_boolean                 {
+	expect_type expect_word_boolean;
+}
+
+sub expect_type_byte                    {
+	expect_type expect_word_byte;
+}
+
+sub expect_type_char                    {
+	expect_type expect_word_char;
 }
 
 sub expect_type_class                   {
@@ -301,7 +332,7 @@ sub expect_type_class                   {
 			? @{ $params{annotations} }
 			: ()
 			,
-		expect_reference (@$class),
+		_list_with_separator ([ expect_token_dot() ], \& expect_identifier, @$class),
 		$params{type_arguments}
 			? expect_type_arguments (@{ $params{type_arguments} })
 			: ()
@@ -309,14 +340,30 @@ sub expect_type_class                   {
 	)),
 }
 
+sub expect_type_double                  {
+	expect_type expect_word_double;
+}
+
+sub expect_type_float                   {
+	expect_type expect_word_float;
+}
+
 sub expect_type_identifier              {
 	expect_token ('::Type::Identifier' => @_)
+}
+
+sub expect_type_int                     {
+	expect_type expect_word_int;
+}
+
+sub expect_type_long                    {
+	expect_type expect_word_long;
 }
 
 sub expect_type_name                    {
 	my ($name) = @_;
 
-	expect_token ('CSI::Language::Java::Type::Name' => $name);
+	expect_token ('::Type::Name' => $name);
 }
 
 sub expect_type_reference               {
@@ -332,7 +379,11 @@ sub expect_type_reference               {
 	));
 }
 
-sub expect_type_string              {
+sub expect_type_short                   {
+	expect_type expect_word_short;
+}
+
+sub expect_type_string                  {
 	expect_type_class [qw[ String ]]
 }
 
