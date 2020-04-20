@@ -43,8 +43,9 @@ package CSI::Grammar v1.0.0 {
 	sub _common {
 		my ($class, $rule_name, @def) = @_;
 		state $label_map = {
-			dom    => 'DOM',
 			action => 'ACTION',
+			dom    => 'DOM',
+			group  => 'GROUP',
 			proto  => 'PROTO',
 		};
 
@@ -67,6 +68,10 @@ package CSI::Grammar v1.0.0 {
 
 			PROTO:
 			$class->__csi_grammar->append_rule ($value => \ $rule_name);
+			next;
+
+			GROUP:
+			$class->__csi_grammar->append_rule ($value => [ $rule_name ]);
 			next;
 		}
 
