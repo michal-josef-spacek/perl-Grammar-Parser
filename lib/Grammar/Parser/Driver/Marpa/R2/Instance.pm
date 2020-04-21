@@ -66,8 +66,11 @@ package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 			$ref //= $value;
 			$counter++;
 			use DDP;
-			p $ref if $counter == 2;
-			p $value if $counter > 1;
+			use Test::Deep;
+			Test::Deep::cmp_deeply ($ref, $value, "compare $counter")
+				if $counter > 1;
+			#p $ref if $counter == 2;
+			#p $value if $counter > 1;
 			die "Too many results received" if $DIE_ON_MULTIPLE && $counter > 1;
 		}
 
