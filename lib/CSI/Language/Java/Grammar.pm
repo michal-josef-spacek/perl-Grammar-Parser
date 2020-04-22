@@ -1122,13 +1122,12 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  formal_parameter                  => dom => 'CSI::Language::Java::Parameter',
-		[qw[   variable_modifiers  variable_type  ELIPSIS  variable_name        ]],
-		[qw[   variable_modifiers  variable_type           variable_name  dims  ]],
-		[qw[   variable_modifiers  variable_type           variable_name        ]],
-		[qw[                       variable_type  ELIPSIS  variable_name        ]],
-		[qw[                       variable_type           variable_name  dims  ]],
-		[qw[                       variable_type           variable_name        ]],
-		;
+		[qw[  variable_modifiers  data_type  variable_name  dims  ]],
+		[qw[  variable_modifiers  data_type  variable_name        ]],
+		[qw[                      data_type  variable_name  dims  ]],
+		[qw[                      data_type  variable_name        ]],
+		[qw[  variable_arity_parameter                            ]],
+ 	;
 
 	rule  formal_parameters                 =>
 		[qw[  formal_parameter                            ]],
@@ -1954,7 +1953,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		[qw[  LOGICAL_COMPLEMENT  unary_element  ]],
 		;
 
-	rule  variable_arity_parameter          => action => 'pass_through',
+	rule  variable_arity_parameter          =>
 		[qw[   variable_modifiers  data_type  annotations  ELIPSIS  variable_name  ]],
 		[qw[                       data_type  annotations  ELIPSIS  variable_name  ]],
 		[qw[   variable_modifiers  data_type               ELIPSIS  variable_name  ]],
