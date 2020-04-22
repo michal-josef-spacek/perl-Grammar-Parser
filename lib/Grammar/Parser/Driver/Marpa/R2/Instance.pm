@@ -12,7 +12,7 @@ package Grammar::Parser::Driver::Marpa::R2::Instance v1.0.0 {
 
 	extends 'Grammar::Parser::Driver::Instance';
 
-	our $SHOW_PROGRESS_ON_ERROR = 1;
+	our $SHOW_PROGRESS_ON_ERROR = 0;
 
 	has lexer => (
 		is => 'ro',
