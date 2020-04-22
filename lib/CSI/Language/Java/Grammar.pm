@@ -424,6 +424,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  annotation_body                   => dom => 'CSI::Language::Java::Structure::Body::Annotation',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-AnnotationTypeBody
 		[qw[  BRACE_OPEN  annotation_body_declarations  BRACE_CLOSE  ]],
 		[qw[  BRACE_OPEN                                BRACE_CLOSE  ]],
 		;
@@ -444,8 +445,41 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  annotation_declaration            => dom => 'CSI::Language::Java::Declaration::Annotation',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-AnnotationTypeDeclaration
 		[qw[  interface_modifiers  ANNOTATION  interface  type_name  annotation_body  ]],
 		[qw[                       ANNOTATION  interface  type_name  annotation_body  ]],
+		;
+
+	rule  annotation_default_value          => dom => 'CSI::Language::Java::Annotation::Default::Value',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-DefaultValue
+		[qw[  default  element_value  ]],
+		;
+
+	rule  annotation_element_declaration    => dom => 'CSI::Language::Java::Annotation::Element',
+		# https://docs.oracle.com/javase/specs/jls/se13/html/jls-9.html#jls-AnnotationTypeElementDeclaration
+		[qw[  annotation_element_modifiers  annotation_element_declarator  dims  annotation_default_value  SEMICOLON  ]],
+		[qw[                                annotation_element_declarator  dims  annotation_default_value  SEMICOLON  ]],
+		[qw[  annotation_element_modifiers  annotation_element_declarator  dims                            SEMICOLON  ]],
+		[qw[                                annotation_element_declarator  dims                            SEMICOLON  ]],
+		[qw[  annotation_element_modifiers  annotation_element_declarator        annotation_default_value  SEMICOLON  ]],
+		[qw[                                annotation_element_declarator        annotation_default_value  SEMICOLON  ]],
+		[qw[  annotation_element_modifiers  annotation_element_declarator                                  SEMICOLON  ]],
+		[qw[                                annotation_element_declarator                                  SEMICOLON  ]],
+		;
+
+	rule  annotation_element_declarator     =>
+		[qw[  variable_type  variable_name  PAREN_OPEN  PAREN_CLOSE  ]],
+		;
+
+	rule  annotation_element_modifier       => dom => 'CSI::Language::Java::Modifier',
+		[qw[  annotation  ]],
+		[qw[  public      ]],
+		[qw[  abstract    ]],
+		;
+
+	rule  annotation_element_modifiers      =>
+		[qw[  annotation_element_modifier  annotation_element_modifiers  ]],
+		[qw[  annotation_element_modifier                                ]],
 		;
 
 	rule  annotations                       =>
@@ -1992,51 +2026,6 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 __END__
 
-	sub annotation_type_element_declaration:RULE :ACTION_DEFAULT {
-		[
-			[qw[  annotation_type_element_modifier_list  unann_type  identifier  PAREN_OPEN  PAREN_CLOSE  dims  default_value  SEMICOLON  ]],
-			[qw[                                         unann_type  identifier  PAREN_OPEN  PAREN_CLOSE  dims  default_value  SEMICOLON  ]],
-			[qw[  annotation_type_element_modifier_list  unann_type  identifier  PAREN_OPEN  PAREN_CLOSE        default_value  SEMICOLON  ]],
-			[qw[                                         unann_type  identifier  PAREN_OPEN  PAREN_CLOSE        default_value  SEMICOLON  ]],
-			[qw[  annotation_type_element_modifier_list  unann_type  identifier  PAREN_OPEN  PAREN_CLOSE  dims                 SEMICOLON  ]],
-			[qw[                                         unann_type  identifier  PAREN_OPEN  PAREN_CLOSE  dims                 SEMICOLON  ]],
-			[qw[  annotation_type_element_modifier_list  unann_type  identifier  PAREN_OPEN  PAREN_CLOSE                       SEMICOLON  ]],
-			[qw[                                         unann_type  identifier  PAREN_OPEN  PAREN_CLOSE                       SEMICOLON  ]],
-		];
-	}
-
-	sub annotation_type_element_modifier:RULE :ACTION_DEFAULT {
-		[
-			[qw[  annotation  ]],
-			[qw[      PUBLIC  ]],
-			[qw[    ABSTRACT  ]],
-		];
-	}
-
-	sub annotation_type_element_modifier_list:RULE :ACTION_LIST {
-		[
-			[qw[  annotation_type_element_modifier                                        ]],
-			[qw[  annotation_type_element_modifier  annotation_type_element_modifier_list ]],
-		];
-	}
-
-	sub annotation_type_member_declaration:RULE :ACTION_PASS_THROUGH {
-		[
-			[qw[ annotation_type_element_declaration ]],
-			[qw[                constant_declaration ]],
-			[qw[                   class_declaration ]],
-			[qw[               interface_declaration ]],
-			[qw[                           SEMICOLON ]],
-		];
-	}
-
-	sub annotation_type_member_declaration_list:RULE :ACTION_LIST {
-		[
-			[qw[ annotation_type_member_declaration                                         ]],
-			[qw[ annotation_type_member_declaration annotation_type_member_declaration_list ]],
-		];
-	}
-
 	sub array_access                :RULE :ACTION_DEFAULT {
 		[
 			[qw[      expression_name BRACKET_OPEN expression BRACKET_CLOSE ]],
@@ -2133,12 +2122,6 @@ __END__
 	sub constant_expression         :RULE :ACTION_ALIAS {
 		[
 			[qw[ expression ]],
-		];
-	}
-
-	sub default_value               :RULE :ACTION_DEFAULT {
-		[
-			[qw[ DEFAULT element_value ]],
 		];
 	}
 
