@@ -27,6 +27,22 @@ EODATA
 	expect => ignore,
 );
 
+test_rule "expression / binary and expression treated as cast operator" => (
+	rule => 'expression',
+	data => <<'EODATA',
+~(same & diff) + "foo"
+EODATA
+	expect => ignore,
+);
+
+test_rule "expression / binary and expression treated vs cast operator" => (
+	rule => 'expression',
+	data => <<'EODATA',
+return (x & y) + ((x ^ y) >> 1);
+EODATA
+	expect => ignore,
+);
+
 had_no_warnings;
 
 done_testing;
