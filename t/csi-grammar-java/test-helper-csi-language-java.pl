@@ -234,6 +234,13 @@ sub expect_arguments                    {
 	)),
 }
 
+sub expect_array_dimension              {
+	expect_element ('::Array::Dimension' => (
+		expect_token_bracket_open,
+		expect_token_bracket_close,
+	)),
+}
+
 sub expect_array_type                   {
 	my ($array) = @_;
 
