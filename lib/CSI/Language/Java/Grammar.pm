@@ -436,10 +436,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
-		[qw[  cast_reference_operators  lambda_expression                ]],
-		[qw[  cast_reference_operators  prefix_element                   ]],
-		[qw[  cast_reference_operators  unary_expression_not_plus_minus  ]],
-		[qw[  cast_primary_operators    unary_element                    ]],
+		[qw[  cast_reference_operators  lambda_expression                 ]],
+		[qw[  cast_reference_operators  prefix_element                    ]],
+		[qw[  cast_reference_operators  prefix_expression_not_plus_minus  ]],
+		[qw[  cast_primary_operators    prefix_expression                 ]],
 		;
 
 	rule  cast_primary_operator             => dom => 'CSI::Language::Java::Operator::Cast',
@@ -883,6 +883,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 
 	rule  prefix_expression                 => dom => 'CSI::Language::Java::Expression::Prefix',
 		[qw[  prefix_operators  prefix_element  ]],
+		;
+
+	rule  prefix_expression_not_plus_minus  => dom => 'CSI::Language::Java::Expression::Prefix',
+		[qw[  unary_expression_not_plus_minus  ]],
 		;
 
 	rule  prefix_operator                   =>
