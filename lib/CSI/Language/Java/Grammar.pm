@@ -666,9 +666,10 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  cast_expression                   => dom => 'CSI::Language::Java::Expression::Cast',
-		[qw[  cast_reference_operators  lambda_expression                 ]],
+		[qw[  cast_reference_operators  lambda_expression                 PRIORITY_TOKEN  ]],
 		[qw[  cast_reference_operators  prefix_element                    ]],
 		[qw[  cast_reference_operators  prefix_expression_not_plus_minus  ]],
+		[qw[  cast_primary_operators    prefix_element                    ]],
 		[qw[  cast_primary_operators    prefix_expression                 ]],
 		;
 
@@ -1291,8 +1292,9 @@ package CSI::Language::Java::Grammar v1.0.0 {
 		;
 
 	rule  lambda_body                       =>
+		# lambda expression is greedy
 		[qw[  statement_expression  ]],
-		[qw[  block                 ]],
+		[qw[  block                       ]],
 		;
 
 	rule  lambda_expression                 => dom => 'CSI::Language::Java::Expression::Lambda',

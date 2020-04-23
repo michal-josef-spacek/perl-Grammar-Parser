@@ -11,7 +11,7 @@ BEGIN { require "test-helper-csi-language-java.pl" }
 
 arrange_start_rule 'block_statement';
 
-plan tests => 3;
+plan tests => 4;
 
 test_rule "variable initialization with assignment" => (
 	data => <<'EODATA',
@@ -23,6 +23,13 @@ EODATA
 test_rule "assign lambda" => (
 	data => <<'EODATA',
 variable = () -> { };
+EODATA
+	expect => ignore,
+);
+
+test_rule "lambda / method call" => (
+	data => <<'EODATA',
+	users.sort((o1, o2) -> strategy.compare(o1.getId(), o2.getId()));
 EODATA
 	expect => ignore,
 );
