@@ -297,6 +297,36 @@ package Grammar::Parser::Lexer v1.0.0 {
 		return [ $token_name, $value ];
 	}
 
+	sub _lookup_first_match {
+		my ($self, @accepted) = @_;
+		state $counter = 0;
+		$counter ++;
+
+		@accepted = keys %{ $self->tokens }
+			unless @accepted;
+
+		for my $token_name (@accepted) {
+			my $regex = $self->_parser_token_map->{$token_name};
+			next unless $regex;
+
+			next unless ${ $self->_data } =~ m/^$regex/gc;
+			my $match = substr (${ $self->_data}, 0, pos ${ $self->_data});
+
+			my $value = $self->_build_match_value (
+				name		=> $token_name,
+				match		=> $match,
+				line		=> $self->_line,
+				column      => $self->_column,
+				significant => ! exists $self->_insignificant_map->{$token_name},
+				captures	=> { %+ },
+			);
+
+			return [ $token_name, $value ];
+		}
+
+		();
+	}
+
 	sub _adjust_data {
 		my ($self, $token) = @_;
 
@@ -363,11 +393,13 @@ package Grammar::Parser::Lexer v1.0.0 {
 		my %allowed;
 
 		@accepted{@accepted} = ();
-		@allowed{@accepted, @{ $self->insignificant }} = ();
+		my @allowed = (@accepted, @{ $self->insignificant });
+		@allowed{@allowed} = ();
 
 		my $token;
 		until ($token) {
 			$token = $self->_lookup_longest_match (\%allowed);
+			#$token = $self->_lookup_first_match (@allowed);
 
 			last unless $token;
 
