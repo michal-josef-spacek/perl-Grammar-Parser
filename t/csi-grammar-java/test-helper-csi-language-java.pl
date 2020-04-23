@@ -74,6 +74,7 @@ sub expect_literal_class                {
 
 sub expect_literal_string               { expect_token LITERAL_STRING           => @_ }
 sub expect_literal_floating_decimal     { expect_token LITERAL_FLOAT_DECIMAL    => @_ }
+sub expect_literal_floating_hex         { expect_token LITERAL_FLOAT_HEX        => @_ }
 sub expect_literal_integral_binary      { expect_token LITERAL_INTEGRAL_BINARY  => @_ }
 sub expect_literal_integral_decimal     { expect_token LITERAL_INTEGRAL_DECIMAL => @_ }
 sub expect_literal_integral_hex         { expect_token LITERAL_INTEGRAL_HEX     => @_ }

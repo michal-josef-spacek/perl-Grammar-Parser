@@ -157,7 +157,7 @@ subtest "integral number literals" => sub {
 };
 
 subtest "floating number literals" => sub {
-	plan tests => 3;
+	plan tests => 4;
 
 	test_rule "float literal / decimal / with trailing dot" => (
 		data => '0.',
@@ -177,6 +177,13 @@ subtest "floating number literals" => sub {
 		data => '0d',
 		expect => [
 			expect_literal_floating_decimal ('0d'),
+		],
+	);
+
+	test_rule "float literal / hex" => (
+		data => '0x1p31',
+		expect => [
+			expect_literal_floating_hex ('0x1p31'),
 		],
 	);
 

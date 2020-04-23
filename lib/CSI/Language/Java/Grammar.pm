@@ -190,6 +190,18 @@ package CSI::Language::Java::Grammar v1.0.0 {
 			)
 		)/sx;
 
+	token LITERAL_FLOAT_HEX                 => action => 'float_value',
+		qr/(?>
+			(?<hex_value>
+				(?: (??{ 'Hex_Numeral'     }) \.? ) | (?: 0 [xX] [[:xdigit:]]* \. [[:xdigit:]]+ )
+			)
+			[pP]
+			(?<binary_exponent>
+				[+-]? (??{ 'Decimal_Numeral' })
+			)
+			(?<type_suffix> (??{ 'Floating_Type_Suffix' }) ) ?
+		)/sx;
+
 	token LITERAL_INTEGRAL_BINARY           => action => 'integral_value',
 		qr/(?>
 			(?<binary_value>  (??{ 'Binary_Numeral'  }) )
@@ -1315,6 +1327,7 @@ package CSI::Language::Java::Grammar v1.0.0 {
 	rule  literal                           =>
 		[qw[ LITERAL_CHARACTER        ]],
 		[qw[ LITERAL_FLOAT_DECIMAL    ]],
+		[qw[ LITERAL_FLOAT_HEX        ]],
 		[qw[ LITERAL_INTEGRAL_BINARY  ]],
 		[qw[ LITERAL_INTEGRAL_DECIMAL ]],
 		[qw[ LITERAL_INTEGRAL_HEX     ]],
